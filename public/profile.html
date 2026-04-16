@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile | EcoTravel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+   :root {
+  --blue-dark: #0f2a44;
+  --blue-mid: #1f4e79;
+  --blue-light: #3a7bd5;
+  --blue-pale: #eaf3ff;
+
+  --orange: #f97316;
+  --orange-soft: #fff2e8;
+
+  --text-main: #1a1a1a;
+  --text-muted: #6b7280;
+  --border: #dbe6f3;
+
+  --bg: #f4f8ff;
+  --card-bg: #ffffff;
+}
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+      padding: 0.9rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: #fff !important;
+      letter-spacing: 0.5px;
+    }
+  .navbar-brand span {
+  color: var(--orange);
+}
+    .nav-link {
+      color: rgba(255,255,255,0.75) !important;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+      transition: color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: #fff !important; }
+
+    /* ── Page layout ── */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--green-dark);
+      margin-bottom: 0.25rem;
+    }
+    .page-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    /* ── Card ── */
+    .profile-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(26,60,46,0.07);
+    }
+
+    /* ── Avatar banner ── */
+    .profile-banner {
+       background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+      padding: 2rem 2rem 0;
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      position: relative;
+    }
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .avatar-circle {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+     background-color: var(--orange);
+  color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      border: 4px solid #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      user-select: none;
+    }
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: var(--green-dark);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background 0.2s;
+    }
+    .avatar-edit-btn:hover { background: var(--green-pale); }
+    .banner-info {
+      padding-bottom: 1rem;
+    }
+    .banner-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .banner-email {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+      margin-top: 2px;
+    }
+    .banner-badge {
+      display: inline-block;
+      margin-top: 6px;
+      background: var(--accent);
+      color: var(--green-dark);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Tabs ── */
+    .profile-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--card-bg);
+      padding: 0 2rem;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      font-size: 0.875rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      margin-bottom: -1.5px;
+      transition: color 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab-btn.active {
+  color: var(--blue-mid);
+  border-bottom-color: var(--blue-mid);
+}
+    .tab-btn:hover:not(.active) { color: var(--text-main); }
+
+    /* ── Tab panels ── */
+    .tab-panel { display: none; padding: 2rem; }
+    .tab-panel.active { display: block; }
+
+    /* ── Form styles ── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      margin-top: 1.5rem;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 5px;
+    }
+    .form-control, .form-select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 0.85rem;
+      color: var(--text-main);
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+   .form-control:focus, .form-select:focus {
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(58,123,213,0.15);
+}
+    .form-control[readonly] {
+      background: var(--green-pale);
+      color: var(--text-muted);
+    }
+    .input-icon-wrap {
+      position: relative;
+    }
+    .input-icon-wrap .bi {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .input-icon-wrap .form-control {
+      padding-left: 2.2rem;
+    }
+
+    /* ── Interests checkboxes ── */
+    .interests-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.5rem;
+    }
+    .interest-chip input { display: none; }
+    .interest-chip label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      cursor: pointer;
+      background: #fff;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .interest-chip input:checked + label {
+      background: var(--green-pale);
+      border-color: var(--green-light);
+      color: var(--green-dark);
+      font-weight: 500;
+    }
+
+    /* ── Buttons ── */
+    .btn-save {
+       background: var(--orange);
+  color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 1.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-save:hover {  background: #ea580c; }
+    .btn-save:active { transform: scale(0.98); }
+
+    .btn-cancel {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 1.4rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-cancel:hover {  background: var(--blue-pale); }
+
+    .btn-danger-outline {
+      background: transparent;
+      color: #dc3545;
+      border: 1px solid #dc3545;
+      border-radius: 10px;
+      padding: 0.55rem 1.2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-danger-outline:hover { background: #fff5f5; }
+
+    /* ── Alert ── */
+    .alert-success-custom {
+      background: var(--blue-pale);
+      border: 1px solid #b6d4fe;
+      color: var(--blue-dark);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+     
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .alert-success-custom.show { display: flex; }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      flex: 1;
+        background: var(--blue-pale);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+       color: var(--blue-dark);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .page-wrapper { padding: 0 1rem 3rem; margin-top: 1.5rem; }
+      .profile-banner { flex-direction: column; align-items: flex-start; padding: 1.5rem 1.5rem 0; }
+      .profile-tabs { padding: 0 1rem; overflow-x: auto; }
+      .tab-panel { padding: 1.5rem; }
+      .stats-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <a class="navbar-brand" href="#">Eco<span>Travel</span></a>
+  <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+    <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navMenu">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Itinerary</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Directory</a></li>
+      <li class="nav-item"><a class="nav-link active" href="#">Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="page-wrapper">
+  <p class="page-title">My Profile</p>
+  <p class="page-subtitle">Manage your account details and preferences.</p>
+
+  <div class="profile-card">
+
+    <!-- Banner -->
+    <div class="profile-banner">
+      <div class="avatar-wrap">
+        <div class="avatar-circle" id="avatarInitials">AZ</div>
+        <button class="avatar-edit-btn" title="Change avatar"><i class="bi bi-camera"></i></button>
+      </div>
+      <div class="banner-info">
+        <div class="banner-name" id="bannerName">Ahmad Zulkifli</div>
+        <div class="banner-email" id="bannerEmail">ahmad@example.com</div>
+        <span class="banner-badge">🌱 Eco Traveller</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="profile-tabs">
+      <button class="tab-btn active" onclick="switchTab('info', this)">
+        <i class="bi bi-person"></i> Personal Info
+      </button>
+      <button class="tab-btn" onclick="switchTab('password', this)">
+        <i class="bi bi-lock"></i> Password
+      </button>
+      <button class="tab-btn" onclick="switchTab('danger', this)">
+        <i class="bi bi-exclamation-triangle"></i> Account
+      </button>
+    </div>
+
+    <!-- Tab: Personal Info -->
+    <div class="tab-panel active" id="tab-info">
+      <div class="alert-success-custom" id="infoAlert">
+        <i class="bi bi-check-circle-fill"></i> Profile updated successfully!
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Trips Planned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12.4 kg</div>
+          <div class="stat-label">CO₂ Saved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">7</div>
+          <div class="stat-label">Favourites</div>
+        </div>
+      </div>
+
+      <form id="profileForm" onsubmit="saveProfile(event)">
+        <p class="section-label">Basic Details</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="firstName">First Name</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-person"></i>
+              <input type="text" class="form-control" id="firstName" value="Ahmad" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="lastName">Last Name</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-person"></i>
+              <input type="text" class="form-control" id="lastName" value="Zulkifli" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-envelope"></i>
+              <input type="email" class="form-control" id="email" value="ahmad@example.com" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="phone">Phone Number</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-phone"></i>
+              <input type="tel" class="form-control" id="phone" value="+60123456789" />
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="username">Username</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-at"></i>
+              <input type="text" class="form-control" id="username" value="ahmad_eco" />
+            </div>
+          </div>
+        </div>
+
+        <p class="section-label">Travel Preferences</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="country">Country</label>
+            <select class="form-select" id="country">
+              <option selected>Malaysia</option>
+              <option>Singapore</option>
+              <option>Indonesia</option>
+              <option>Thailand</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="budget">Monthly Travel Budget (MYR)</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-wallet2"></i>
+              <input type="number" class="form-control" id="budget" value="500" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <p class="section-label" style="margin-top:1.5rem;">Interests</p>
+        <div class="interests-grid">
+          <div class="interest-chip">
+            <input type="checkbox" id="int-eco" checked />
+            <label for="int-eco">🌿 Eco stays</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-food" checked />
+            <label for="int-food">🍃 Plant-based food</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-hike" />
+            <label for="int-hike">🥾 Hiking</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-beach" checked />
+            <label for="int-beach">🏖️ Beach</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-culture" />
+            <label for="int-culture">🏛️ Culture</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-wildlife" />
+            <label for="int-wildlife">🦋 Wildlife</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-cycle" />
+            <label for="int-cycle">🚴 Cycling</label>
+          </div>
+          <div class="interest-chip">
+            <input type="checkbox" id="int-train" checked />
+            <label for="int-train">🚆 Train travel</label>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn-save"><i class="bi bi-check2"></i> Save Changes</button>
+          <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tab: Password -->
+    <div class="tab-panel" id="tab-password">
+      <div class="alert-success-custom" id="pwAlert">
+        <i class="bi bi-check-circle-fill"></i> Password changed successfully!
+      </div>
+      <p class="section-label">Change Password</p>
+      <form id="passwordForm" onsubmit="changePassword(event)">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="currentPw">Current Password</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-lock"></i>
+              <input type="password" class="form-control" id="currentPw" placeholder="Enter current password" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="newPw">New Password</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-lock-fill"></i>
+              <input type="password" class="form-control" id="newPw" placeholder="Min. 8 characters" required minlength="8" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="confirmPw">Confirm New Password</label>
+            <div class="input-icon-wrap">
+              <i class="bi bi-lock-fill"></i>
+              <input type="password" class="form-control" id="confirmPw" placeholder="Repeat new password" required />
+            </div>
+          </div>
+          <div class="col-12" id="pwError" style="color:#dc3545;font-size:0.82rem;display:none;">
+            <i class="bi bi-exclamation-circle"></i> Passwords do not match.
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn-save"><i class="bi bi-shield-lock"></i> Update Password</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tab: Danger Zone -->
+    <div class="tab-panel" id="tab-danger">
+      <p class="section-label">Account Actions</p>
+      <div style="background:#fff5f5;border:1px solid #f5c6cb;border-radius:12px;padding:1.25rem 1.5rem;max-width:480px;">
+        <p style="font-weight:500;font-size:0.95rem;color:#842029;margin-bottom:0.4rem;">
+          <i class="bi bi-exclamation-triangle-fill"></i> Delete Account
+        </p>
+        <p style="font-size:0.83rem;color:#6b7280;margin-bottom:1rem;">
+          Once you delete your account, all your data including itineraries, favourites, and profile information will be permanently removed. This action cannot be undone.
+        </p>
+        <button class="btn-danger-outline" data-bs-toggle="modal" data-bs-target="#deleteModal">
+          <i class="bi bi-trash3"></i> Delete My Account
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end profile-card -->
+</div><!-- end page-wrapper -->
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" style="font-family:'Playfair Display',serif;color:#842029;">Confirm Account Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="font-size:0.88rem;color:#444;">
+        <p>Are you sure you want to delete your account? This will permanently erase:</p>
+        <ul style="margin-top:0.5rem;padding-left:1.2rem;">
+          <li>Your profile and personal details</li>
+          <li>All saved itineraries</li>
+          <li>Your favourites and carbon footprint history</li>
+        </ul>
+        <p style="margin-top:0.75rem;">Type <strong>DELETE</strong> to confirm:</p>
+        <input type="text" class="form-control mt-2" id="deleteConfirmInput" placeholder="Type DELETE here" />
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-danger-outline" onclick="confirmDelete()">
+          <i class="bi bi-trash3"></i> Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ── Tab switching ──
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Save profile ──
+  function saveProfile(e) {
+    e.preventDefault();
+    const first = document.getElementById('firstName').value.trim();
+    const last  = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    // Update banner
+    document.getElementById('bannerName').textContent  = first + ' ' + last;
+    document.getElementById('bannerEmail').textContent = email;
+
+    // Update avatar initials
+    const initials = (first[0] || '') + (last[0] || '');
+    document.getElementById('avatarInitials').textContent = initials.toUpperCase();
+
+    // Show success alert
+    const alert = document.getElementById('infoAlert');
+    alert.classList.add('show');
+    setTimeout(() => alert.classList.remove('show'), 3500);
+
+    // TODO (Phase 2): Send PUT request to /api/profile with form data
+    // fetch('/api/profile', { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({...}) })
+  }
+
+  // ── Reset form ──
+  function resetForm() {
+    document.getElementById('profileForm').reset();
+  }
+
+  // ── Change password ──
+  function changePassword(e) {
+    e.preventDefault();
+    const newPw  = document.getElementById('newPw').value;
+    const confirm = document.getElementById('confirmPw').value;
+    const errEl  = document.getElementById('pwError');
+
+    if (newPw !== confirm) {
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    const alert = document.getElementById('pwAlert');
+    alert.classList.add('show');
+    setTimeout(() => alert.classList.remove('show'), 3500);
+    document.getElementById('passwordForm').reset();
+
+    // TODO (Phase 2): Send PUT request to /api/profile/password
+    // fetch('/api/profile/password', { method: 'PUT', body: JSON.stringify({ currentPw, newPw }) })
+  }
+
+  // ── Delete account ──
+  function confirmDelete() {
+    const val = document.getElementById('deleteConfirmInput').value.trim();
+    if (val !== 'DELETE') {
+      alert('Please type DELETE exactly to confirm.');
+      return;
+    }
+    // TODO (Phase 2): Send DELETE request to /api/profile
+    // fetch('/api/profile', { method: 'DELETE' }).then(() => window.location.href = '/register')
+    alert('Account deletion would be processed here (Phase 2).');
+    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+  }
+</script>
+</body>
+</html>
