@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sustainable Directory - EcoTravel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="search-page">
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">Eco<span>Travel</span></a>
+      <div class="navbar-links">
+        <a href="index.html" class="navbar-link">Home</a>
+        <a href="search.html" class="navbar-link active">Sustainable Directory</a>
+        <a href="#favorites-panel" class="navbar-link">
+          Favorites
+          <span id="itinerary-badge" class="navbar-badge hidden">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1 class="font-serif">Find Sustainable Travel Options</h1>
+    <p>Search eco-friendly accommodations, restaurants, transport, and activities by city or town.</p>
+    <form class="search-bar" onsubmit="handleSearch(event)">
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Search by city or town..."
+      >
+      <button type="submit" class="search-btn" aria-label="Search">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <div class="main-grid">
+    <aside class="sidebar" id="filter-sidebar">
+      <h2 class="sidebar-title">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        Filters
+      </h2>
+
+      <div class="filter-section">
+        <p class="filter-label">Budget (MYR)</p>
+        <div class="filter-value" id="budget-display">RM 0 – RM 300+</div>
+        <input type="range" id="budget-min" min="0" max="300" step="10" value="0">
+        <input type="range" id="budget-max" min="0" max="300" step="10" value="300">
+        <div class="range-labels">
+          <span>RM 0</span>
+          <span>RM 300+</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <p class="filter-label">Option Type</p>
+        <div class="option-group" id="transport-options">
+          <button type="button" class="option-btn active" data-value="any">All</button>
+          <button type="button" class="option-btn" data-value="Accommodation">Stay</button>
+          <button type="button" class="option-btn" data-value="Restaurant">Food</button>
+          <button type="button" class="option-btn" data-value="Transport">Transport</button>
+          <button type="button" class="option-btn" data-value="Activity">Activity</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <p class="filter-label">Eco Features</p>
+        <div class="option-group" id="interest-options">
+          <label class="checkbox-option">
+            <input type="checkbox" value="renewable">
+            <span>Renewable energy</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" value="local">
+            <span>Local sourcing</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" value="lowcarbon">
+            <span>Low carbon</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" value="plasticfree">
+            <span>Plastic free</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" value="conservation">
+            <span>Conservation</span>
+          </label>
+          <label class="checkbox-option">
+            <input type="checkbox" value="community">
+            <span>Community tourism</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <p class="filter-label">Favorites</p>
+        <div class="option-group" id="carbon-options">
+          <button type="button" class="option-btn active" data-value="any">Show All</button>
+          <button type="button" class="option-btn" data-value="favorites">Favorites Only</button>
+        </div>
+      </div>
+
+      <button class="reset-btn" onclick="resetFilters()">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        Reset Filters
+      </button>
+
+      <div class="favorites-panel" id="favorites-panel">
+        <h3 class="favorites-panel-title">Saved Favorites</h3>
+        <div id="favorites-list" class="favorites-list"></div>
+        <p id="favorites-empty" class="favorites-empty">No favorites saved yet.</p>
+      </div>
+    </aside>
+
+    <div>
+      <div class="results-header">
+        <div>
+          <h2>Available Cities / Towns</h2>
+          <p id="results-count">Showing 0 places</p>
+        </div>
+        <select class="sort-select" id="sort-select">
+          <option value="default">Sort: Recommended</option>
+          <option value="name-asc">Name: A to Z</option>
+          <option value="count-desc">Most options</option>
+          <option value="budget-asc">Lowest average price</option>
+        </select>
+      </div>
+
+      <div class="cards-grid" id="city-cards"></div>
+
+      <div class="empty-state hidden" id="empty-state">
+        <div class="empty-state-emoji">🔍</div>
+        <p class="empty-state-title">No places found</p>
+        <p class="empty-state-text">Try adjusting your filters or search term.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="activity-modal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal">
+      <div class="modal-header" id="modal-header">
+        <button class="modal-close" onclick="closeModal()">
+          <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <span class="modal-emoji" id="modal-emoji"></span>
+        <h2 class="modal-title font-serif" id="modal-title"></h2>
+        <p class="modal-subtitle" id="modal-subtitle"></p>
+      </div>
+      <div class="modal-body">
+        <h3 class="modal-section-title" id="modal-activities-count">Sustainable Options (0)</h3>
+        <div id="modal-activities"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    let filters = {
+      search: "",
+      budgetMin: 0,
+      budgetMax: 300,
+      type: "any",
+      favorites: "any",
+      features: [],
+      sort: "default"
+    };
+
+    let currentModalCity = null;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      setupFilterListeners();
+      updateBudgetDisplay();
+      renderCityCards();
+      updateNavbarBadge();
+      renderFavoritesList();
+    });
+
+    function setupFilterListeners() {
+      const budgetMin = document.getElementById("budget-min");
+      const budgetMax = document.getElementById("budget-max");
+
+      budgetMin.addEventListener("input", () => {
+        filters.budgetMin = parseInt(budgetMin.value, 10);
+        updateBudgetDisplay();
+        renderCityCards();
+      });
+
+      budgetMax.addEventListener("input", () => {
+        filters.budgetMax = parseInt(budgetMax.value, 10);
+        updateBudgetDisplay();
+        renderCityCards();
+      });
+
+      document.querySelectorAll("#transport-options .option-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#transport-options .option-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          filters.type = btn.dataset.value;
+          renderCityCards();
+        });
+      });
+
+      document.querySelectorAll("#interest-options input").forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+          filters.features = Array.from(document.querySelectorAll("#interest-options input:checked"))
+            .map(cb => cb.value);
+          renderCityCards();
+        });
+      });
+
+      document.querySelectorAll("#carbon-options .option-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#carbon-options .option-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          filters.favorites = btn.dataset.value;
+          renderCityCards();
+        });
+      });
+
+      document.getElementById("sort-select").addEventListener("change", (e) => {
+        filters.sort = e.target.value;
+        renderCityCards();
+      });
+
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        filters.search = e.target.value;
+        renderCityCards();
+      });
+    }
+
+    function handleSearch(e) {
+      e.preventDefault();
+      filters.search = document.getElementById("search-input").value;
+      renderCityCards();
+    }
+
+    function updateBudgetDisplay() {
+      const lo = Math.min(filters.budgetMin, filters.budgetMax);
+      const hi = Math.max(filters.budgetMin, filters.budgetMax);
+      document.getElementById("budget-display").textContent =
+        `RM ${lo} – RM ${hi === 300 ? "300+" : hi}`;
+    }
+
+    function resetFilters() {
+      filters = {
+        search: "",
+        budgetMin: 0,
+        budgetMax: 300,
+        type: "any",
+        favorites: "any",
+        features: [],
+        sort: "default"
+      };
+
+      document.getElementById("search-input").value = "";
+      document.getElementById("budget-min").value = 0;
+      document.getElementById("budget-max").value = 300;
+      document.getElementById("sort-select").value = "default";
+
+      document.querySelectorAll("#transport-options .option-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.value === "any");
+      });
+
+      document.querySelectorAll("#carbon-options .option-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.value === "any");
+      });
+
+      document.querySelectorAll("#interest-options input").forEach(cb => {
+        cb.checked = false;
+      });
+
+      updateBudgetDisplay();
+      renderCityCards();
+    }
+
+    function cityMatchesFilters(city) {
+      const lo = Math.min(filters.budgetMin, filters.budgetMax);
+      const hi = Math.max(filters.budgetMin, filters.budgetMax);
+      const searchTerm = filters.search.toLowerCase();
+      const optionList = getOptionsByCity(city.id);
+
+      if (!city.name.toLowerCase().includes(searchTerm) && !city.country.toLowerCase().includes(searchTerm)) {
+        if (searchTerm && !optionList.some(option => option.name.toLowerCase().includes(searchTerm))) {
+          return false;
+        }
+      }
+
+      const matchingOptions = optionList.filter(option => {
+        if (option.price < lo || option.price > hi) return false;
+        if (filters.type !== "any" && option.category !== filters.type) return false;
+        if (filters.features.length > 0 && !filters.features.some(feature => option.tags.includes(feature))) return false;
+        if (filters.favorites === "favorites" && !isFavorite(option.id)) return false;
+        return true;
+      });
+
+      return matchingOptions.length > 0;
+    }
+
+    function renderCityCards() {
+      let filtered = cities.filter(cityMatchesFilters);
+
+      if (filters.sort === "name-asc") filtered.sort((a, b) => a.name.localeCompare(b.name));
+      if (filters.sort === "count-desc") filtered.sort((a, b) => getOptionsByCity(b.id).length - getOptionsByCity(a.id).length);
+      if (filters.sort === "budget-asc") filtered.sort((a, b) => a.price - b.price);
+
+      document.getElementById("results-count").textContent =
+        `Showing ${filtered.length} place${filtered.length !== 1 ? "s" : ""}`;
+
+      const cardsContainer = document.getElementById("city-cards");
+      const emptyState = document.getElementById("empty-state");
+
+      if (filtered.length === 0) {
+        cardsContainer.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      cardsContainer.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+
+      cardsContainer.innerHTML = filtered.map(city => {
+        const optionCount = getFilteredOptionsForCity(city.id).length;
+
+        return `
+          <div class="city-card" onclick="openModal(${city.id})">
+            <div class="city-card-header" style="background-color: ${city.imgBg}">
+              <span class="city-card-emoji">${city.emoji}</span>
+              <span class="city-card-badge">${optionCount} options</span>
+            </div>
+            <div class="city-card-content">
+              <h3 class="city-card-name">${city.name}</h3>
+              <p class="city-card-location">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                ${city.country}
+              </p>
+              <div class="city-card-tags">
+                ${city.tags.slice(0, 3).map(tag => `<span class="tag">${getTagLabel(tag)}</span>`).join("")}
+              </div>
+              <div class="city-card-footer">
+                <span class="city-card-price">Avg. RM ${city.price}</span>
+                <span class="city-card-co2">${optionCount} eco choices</span>
+              </div>
+              <button class="view-activities-btn" type="button">View Sustainable Options</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function getFilteredOptionsForCity(cityId) {
+      const lo = Math.min(filters.budgetMin, filters.budgetMax);
+      const hi = Math.max(filters.budgetMin, filters.budgetMax);
+      return getOptionsByCity(cityId).filter(option => {
+        if (option.price < lo || option.price > hi) return false;
+        if (filters.type !== "any" && option.category !== filters.type) return false;
+        if (filters.features.length > 0 && !filters.features.some(feature => option.tags.includes(feature))) return false;
+        if (filters.favorites === "favorites" && !isFavorite(option.id)) return false;
+        return true;
+      });
+    }
+
+    function openModal(cityId) {
+      const city = getCityById(cityId);
+      if (!city) return;
+
+      currentModalCity = city;
+      const cityOptions = getFilteredOptionsForCity(cityId);
+
+      document.getElementById("modal-header").style.backgroundColor = city.imgBg;
+      document.getElementById("modal-emoji").textContent = city.emoji;
+      document.getElementById("modal-title").textContent = city.name;
+      document.getElementById("modal-subtitle").textContent = city.country;
+      document.getElementById("modal-activities-count").textContent = `Sustainable Options (${cityOptions.length})`;
+
+      document.getElementById("modal-activities").innerHTML = cityOptions.map(option => {
+        const fav = isFavorite(option.id);
+
+        return `
+          <div class="activity-card">
+            <div class="activity-card-inner">
+              <span class="activity-emoji">${option.emoji}</span>
+              <div class="activity-content">
+                <h4 class="activity-name">${option.name}</h4>
+                <p class="activity-desc">${option.description}</p>
+                <div class="city-card-tags" style="margin-bottom: 0.75rem;">
+                  <span class="tag">${option.category}</span>
+                  ${option.tags.map(tag => `<span class="tag">${getTagLabel(tag)}</span>`).join("")}
+                </div>
+                <div class="activity-meta">
+                  <span>${option.ecoLabel}</span>
+                  <span>${option.address}</span>
+                  <span class="activity-price">RM ${option.price}</span>
+                </div>
+              </div>
+              <button
+                class="add-btn ${fav ? "added" : "default"}"
+                onclick="handleFavoriteOption(event, ${option.id})"
+              >
+                ${fav ? "Favorited" : "Favorite"}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("activity-modal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("activity-modal").classList.add("hidden");
+      document.body.style.overflow = "";
+      currentModalCity = null;
+    }
+
+    function handleFavoriteOption(event, optionId) {
+      event.stopPropagation();
+      toggleFavorite(optionId);
+      updateNavbarBadge();
+      renderFavoritesList();
+      renderCityCards();
+      if (currentModalCity) {
+        openModal(currentModalCity.id);
+      }
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
