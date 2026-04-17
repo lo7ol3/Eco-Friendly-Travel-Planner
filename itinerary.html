@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Itinerary - EcoTravel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">Eco<span>Travel</span></a>
+      <div class="navbar-links">
+        <a href="index.html" class="navbar-link">Home</a>
+        <a href="searchandfav.html" class="navbar-link">Destinations</a>
+        <a href="itinerary.html" class="navbar-link active">
+          Itinerary
+          <span id="itinerary-badge" class="navbar-badge hidden">0</span>
+        </a>
+        <a href="favorite.html" class="navbar-link">
+          ❤️ Favourites
+          <span id="fav-badge" class="navbar-badge hidden">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1 class="font-serif">Create Your Green Itinerary</h1>
+    <p>Organize your eco-friendly destinations and track your impact.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="itinerary-grid">
+    <!-- Left Column -->
+    <div>
+      <!-- Trip Details Form -->
+      <div class="trip-form">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1rem; color: var(--green-dark); font-weight: 600;">Trip Settings</h3>
+          <button type="button" onclick="handleResetTrip()" style="background: none; border: none; color: var(--text-muted); font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; padding: 0; transition: color 0.2s;">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+            Reset Trip
+          </button>
+        </div>
+        <div class="trip-form-grid">
+          <!-- City Selector -->
+          <div class="form-group">
+            <label class="form-label">Destination City</label>
+            <button type="button" class="city-dropdown" id="city-dropdown" onclick="toggleCityDropdown()">
+              <div class="city-dropdown-inner" id="city-dropdown-display">
+                <svg class="icon icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span style="color: var(--text-muted);">Select a destination...</span>
+              </div>
+              <svg class="icon icon-muted" id="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="dropdown-menu hidden" id="city-dropdown-menu">
+              <div class="dropdown-search">
+                <div class="dropdown-search-inner">
+                  <svg class="dropdown-search-icon icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <input type="text" id="city-search" placeholder="Search cities..." oninput="filterCityDropdown()">
+                </div>
+              </div>
+              <div class="dropdown-list" id="city-list"></div>
+            </div>
+          </div>
+
+          <!-- Travel Dates -->
+          <div class="form-group">
+            <label class="form-label">Travel Dates</label>
+            <div class="date-inputs">
+              <input type="date" class="form-input" id="start-date">
+              <input type="date" class="form-input" id="end-date">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weather Section -->
+      <div class="section-header">
+        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A8 8 0 1 0 3 15Z"/>
+        </svg>
+        <span>Weather Forecast:</span>
+        <span class="section-header-muted" id="weather-city-name">Select a city</span>
+      </div>
+      <div id="weather-widget"></div>
+
+      <!-- Timeline Section -->
+      <div class="section-header">
+        <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+        </svg>
+        <span>Your Plan</span>
+      </div>
+      <div id="itinerary-timeline"></div>
+    </div>
+
+    <!-- Right Column - Sidebar -->
+    <aside>
+      <!-- Carbon Summary -->
+      <div class="carbon-card">
+        <p class="carbon-label">Total Estimated Footprint</p>
+        <h3 class="carbon-value font-serif" id="total-co2">0.0</h3>
+        <p class="carbon-unit">kg CO2e</p>
+        <hr class="carbon-divider">
+        <button class="offset-btn" onclick="handleOffset()">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 22V8M17 12l-5-5-5 5M4 22h16M3 5l4-3 3 2 4-2 4 2 4-2v8"/>
+          </svg>
+          Offset Emissions
+        </button>
+      </div>
+
+      <!-- Budget Summary -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">
+          <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/>
+            <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/>
+            <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/>
+          </svg>
+          Budget Summary
+        </div>
+        <div class="budget-total">
+          <p class="budget-total-label">Total Estimated Cost</p>
+          <p class="budget-total-value" id="total-budget">RM 0</p>
+          <p class="budget-total-count" id="activity-count">0 activities</p>
+        </div>
+        <div class="budget-breakdown" id="budget-breakdown"></div>
+        <p class="timeline-empty text-center" id="budget-empty" style="display: none;">
+          Add activities to see your budget breakdown.
+        </p>
+      </div>
+
+      <!-- Add More Activities CTA -->
+      <div class="cta-card">
+        <div class="cta-card-header">
+          <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>Add More Activities</span>
+        </div>
+        <p>Browse eco-friendly destinations and add activities to your trip.</p>
+        <a href="destinations.html" class="cta-browse-btn">Browse Destinations</a>
+      </div>
+
+      <!-- Save Button -->
+      <button class="save-btn" onclick="handleSave()">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Save Itinerary
+      </button>
+    </aside>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // ============================================
+    // ITINERARY PAGE SPECIFIC CODE
+    // ============================================
+
+    let tripDetails = getTripDetails();
+    let dropdownOpen = false;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load trip details
+      document.getElementById('start-date').value = tripDetails.startDate || '';
+      document.getElementById('end-date').value = tripDetails.endDate || '';
+      
+      // Populate city dropdown
+      renderCityDropdown();
+      updateCityDisplay();
+      
+      // Render all sections
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('city-dropdown-menu');
+        const button = document.getElementById('city-dropdown');
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+          closeCityDropdown();
+        }
+      });
+    });
+
+    // City Dropdown Functions
+    function toggleCityDropdown() {
+      dropdownOpen = !dropdownOpen;
+      const menu = document.getElementById('city-dropdown-menu');
+      const arrow = document.getElementById('dropdown-arrow');
+      
+      if (dropdownOpen) {
+        menu.classList.remove('hidden');
+        arrow.style.transform = 'rotate(180deg)';
+        document.getElementById('city-search').focus();
+      } else {
+        closeCityDropdown();
+      }
+    }
+
+    function closeCityDropdown() {
+      dropdownOpen = false;
+      document.getElementById('city-dropdown-menu').classList.add('hidden');
+      document.getElementById('dropdown-arrow').style.transform = '';
+      document.getElementById('city-search').value = '';
+      renderCityDropdown();
+    }
+
+    function renderCityDropdown(searchQuery = '') {
+      const list = document.getElementById('city-list');
+      const filtered = cities.filter(city => 
+        city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        city.country.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<p style="padding: 1rem; font-size: 0.875rem; color: var(--text-muted);">No cities found</p>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(city => `
+        <button 
+          type="button" 
+          class="dropdown-item ${tripDetails.cityId === city.id ? 'selected' : ''}"
+          onclick="selectCity(${city.id})"
+        >
+          <span class="dropdown-item-emoji">${city.emoji}</span>
+          <div style="flex: 1;">
+            <p class="dropdown-item-name">${city.name}</p>
+            <p class="dropdown-item-country">${city.country}</p>
+          </div>
+          ${tripDetails.cityId === city.id ? '<span style="font-size: 0.75rem; color: var(--green-mid); font-weight: 500;">Selected</span>' : ''}
+        </button>
+      `).join('');
+    }
+
+    function filterCityDropdown() {
+      const query = document.getElementById('city-search').value;
+      renderCityDropdown(query);
+    }
+
+    function selectCity(cityId) {
+      const city = getCityById(cityId);
+      if (city) {
+        tripDetails.city = city.name;
+        tripDetails.cityId = city.id;
+        setTripDetails(tripDetails);
+        
+        updateCityDisplay();
+        closeCityDropdown();
+        renderWeatherWidget();
+        renderTimeline();
+        renderSidebar();
+      }
+    }
+
+    function updateCityDisplay() {
+      const display = document.getElementById('city-dropdown-display');
+      const weatherCityName = document.getElementById('weather-city-name');
+      
+      if (tripDetails.cityId) {
+        const city = getCityById(tripDetails.cityId);
+        if (city) {
+          display.innerHTML = `
+            <span style="font-size: 1.125rem;">${city.emoji}</span>
+            <span style="color: var(--green-dark);">${city.name}, ${city.country}</span>
+          `;
+          weatherCityName.textContent = city.name;
+          return;
+        }
+      }
+      
+      display.innerHTML = `
+        <svg class="icon icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span style="color: var(--text-muted);">Select a destination...</span>
+      `;
+      weatherCityName.textContent = 'Select a city';
+    }
+
+    function updateTripDates() {
+      tripDetails.startDate = document.getElementById('start-date').value;
+      tripDetails.endDate = document.getElementById('end-date').value;
+      setTripDetails(tripDetails);
+      
+      // Normalize item dates
+      const items = getItineraryItems();
+      const start = new Date(tripDetails.startDate);
+      const end = new Date(tripDetails.endDate);
+      
+      const normalizedItems = items.map(item => {
+        if (!item.date) return { ...item, date: tripDetails.startDate };
+        const itemDate = new Date(item.date);
+        if (itemDate < start || itemDate > end) {
+          return { ...item, date: tripDetails.startDate };
+        }
+        return item;
+      });
+      
+      setItineraryItems(normalizedItems);
+      
+      renderWeatherWidget();
+      renderTimeline();
+    }
+
+    // Reset Trip Function
+    function handleResetTrip() {
+      // 1. Safety check: Only prompt if they actually have activities saved
+      const currentItems = getItineraryItems();
+      if (currentItems.length > 0) {
+        const confirmReset = confirm("Are you sure you want to clear your entire itinerary? This cannot be undone.");
+        if (!confirmReset) return; // Exit if they click "Cancel"
+      }
+
+      // 2. Clear the data
+      setItineraryItems([]);
+      
+      // 3. Reset trip details to default state
+      const defaultTrip = {
+        city: '',
+        cityId: null,
+        startDate: '',
+        endDate: ''
+      };
+      
+      setTripDetails(defaultTrip);
+      tripDetails = defaultTrip; // Update local state variable
+
+      // 4. Reset the form inputs in the UI
+      document.getElementById('start-date').value = defaultTrip.startDate;
+      document.getElementById('end-date').value = defaultTrip.endDate;
+
+      // 5. Re-render all components to show the empty states
+      updateCityDisplay();
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
+
+    // Weather Widget
+    function renderWeatherWidget() {
+      const container = document.getElementById('weather-widget');
+      
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="weather-placeholder">
+            <svg class="icon-xl icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <div>
+              <p>Select a destination to see weather forecast</p>
+              <small>Weather will update based on your travel dates</small>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const city = getCityById(tripDetails.cityId);
+      const tripDates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      const forecasts = tripDates.map(date => getWeatherForDate(date));
+      const current = forecasts[0];
+
+      container.innerHTML = `
+        <div class="weather-widget">
+          <div class="weather-current">
+            <div class="weather-temp">
+              ${getWeatherIcon(current.icon)}
+              <h2>${current.temp}°C</h2>
+            </div>
+            <p class="weather-condition">${current.condition} - Wind 12 km/h</p>
+            <div class="weather-city">
+              <span style="font-size: 1.125rem;">${city.emoji}</span>
+              <p>${city.name}, ${city.country}</p>
+            </div>
+          </div>
+          <div class="weather-forecast">
+            ${forecasts.slice(0, 5).map(day => `
+              <div class="weather-day">
+                <div class="weather-day-label">${day.day}</div>
+                ${getWeatherIcon(day.icon)}
+                <div class="weather-day-temp">${day.temp}°</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Timeline
+    function renderTimeline() {
+      const container = document.getElementById('itinerary-timeline');
+      const items = getItineraryItems();
+      
+      // Filter items by selected city
+      const filteredItems = tripDetails.cityId 
+        ? items.filter(item => item.cityId === tripDetails.cityId)
+        : items;
+
+      // No city selected
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="timeline-placeholder">
+            <p>Select a destination city above to start planning your trip.</p>
+            <small>Once you select a city and set your travel dates, you can add activities from the Destinations page.</small>
+          </div>
+        `;
+        return;
+      }
+
+      // No activities
+      if (filteredItems.length === 0) {
+        container.innerHTML = `
+          <div class="timeline-placeholder">
+            <p>No activities added for ${tripDetails.city} yet. Browse destinations to add activities!</p>
+            <a href="destinations.html" class="browse-btn">Browse Destinations</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Get all dates in trip range
+      const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      
+      // Group items by date
+      const itemsByDate = filteredItems.reduce((acc, item) => {
+        const date = item.date || tripDetails.startDate;
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(item);
+        return acc;
+      }, {});
+
+      const activityColors = {
+        wellness: '#c5e1a5',
+        food: '#ffe0b2',
+        nature: '#dcedc8',
+        culture: '#e1bee7',
+        adventure: '#f9e4b7',
+        wildlife: '#b2dfdb',
+      };
+
+      function getActivityColor(tags) {
+        for (const tag of tags) {
+          const lower = tag.toLowerCase();
+          if (activityColors[lower]) return activityColors[lower];
+        }
+        return '#e8f5ee';
+      }
+
+      container.innerHTML = `
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          ${dates.map(date => {
+            const dayItems = itemsByDate[date] || [];
+            const dayNum = getDayNumber(tripDetails.startDate, date);
+            
+            // Fetch weather for this specific day
+            const dayWeather = getWeatherForDate(date);
+            
+            return `
+              <div class="timeline-day">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Day ${dayNum}: ${formatDate(date)}</div>
+                ${dayItems.length > 0 ? dayItems.map(item => {
+                  
+                  // SMART SUGGESTION LOGIC
+                  const outdoorTags = ['beach', 'hiking', 'cycle', 'wildlife', 'eco'];
+                  const isOutdoor = item.tags.some(tag => outdoorTags.includes(tag.toLowerCase()));
+                  const isRaining = dayWeather.icon === 'cloud-rain';
+                  
+                  const weatherSuggestion = (isOutdoor && isRaining) ? `
+                    <div style="background-color: #fffbeb; border: 1px solid #fef08a; color: #854d0e; padding: 0.5rem 0.75rem; border-radius: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+                      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.125rem;">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      <div>
+                        <strong>Weather Alert:</strong> Rain is forecasted! Consider moving this outdoor activity to another day or swapping it for an indoor cultural experience.
+                      </div>
+                    </div>
+                  ` : '';
+
+                  return `
+                  <div class="timeline-item">
+                    <div class="timeline-item-header">
+                      <div class="timeline-item-left">
+                        <div class="timeline-item-icon" style="background-color: ${getActivityColor(item.tags)}">
+                          ${item.emoji}
+                        </div>
+                        <div>
+                          <h4 class="timeline-item-name">${item.name}</h4>
+                          <p class="timeline-item-category">${item.tags[0] ? getTagLabel(item.tags[0]) : 'Activity'}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item-right">
+                        <span class="timeline-item-co2">+${item.co2} kg CO2</span>
+                        <button class="timeline-item-delete" onclick="removeActivity(${item.id})">
+                          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    ${weatherSuggestion}
+                    
+                    ${dates.length > 1 ? `
+                      <div class="timeline-item-move">
+                        <span>Move to:</span>
+                        <div class="move-btns">
+                          ${dates.map((d, idx) => `
+                            <button 
+                              class="move-btn ${d === date ? 'current' : 'other'}"
+                              onclick="${d !== date ? `moveActivity(${item.id}, '${d}')` : ''}"
+                              ${d === date ? 'disabled' : ''}
+                            >
+                              Day ${idx + 1}
+                            </button>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+                `}).join('') : `
+                  <p class="timeline-empty">No activities planned for this day.</p>
+                `}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function removeActivity(activityId) {
+      removeFromItinerary(activityId);
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
+
+    function moveActivity(activityId, newDate) {
+      updateItemDate(activityId, newDate);
+      renderTimeline();
+    }
+
+    // Sidebar
+    function renderSidebar() {
+      const items = getItineraryItems();
+      
+      // Return empty array [] if no city is selected so totals stay at 0
+      const filteredItems = tripDetails.cityId 
+        ? items.filter(item => item.cityId === tripDetails.cityId)
+        : [];
+
+      // Carbon summary
+      const totalCO2 = filteredItems.reduce((sum, item) => sum + item.co2, 0);
+      document.getElementById('total-co2').textContent = totalCO2.toFixed(1);
+
+      // Budget summary
+      const totalPrice = filteredItems.reduce((sum, item) => sum + item.price, 0);
+      document.getElementById('total-budget').textContent = `RM ${totalPrice.toLocaleString()}`;
+      document.getElementById('activity-count').textContent = `${filteredItems.length} activities`;
+
+      // Budget breakdown
+      const categoryTotals = filteredItems.reduce((acc, item) => {
+        const category = item.tags[0] || 'other';
+        acc[category] = (acc[category] || 0) + item.price;
+        return acc;
+      }, {});
+
+      const sortedCategories = Object.entries(categoryTotals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4);
+
+      const breakdownContainer = document.getElementById('budget-breakdown');
+      const emptyMessage = document.getElementById('budget-empty');
+
+      if (sortedCategories.length > 0) {
+        emptyMessage.style.display = 'none';
+        breakdownContainer.innerHTML = `
+          <p class="budget-category-label">By Category</p>
+          ${sortedCategories.map(([category, amount]) => `
+            <div class="budget-category-item">
+              <span>${category}</span>
+              <span>RM ${amount.toLocaleString()}</span>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        breakdownContainer.innerHTML = '';
+        emptyMessage.style.display = 'block';
+      }
+    }
+
+    function handleOffset() {
+      alert('Phase 2 Feature: This will connect to a Carbon Offset purchasing API!');
+    }
+
+    function handleSave() {
+      alert('Phase 2 Feature: This will save your itinerary to the database.');
+    }
+  </script>
+</body>
+</html>
