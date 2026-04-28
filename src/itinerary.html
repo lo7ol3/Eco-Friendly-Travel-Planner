@@ -43,7 +43,25 @@
           <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           <h2 class="section-header-title">Trip Settings</h2>
         </div>
+<div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+<h5 class="fw-bold text-success mb-3">Add Activity for Selected Destination</h5>
+<p class="text-muted small mb-3">
+  Choose your destination first, then select from saved activities for that place.
+</p>
+  <label class="form-label">Choose Saved Activity</label>
+  <select id="savedActivitySelect" class="form-select rounded-3 mb-3">
+    <option value="">Select activity...</option>
+  </select>
 
+  <label class="form-label">Choose Date</label>
+  <select id="activityDateSelect" class="form-select rounded-3 mb-3">
+    <option value="">Select date...</option>
+  </select>
+
+  <button class="btn btn-success w-100 rounded-3 fw-bold" onclick="addSavedActivityToSchedule()">
+    Add to Itinerary
+  </button>
+</div>
         <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
              <span class="small fw-bold text-muted text-uppercase">Basic Details</span>

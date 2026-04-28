@@ -12,11 +12,79 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderAll() {
     updateCityDisplay();
     renderWeatherWidget();
+    renderSavedActivityScheduler();
     renderTimeline();
     renderSidebar();
     updateNavbarBadge();
 }
+function renderSavedActivityScheduler() {
+    const activitySelect = document.getElementById("savedActivitySelect");
+    const dateSelect = document.getElementById("activityDateSelect");
 
+    if (!activitySelect || !dateSelect) return;
+
+    const saved = getSavedActivities();
+    const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+
+    const filteredSaved = tripDetails.cityId
+        ? saved.filter(item => item.cityId == tripDetails.cityId)
+        : [];
+
+    if (!tripDetails.cityId) {
+        activitySelect.innerHTML = '<option value="">Please select a destination first</option>';
+    } else if (filteredSaved.length === 0) {
+        activitySelect.innerHTML = '<option value="">No saved activities for this destination</option>';
+    } else {
+        activitySelect.innerHTML = '<option value="">Select saved activity...</option>' +
+            filteredSaved.map(item => `
+                <option value="${item.id}">
+                    ${item.emoji} ${item.name}
+                </option>
+            `).join('');
+    }
+
+    dateSelect.innerHTML = '<option value="">Select date...</option>' +
+        dates.map((date, index) => `
+            <option value="${date}">
+                Day ${index + 1} - ${date}
+            </option>
+        `).join('');
+}
+
+function addSavedActivityToSchedule() {
+    const activityId = Number(document.getElementById("savedActivitySelect").value);
+    const selectedDate = document.getElementById("activityDateSelect").value;
+
+    if (!activityId || !selectedDate) {
+        alert("Please choose an activity and date.");
+        return;
+    }
+
+    const saved = getSavedActivities();
+    const activity = saved.find(item => item.id === activityId);
+
+    if (!activity) {
+        alert("Activity not found.");
+        return;
+    }
+
+    const items = getItineraryItems();
+
+    if (items.some(item => item.id === activity.id && item.date === selectedDate)) {
+        alert("This activity is already added on this date.");
+        return;
+    }
+
+    items.push({
+        ...activity,
+        date: selectedDate
+    });
+
+    setItineraryItems(items);
+
+    alert("Activity added to itinerary!");
+    renderAll();
+}
 function populateCitySelect() {
     const select = document.getElementById('city-select');
     select.innerHTML = '<option value="">Select a destination...</option>' + 
@@ -116,7 +184,7 @@ function renderTimeline() {
     if (items.length === 0) {
         container.innerHTML = `
             <div class="timeline-placeholder shadow-sm">
-                <p class="text-muted italic mb-4">No activities added for ${tripDetails.city || 'your destination'} yet. Browse destinations to add activities!</p>
+                <p class="text-muted italic mb-4">No activities added for ${tripDetails.city || 'your destination'} yet. Save activities from Directory, then add them to your schedule here.</p>
                 <a href="directory.html" class="browse-btn">Browse Destinations</a>
             </div>`;
         return;

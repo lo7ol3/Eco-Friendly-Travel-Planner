@@ -165,7 +165,8 @@ function getCO2Label(co2) {
 const STORAGE_KEYS = {
   ITINERARY: 'ecotravel-itinerary',
   TRIP: 'ecotravel-trip',
-  FAVORITES: 'ecotravel-favorites'
+  FAVORITES: 'ecotravel-favorites',
+  SAVED_ACTIVITIES: 'ecotravel-saved-activities'
 };
 
 function getItineraryItems() {
@@ -216,7 +217,49 @@ function getFavorites() {
 function setFavorites(favorites) {
   localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
 }
+function getSavedActivities() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.SAVED_ACTIVITIES);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
 
+function setSavedActivities(items) {
+  localStorage.setItem(STORAGE_KEYS.SAVED_ACTIVITIES, JSON.stringify(items));
+}
+
+function saveActivity(activity, cityName, cityId) {
+  const saved = getSavedActivities();
+
+  if (saved.some(item => item.id === activity.id)) {
+    return false;
+  }
+
+  saved.push({
+    id: activity.id,
+    name: activity.name,
+    city: cityName,
+    cityId: cityId,
+    emoji: activity.emoji,
+    price: activity.price,
+    co2: activity.co2,
+    tags: activity.tags
+  });
+
+  setSavedActivities(saved);
+  return true;
+}
+
+function removeSavedActivity(activityId) {
+  const saved = getSavedActivities().filter(item => item.id !== activityId);
+  setSavedActivities(saved);
+}
+
+function isSavedActivity(activityId) {
+  return getSavedActivities().some(item => item.id === activityId);
+}
 function addToItinerary(activity, cityName, cityId) {
   const items = getItineraryItems();
   const tripDetails = getTripDetails();

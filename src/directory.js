@@ -151,7 +151,7 @@ function openModal(cityId) {
     document.getElementById('modal-activities-count').textContent = `Available Activities (${cityActivities.length})`;
 
     document.getElementById('modal-activities').innerHTML = cityActivities.map(act => {
-        const added = isInItinerary(act.id);
+const added = isSavedActivity(act.id);
         return `
         <div class="card border rounded-4 p-3 shadow-sm">
             <div class="d-flex align-items-center gap-3">
@@ -162,7 +162,7 @@ function openModal(cityId) {
                     <div class="small fw-bold text-success">RM ${act.price} • ${act.co2}kg CO2</div>
                 </div>
                 <button class="btn ${added ? 'btn-success disabled' : 'btn-outline-success'} rounded-3" onclick="handleAddActivity(${act.id})">
-                    ${added ? 'Added' : 'Add'}
+                    ${added ? 'Saved' : 'Save'}
                 </button>
             </div>
         </div>
@@ -173,9 +173,10 @@ function openModal(cityId) {
 
 function handleAddActivity(id) {
     const act = activities.find(a => a.id === id);
-    if (addToItinerary(act, currentModalCity.name, currentModalCity.id)) {
+
+    if (saveActivity(act, currentModalCity.name, currentModalCity.id)) {
         openModal(currentModalCity.id);
-        updateNavbarBadge();
+        alert("Activity saved! You can add it to your itinerary later.");
     }
 }
 
