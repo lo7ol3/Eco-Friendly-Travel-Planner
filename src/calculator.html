@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carbon Footprint Calculator - EcoWander</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+    <title>Carbon Footprint Calculator - EcoTravel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="calculator.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">EcoTravel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-content="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -25,246 +21,218 @@
                     <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
                     <li class="nav-item"><a class="nav-link" href="itinerary.html">Itinerary</a></li>
-                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
-                    <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="calculator.html">Carbon Calculator</a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
+    <header class="hero">
         <div class="container">
-            <h1 class="page-title">Carbon Footprint Calculator</h1>
-            <p class="page-subtitle">Calculate and offset the environmental impact of your travel plans.</p>
+            <h1 class="hero-title">Carbon Footprint Calculator</h1>
+            <p class="hero-subtitle">Calculate and offset the environmental impact of your travel plans.</p>
+        </div>
+    </header>
 
-            <div class="row">
-                <!-- Calculator Form -->
-                <div class="col-lg-6 mb-4">
-                    <div class="calculator-card">
-                        <div class="card-header-title">
-                            <i class="bi bi-calculator"></i>
-                            Calculate Your Emissions
-                        </div>
-                        <p class="card-description">Enter your travel details to estimate carbon emissions</p>
-
-                        <!-- Bootstrap Tabs -->
-                        <ul class="nav nav-tabs" id="calculatorTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="flight-tab" data-bs-toggle="tab" data-bs-target="#flight" type="button" role="tab" aria-controls="flight" aria-selected="true">
-                                    <i class="bi bi-airplane"></i>
-                                    Flight
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="car-tab" data-bs-toggle="tab" data-bs-target="#car" type="button" role="tab" aria-controls="car" aria-selected="false">
-                                    <i class="bi bi-car-front"></i>
-                                    Car
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="accommodation-tab" data-bs-toggle="tab" data-bs-target="#accommodation" type="button" role="tab" aria-controls="accommodation" aria-selected="false">
-                                    <i class="bi bi-building"></i>
-                                    Accommodation
-                                </button>
-                            </li>
-                        </ul>
-
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="calculatorTabContent">
-                            <!-- Flight Tab -->
-                            <div class="tab-pane fade show active" id="flight" role="tabpanel" aria-labelledby="flight-tab">
-                                <div class="mb-3">
-                                    <label for="flightClass" class="form-label">Flight Class</label>
-                                    <select class="form-select" id="flightClass">
-                                        <option value="" selected>Select flight class</option>
-                                        <option value="economy">Economy</option>
-                                        <option value="premium-economy">Premium Economy</option>
-                                        <option value="business">Business</option>
-                                        <option value="first">First Class</option>
-                                    </select>
-                                </div>
-
-                                <div class="range-container">
-                                    <div class="range-header">
-                                        <label class="form-label mb-0">Flight Distance (km)</label>
-                                        <span class="range-value" id="flightDistanceValue">500 km</span>
-                                    </div>
-                                    <input type="range" class="form-range" id="flightDistance" min="100" max="15000" value="500" step="100">
-                                    <div class="range-labels">
-                                        <span>100 km</span>
-                                        <span>15,000 km</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="flightPassengers" class="form-label">Number of Passengers</label>
-                                    <input type="number" class="form-control" id="flightPassengers" value="1" min="1" max="10">
-                                </div>
-
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="roundTrip">
-                                    <label class="form-check-label" for="roundTrip">
-                                        Round trip
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Car Tab -->
-                            <div class="tab-pane fade" id="car" role="tabpanel" aria-labelledby="car-tab">
-                                <div class="mb-3">
-                                    <label for="carType" class="form-label">Vehicle Type</label>
-                                    <select class="form-select" id="carType">
-                                        <option value="" selected>Select vehicle type</option>
-                                        <option value="petrol-small">Petrol - Small Car</option>
-                                        <option value="petrol-medium">Petrol - Medium Car</option>
-                                        <option value="petrol-large">Petrol - Large Car/SUV</option>
-                                        <option value="diesel-small">Diesel - Small Car</option>
-                                        <option value="diesel-medium">Diesel - Medium Car</option>
-                                        <option value="diesel-large">Diesel - Large Car/SUV</option>
-                                        <option value="hybrid">Hybrid</option>
-                                        <option value="electric">Electric</option>
-                                    </select>
-                                </div>
-
-                                <div class="range-container">
-                                    <div class="range-header">
-                                        <label class="form-label mb-0">Travel Distance (km)</label>
-                                        <span class="range-value" id="carDistanceValue">100 km</span>
-                                    </div>
-                                    <input type="range" class="form-range" id="carDistance" min="10" max="2000" value="100" step="10">
-                                    <div class="range-labels">
-                                        <span>10 km</span>
-                                        <span>2,000 km</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="carPassengers" class="form-label">Number of Passengers</label>
-                                    <input type="number" class="form-control" id="carPassengers" value="1" min="1" max="7">
-                                </div>
-                            </div>
-
-                            <!-- Accommodation Tab -->
-                            <div class="tab-pane fade" id="accommodation" role="tabpanel" aria-labelledby="accommodation-tab">
-                                <div class="mb-3">
-                                    <label for="accommodationType" class="form-label">Accommodation Type</label>
-                                    <select class="form-select" id="accommodationType">
-                                        <option value="" selected>Select accommodation</option>
-                                        <option value="hotel-luxury">Luxury Hotel</option>
-                                        <option value="hotel-standard">Standard Hotel</option>
-                                        <option value="hotel-budget">Budget Hotel</option>
-                                        <option value="hostel">Hostel</option>
-                                        <option value="airbnb">Vacation Rental/Airbnb</option>
-                                        <option value="eco-hotel">Eco-Certified Hotel</option>
-                                        <option value="camping">Camping</option>
-                                    </select>
-                                </div>
-
-                                <div class="range-container">
-                                    <div class="range-header">
-                                        <label class="form-label mb-0">Number of Nights</label>
-                                        <span class="range-value" id="nightsValue">3 nights</span>
-                                    </div>
-                                    <input type="range" class="form-range" id="nights" min="1" max="30" value="3" step="1">
-                                    <div class="range-labels">
-                                        <span>1 night</span>
-                                        <span>30 nights</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="rooms" class="form-label">Number of Rooms</label>
-                                    <input type="number" class="form-control" id="rooms" value="1" min="1" max="10">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Calculate Button -->
-                        <button type="button" class="btn btn-calculate" id="calculateBtn">
-                            <i class="bi bi-calculator"></i>
-                            Calculate Emissions
-                        </button>
+    <main class="container my-5">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card p-4 border-0 shadow-sm rounded-4">
+                    <div class="section-header-group">
+                        <i class="bi bi-calculator text-success fs-5"></i>
+                        <h2 class="section-header-title">Calculate Your Emissions</h2>
                     </div>
-                </div>
+                    <p class="text-muted small mb-4">Enter your travel details to estimate carbon emissions</p>
 
-                <!-- Results Panel -->
-                <div class="col-lg-6 mb-4">
-                    <div class="calculator-card">
-                        <!-- Empty State -->
-                        <div class="results-panel" id="emptyState">
-                            <div class="results-icon">
-                                <i class="bi bi-grid-3x3"></i>
+                    <ul class="nav nav-tabs border-bottom-0 mb-4" id="calculatorTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active text-success fw-bold border-0" id="flight-tab" data-bs-toggle="tab" data-bs-target="#flight" type="button">
+                                <i class="bi bi-airplane me-1"></i> Flight
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link text-muted border-0" id="car-tab" data-bs-toggle="tab" data-bs-target="#car" type="button">
+                                <i class="bi bi-car-front me-1"></i> Car
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link text-muted border-0" id="accommodation-tab" data-bs-toggle="tab" data-bs-target="#accommodation" type="button">
+                                <i class="bi bi-building me-1"></i> Accommodation
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="calculatorTabContent">
+                        <div class="tab-pane fade show active" id="flight" role="tabpanel">
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Flight Class</label>
+                                <select class="form-select rounded-3" id="flightClass">
+                                    <option value="" selected>Select flight class</option>
+                                    <option value="economy">Economy</option>
+                                    <option value="premium-economy">Premium Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First Class</option>
+                                </select>
                             </div>
-                            <h3 class="results-title">Calculate Your Impact</h3>
-                            <p class="results-description">Fill in your travel details on the left to see your estimated carbon footprint and offset options.</p>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <label class="form-label small fw-bold mb-0">Flight Distance (km)</label>
+                                    <span class="badge bg-success-subtle text-success py-2 px-3 rounded-pill" id="flightDistanceValue">500 km</span>
+                                </div>
+                                <input type="range" class="form-range" id="flightDistance" min="100" max="15000" value="500" step="100">
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>100 km</span>
+                                    <span>15,000 km</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Number of Passengers</label>
+                                <input type="number" class="form-control rounded-3" id="flightPassengers" value="1" min="1">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="roundTrip">
+                                <label class="form-check-label small" for="roundTrip">Round trip</label>
+                            </div>
                         </div>
 
-                        <!-- Results Display -->
-                        <div class="results-display d-none" id="resultsDisplay">
-                            <div class="emission-result">
-                                <div class="emission-value" id="totalEmissions">0</div>
-                                <div class="emission-unit">kg CO2</div>
-                                <div class="emission-label">Total Carbon Emissions</div>
+                        <div class="tab-pane fade" id="car" role="tabpanel">
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Vehicle Type</label>
+                                <select class="form-select rounded-3" id="carType">
+                                    <option value="" selected>Select vehicle type</option>
+                                    <option value="petrol-small">Petrol - Small Car</option>
+                                    <option value="petrol-medium">Petrol - Medium Car</option>
+                                    <option value="petrol-large">Petrol - Large Car/SUV</option>
+                                    <option value="diesel-small">Diesel - Small Car</option>
+                                    <option value="diesel-medium">Diesel - Medium Car</option>
+                                    <option value="diesel-large">Diesel - Large Car/SUV</option>
+                                    <option value="hybrid">Hybrid</option>
+                                    <option value="electric">Electric</option>
+                                </select>
                             </div>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <label class="form-label small fw-bold mb-0">Travel Distance (km)</label>
+                                    <span class="badge bg-success-subtle text-success py-2 px-3 rounded-pill" id="carDistanceValue">100 km</span>
+                                </div>
+                                <input type="range" class="form-range" id="carDistance" min="10" max="2000" value="100" step="10">
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>10 km</span>
+                                    <span>2,000 km</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Number of Passengers</label>
+                                <input type="number" class="form-control rounded-3" id="carPassengers" value="1" min="1">
+                            </div>
+                        </div>
 
-                            <h5 class="mb-3">Breakdown</h5>
-                            <div id="breakdownList">
-                                <!-- Breakdown items will be inserted here -->
+                        <div class="tab-pane fade" id="accommodation" role="tabpanel">
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Accommodation Type</label>
+                                <select class="form-select rounded-3" id="accommodationType">
+                                    <option value="" selected>Select accommodation</option>
+                                    <option value="hotel-luxury">Luxury Hotel</option>
+                                    <option value="hotel-standard">Standard Hotel</option>
+                                    <option value="hotel-budget">Budget Hotel</option>
+                                    <option value="hostel">Hostel</option>
+                                    <option value="airbnb">Vacation Rental/Airbnb</option>
+                                    <option value="eco-hotel">Eco-Certified Hotel</option>
+                                    <option value="camping">Camping</option>
+                                </select>
                             </div>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <label class="form-label small fw-bold mb-0">Number of Nights</label>
+                                    <span class="badge bg-success-subtle text-success py-2 px-3 rounded-pill" id="nightsValue">3 nights</span>
+                                </div>
+                                <input type="range" class="form-range" id="nights" min="1" max="30" value="3" step="1">
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span>1 night</span>
+                                    <span>30 nights</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Number of Rooms</label>
+                                <input type="number" class="form-control rounded-3" id="rooms" value="1" min="1">
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Offset Your Impact Section -->
-                            <div class="offset-section">
-                                <h5 class="mb-2">Offset Your Impact</h5>
-                                <p class="offset-description">Consider offsetting your carbon footprint through verified carbon offset programs.</p>
-                                <a href="offset-options.html" class="btn btn-offset" id="exploreOffsetBtn">
-                                    <i class="bi bi-tree"></i>
-                                    Explore Offset Options
-                                </a>
-                            </div>
+                    <button class="btn btn-success w-100 py-3 fw-bold rounded-3 shadow-sm mt-4" id="calculateBtn">
+                        <i class="bi bi-calculator me-2"></i> Calculate Emissions
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                    <div class="text-center py-5" id="emptyState">
+                        <div class="display-1 text-light mb-4">
+                            <i class="bi bi-grid-3x3"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">Calculate Your Impact</h3>
+                        <p class="text-muted small mx-auto" style="max-width: 250px;">Fill in your travel details on the left to see your estimated carbon footprint.</p>
+                    </div>
+
+                    <div class="results-display d-none" id="resultsDisplay">
+                        <div class="emission-result bg-light p-5 rounded-4 text-center mb-4">
+                            <div class="display-3 fw-bold text-success" id="totalEmissions">0</div>
+                            <div class="text-muted fw-bold">kg CO2</div>
+                            <div class="small text-muted mt-2">Total Carbon Emissions</div>
+                        </div>
+
+                        <h5 class="section-header-title mb-3">Breakdown</h5>
+                        <div id="breakdownList" class="mb-5"></div>
+
+                        <div class="offset-section border-top pt-4">
+                            <h5 class="section-header-title mb-2">Offset Your Impact</h5>
+                            <p class="small text-muted mb-4">Consider offsetting your footprint through verified carbon programs.</p>
+                            <a href="offset-options.html" class="btn btn-success w-100 py-2 rounded-3 fw-bold" id="exploreOffsetBtn">
+                                <i class="bi bi-tree me-2"></i> Explore Offset Options
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Tips Section -->
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="tips-card">
-                        <div class="tips-header">
-                            <i class="bi bi-lightbulb"></i>
-                            Tips to Reduce Emissions
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card p-4 border-0 shadow-sm rounded-4">
+                    <div class="section-header-group">
+                        <i class="bi bi-lightbulb text-warning fs-5"></i>
+                        <h2 class="section-header-title">Tips to Reduce Emissions</h2>
+                    </div>
+                    
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="bg-success-subtle p-3 rounded-3 text-success h-100">
+                            <i class="bi bi-train-front fs-4"></i>
                         </div>
-
-                        <div class="tip-item">
-                            <div class="tip-icon">
-                                <i class="bi bi-train-front"></i>
-                            </div>
-                            <div>
-                                <div class="tip-title">Choose trains over planes</div>
-                                <div class="tip-description">Trains emit up to 6x less CO2 than flights for the same distance.</div>
-                            </div>
+                        <div>
+                            <div class="fw-bold mb-1">Choose trains over planes</div>
+                            <p class="small text-muted mb-0">Trains emit up to 6x less CO2 than flights for the same distance.</p>
                         </div>
+                    </div>
 
-                        <div class="tip-item">
-                            <div class="tip-icon">
-                                <i class="bi bi-building-check"></i>
-                            </div>
-                            <div>
-                                <div class="tip-title">Stay at eco-certified hotels</div>
-                                <div class="tip-description">Eco-hotels use 60% less energy than traditional luxury hotels.</div>
-                            </div>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="bg-success-subtle p-3 rounded-3 text-success h-100">
+                            <i class="bi bi-building-check fs-4"></i>
                         </div>
+                        <div>
+                            <div class="fw-bold mb-1">Stay at eco-certified hotels</div>
+                            <p class="small text-muted mb-0">Eco-hotels use 60% less energy than traditional luxury hotels.</p>
+                        </div>
+                    </div>
 
-                        <div class="tip-item">
-                            <div class="tip-icon">
-                                <i class="bi bi-ev-front"></i>
-                            </div>
-                            <div>
-                                <div class="tip-title">Rent electric vehicles</div>
-                                <div class="tip-description">EVs produce 70% fewer emissions than petrol cars.</div>
-                            </div>
+                    <div class="d-flex gap-3">
+                        <div class="bg-success-subtle p-3 rounded-3 text-success h-100">
+                            <i class="bi bi-ev-front fs-4"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold mb-1">Rent electric vehicles</div>
+                            <p class="small text-muted mb-0">EVs produce 70% fewer emissions than petrol cars.</p>
                         </div>
                     </div>
                 </div>
@@ -272,59 +240,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="footer-brand">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22c4-3 8-7.5 8-12a8 8 0 1 0-16 0c0 4.5 4 9 8 12z"/>
-                            <path d="M12 8v4"/>
-                            <path d="M12 16h.01"/>
-                        </svg>
-                        EcoWander
-                    </div>
-                    <p class="footer-description">Plan sustainable trips that are kind to our planet. Explore eco-friendly options worldwide.</p>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="footer-heading">Explore</h6>
-                    <ul class="footer-links">
-                        <li><a href="#">Eco Accommodations</a></li>
-                        <li><a href="#">Green Restaurants</a></li>
-                        <li><a href="#">Sustainable Transport</a></li>
-                        <li><a href="#">Eco Activities</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="footer-heading">Tools</h6>
-                    <ul class="footer-links">
-                        <li><a href="#">Trip Planner</a></li>
-                        <li><a href="#">Weather Forecast</a></li>
-                        <li><a href="#">Carbon Calculator</a></li>
-                        <li><a href="#">My Favorites</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="footer-heading">Company</h6>
-                    <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Mission</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>2024 EcoWander. All rights reserved.</span>
-                <span>Travel sustainably. Protect our planet.</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

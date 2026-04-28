@@ -1,0 +1,296 @@
+/* ============================================
+   VARIABLES & BASE STYLING
+   ============================================ */
+:root {
+  --green-dark: #1a3c2e;
+  --green-mid: #2e6b50;
+  --green-light: #4caf82;
+  --green-pale: #e8f5ee;
+  --accent: #f0c040;
+  --bg: #fafdfb;
+  --text-main: #1a1a1a;
+  --text-muted: #6b7280;
+  --border-color: #d4e6db;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.font-serif { 
+  font-family: 'Playfair Display', serif; 
+  font-weight: 700;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar-dark.bg-success { 
+  background-color: var(--green-dark) !important; 
+  padding: 0.8rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand { 
+  font-family: 'Playfair Display', serif; 
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.nav-link.active {
+  color: var(--accent) !important;
+}
+
+/* ============================================
+   UNIFIED PAGE HERO (SHARED BY ALL PAGES)
+   ============================================ */
+.hero {
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  padding: 4.5rem 1.5rem;
+  text-align: center;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 2.75rem; /* Matches Bootstrap display-4 */
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  opacity: 0.9;
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* ============================================
+   SEARCH BAR (DIRECTORY)
+   ============================================ */
+.search-bar, .input-group-lg {
+  max-width: 600px;
+  margin: 1.5rem auto 0;
+}
+
+.rounded-pill {
+  border-radius: 50px !important;
+}
+
+/* ============================================
+   SECTION HEADERS & TITLES
+   ============================================ */
+.section-header-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  margin-top: 2rem;
+}
+
+.sidebar-title, .section-header-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/* ============================================
+   CARDS & SIDEBAR
+   ============================================ */
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #ffffff;
+}
+
+/* Interactive card hover */
+.city-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
+}
+
+.city-card-header {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 3.5rem;
+  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.city-card-fav {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.city-card-fav:hover { transform: scale(1.1); }
+.city-card-fav.active { color: #ef4444; }
+
+/* ============================================
+   CARBON & WEATHER MODULES
+   ============================================ */
+.carbon-card-dark {
+  background-color: var(--green-dark);
+  color: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem 1.5rem;
+}
+
+.weather-card-new {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+/* ============================================
+   UTILITIES & FORMS
+   ============================================ */
+input[type="range"] { accent-color: var(--green-mid); }
+
+.icon { 
+  width: 1.25rem; 
+  height: 1.25rem; 
+  vertical-align: middle; 
+}
+
+.tag { 
+  font-size: 0.75rem; 
+  padding: 0.25rem 0.75rem; 
+  border-radius: 20px; 
+  background: var(--green-pale); 
+  color: var(--green-dark); 
+  margin-right: 5px;
+  font-weight: 500;
+}
+
+.letter-spacing-1 { letter-spacing: 1px; }
+
+/* Form Elements */
+.form-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.form-select, .form-control {
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1rem;
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: var(--green-light);
+  box-shadow: 0 0 0 0.25rem rgba(76, 175, 130, 0.1);
+}
+
+/* Bootstrap Button Overrides */
+.btn-outline-success {
+  color: var(--green-mid);
+  border-color: var(--green-mid);
+}
+
+.btn-outline-success:hover, .btn-outline-success.active {
+  background-color: var(--green-mid);
+  border-color: var(--green-mid);
+}
+
+.btn-success {
+  background-color: var(--green-mid);
+  border-color: var(--green-mid);
+}
+
+/* ============================================
+   AUTH PAGES (LOGIN & REGISTER)
+   ============================================ */
+
+.auth-wrapper {
+  display: flex;
+  justify-content: center;   
+  margin-top: 5rem;         
+  padding-bottom: 4rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  padding: 2.25rem;
+  margin-top: -2.5rem;
+}
+
+.auth-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--green-dark);
+}
+
+.auth-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--green-mid);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  color: var(--accent);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
