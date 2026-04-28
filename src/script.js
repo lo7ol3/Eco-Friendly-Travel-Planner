@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // =========================
         // ACCOMMODATION
         // =========================
-        else if (activeTab === "#stay") {
+       else if (activeTab === "#accommodation") {
 
             const type = document.getElementById("accommodationType").value;
             const nights = Number(document.getElementById("nights").value);

@@ -139,6 +139,13 @@ function renderTimeline() {
                             <div class="d-flex align-items-center gap-3">
                                 <span class="fs-4">${item.emoji}</span>
                                 <h6 class="fw-bold mb-0">${item.name}</h6>
+                                <select class="form-select form-select-sm mt-2" onchange="moveActivity(${item.id}, this.value)">
+  ${dates.map(d => `
+    <option value="${d}" ${item.date === d ? 'selected' : ''}>
+      ${formatDateShort(d)}
+    </option>
+  `).join('')}
+</select>
                             </div>
                             <button class="btn btn-sm text-danger" onclick="removeActivity(${item.id})">✕</button>
                         </div>
@@ -151,10 +158,6 @@ function renderTimeline() {
 
 function renderSidebar() {
     const items = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
-    const totalCO2 = items.reduce((sum, i) => sum + i.co2, 0);
-    const totalCost = items.reduce((sum, i) => sum + i.price, 0);
-
-    document.getElementById('total-co2').textContent = totalCO2.toFixed(1);
     document.getElementById('total-budget').textContent = `RM ${totalCost.toLocaleString()}`;
     document.getElementById('activity-count').textContent = `${items.length} activities`;
 
@@ -168,7 +171,10 @@ function renderSidebar() {
             </div>`;
         }).join('');
 }
-
+function moveActivity(activityId, newDate) {
+    updateItemDate(activityId, newDate);
+    renderAll();
+}
 function removeActivity(id) {
     removeFromItinerary(id);
     renderAll();
@@ -182,5 +188,113 @@ function handleResetTrip() {
     }
 }
 
-function handleSave() { alert("Itinerary saved locally!"); }
+function handleSave() {
+    const plan = {
+        tripDetails: getTripDetails(),
+        activities: getItineraryItems(),
+        carbonEmission: localStorage.getItem("carbonEmissions") || "0"
+    };
+
+    localStorage.setItem("savedItineraryPlan", JSON.stringify(plan));
+
+    alert("Itinerary plan saved successfully!");
+}
 function handleOffset() { alert("Buy offsets clicked!"); }
+function calculateItineraryCarbon() {
+    const flightDistance = Number(document.getElementById("flightDistance").value) || 0;
+    const flightClass = document.getElementById("flightClass").value;
+    const roundTrip = document.getElementById("roundTrip").checked;
+
+    const localTransport = document.getElementById("localTransport").value;
+    const localDistance = Number(document.getElementById("localDistance").value) || 0;
+
+    const accommodationType = document.getElementById("accommodationType").value;
+    const nights = Number(document.getElementById("nights").value) || 0;
+
+    const flightFactors = {
+        economy: 0.255,
+        premium: 0.382,
+        business: 0.739,
+        first: 1.019
+    };
+
+    const localFactors = {
+        walking: 0,
+        train: 0.03,
+        bus: 0.05,
+        electric: 0.053,
+        car: 0.21
+    };
+
+    const accommodationFactors = {
+        eco: 8.2,
+        hostel: 5.1,
+        budget: 10.2,
+        standard: 20.6,
+        luxury: 33.4
+    };
+
+    let flightEmission = flightDistance * flightFactors[flightClass];
+    if (roundTrip) {
+        flightEmission *= 2;
+    }
+
+    const localEmission = localDistance * localFactors[localTransport];
+    const accommodationEmission = nights * accommodationFactors[accommodationType];
+
+    const totalEmission = flightEmission + localEmission + accommodationEmission;
+
+    document.getElementById("carbonResultBox").style.display = "block";
+
+    document.getElementById("carbonTotal").textContent =
+        totalEmission.toFixed(1) + " kg CO₂";
+
+    document.getElementById("carbonBreakdown").innerHTML =
+        "Flight: " + flightEmission.toFixed(1) + " kg CO₂<br>" +
+        "Local transport: " + localEmission.toFixed(1) + " kg CO₂<br>" +
+        "Accommodation: " + accommodationEmission.toFixed(1) + " kg CO₂";
+
+    document.getElementById("carbonSuggestion").textContent =
+        generateCarbonSuggestion(
+            totalEmission,
+            flightDistance,
+            flightClass,
+            localTransport,
+            accommodationType
+        );
+
+    localStorage.setItem("carbonEmissions", totalEmission.toFixed(1));
+
+    document.getElementById("offsetLink").href =
+        "offset-options.html?emissions=" + totalEmission.toFixed(1);
+}
+
+function generateCarbonSuggestion(total, flightDistance, flightClass, localTransport, accommodationType) {
+    let suggestion = "";
+
+    if (flightDistance > 0) {
+        suggestion += "✈️ Flight contributes the most to travel emissions. ";
+    }
+
+    if (flightClass === "business" || flightClass === "first") {
+        suggestion += "Choosing Economy class can significantly reduce your flight footprint. ";
+    }
+
+    if (localTransport === "car") {
+        suggestion += "For local travel, try switching to train, bus, walking, or electric car. ";
+    }
+
+    if (accommodationType === "luxury" || accommodationType === "standard") {
+        suggestion += "Eco hotels or hostels can reduce accommodation emissions. ";
+    }
+
+    if (total < 50) {
+        suggestion += "🟢 Great job! This is a low-carbon trip.";
+    } else if (total < 150) {
+        suggestion += "🟡 This is a moderate-carbon trip. A few greener choices can improve it.";
+    } else {
+        suggestion += "🔴 This trip has high emissions. Consider lower-carbon transport and eco accommodation.";
+    }
+
+    return suggestion;
+}
