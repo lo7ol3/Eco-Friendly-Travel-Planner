@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Destinations - EcoTravel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">EcoTravel</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="directory.html">Directory</a></li>
+          <li class="nav-item"><a class="nav-link" href="itinerary.html">Itinerary</a></li>
+          <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+  <div class="container">
+    <h1 class="hero-title">Find Your Next Eco Trip</h1>
+    <p class="hero-subtitle">Discover sustainable destinations that match your interests and budget.</p>
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <form class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden" onsubmit="handleSearch(event)">
+          <input type="text" id="search-input" class="form-control border-0 px-4" placeholder="Search by city, country, or activity...">
+          <button class="btn btn-warning px-4" type="submit">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <main class="container my-5">
+    <div class="row">
+      <aside class="col-lg-3 mb-4">
+  <div class="card p-4 sticky-top shadow-sm border-0 rounded-4" style="top: 90px;">
+    <h5 class="sidebar-title mb-4 d-flex align-items-center">
+      <svg class="icon me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="20" y1="21" x2="20" y2="16"/></svg>
+      Filters
+    </h5>
+
+    <div class="mb-4">
+      <label class="form-label small fw-bold text-muted text-uppercase">Budget (MYR / person)</label>
+      <div id="budget-display" class="fw-bold text-success mb-2 small">RM 0 – RM 3,000+</div>
+      <input type="range" id="budget-min" class="form-range" min="0" max="3000" step="50" value="0">
+      <input type="range" id="budget-max" class="form-range" min="0" max="3000" step="50" value="3000">
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label small fw-bold text-muted text-uppercase">Transport Type</label>
+      <div class="d-grid gap-2" id="transport-options">
+        <button class="btn btn-sm btn-outline-success active text-start" data-value="any">🌍 Any</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="train">🚆 Train / Rail</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="bus">🚌 Bus / Coach</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="flight">✈️ Flight (offset)</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="cycle">🚴 Cycling route</button>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label small fw-bold text-muted text-uppercase">Interests</label>
+      <div id="interest-options" class="mt-2 small">
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="eco" id="i-eco" checked><label class="form-check-label" for="i-eco">🌿 Eco stays</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="food" id="i-food"><label class="form-check-label" for="i-food">🍃 Plant-based food</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="hiking" id="i-hiking"><label class="form-check-label" for="i-hiking">🥾 Hiking & trekking</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="beach" id="i-beach"><label class="form-check-label" for="i-beach">🏖️ Beach & snorkelling</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="culture" id="i-culture"><label class="form-check-label" for="i-culture">🏛️ Culture & heritage</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="wildlife" id="i-wildlife"><label class="form-check-label" for="i-wildlife">🦋 Wildlife</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="cycle" id="i-cycle"><label class="form-check-label" for="i-cycle">🚴 Cycling</label></div>
+        <div class="form-check mb-1"><input class="form-check-input" type="checkbox" value="wellness" id="i-wellness"><label class="form-check-label" for="i-wellness">🧘 Wellness & retreat</label></div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label small fw-bold text-muted text-uppercase">Max CO2 Impact</label>
+      <div class="d-grid gap-2" id="carbon-options">
+        <button class="btn btn-sm btn-outline-success active text-start" data-value="any">🌍 Any</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="low">🟢 Low (< 50 kg CO2)</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="medium">🟡 Medium (< 150 kg)</button>
+        <button class="btn btn-sm btn-outline-success text-start" data-value="high">🔴 High (any)</button>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-secondary w-100 rounded-3" onclick="resetFilters()">
+      <svg class="icon me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      Reset Filters
+    </button>
+  </div>
+</aside>
+
+      <section class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h4 class="fw-bold mb-0">Destinations</h4>
+            <p id="results-count" class="text-muted small mb-0">Showing destinations</p>
+          </div>
+          <select class="form-select w-auto shadow-sm" id="sort-select">
+            <option value="default">Sort: Recommended</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="co2-asc">CO2: Lowest first</option>
+          </select>
+        </div>
+
+        <div class="row g-4" id="city-cards"></div>
+
+        <div id="empty-state" class="text-center py-5 d-none">
+          <div class="display-1">🔍</div>
+          <h5>No destinations found</h5>
+          <p class="text-muted">Try adjusting your filters.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal fade" id="activity-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 rounded-4 overflow-hidden">
+        <div class="modal-header flex-column py-5 position-relative border-0" id="modal-header">
+          <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
+          <span class="display-3 mb-2" id="modal-emoji"></span>
+          <h2 class="modal-title font-serif" id="modal-title"></h2>
+          <p class="text-muted mb-0" id="modal-subtitle"></p>
+        </div>
+        <div class="modal-body p-4">
+          <h6 class="fw-bold mb-4" id="modal-activities-count">Available Activities (0)</h6>
+          <div id="modal-activities" class="d-flex flex-column gap-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+  <script src="directory.js"></script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offset Options - EcoWander</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="calculator.css">
+     
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="#">EcoTravel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-content="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
+                    <li class="nav-item"><a class="nav-link" href="itinerary.html">Itinerary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <a href="calculator.html" class="back-link">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Calculator
+                </a>
+                <h1 class="page-title">Carbon Offset Projects</h1>
+                <p class="page-subtitle">Choose a verified project to offset your carbon footprint and make a positive environmental impact.</p>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="summary-card">
+                <div class="summary-title">
+                    <i class="bi bi-calculator"></i>
+                    Your Carbon Footprint Summary
+                </div>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="emissionsSummary">0</div>
+                        <div class="summary-stat-label">kg CO2 to offset</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="treeEquivalent">0</div>
+                        <div class="summary-stat-label">trees needed to absorb</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value" id="drivingEquivalent">0</div>
+                        <div class="summary-stat-label">km of driving equivalent</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Offset Projects Grid -->
+            <div class="offset-grid">
+                <!-- Project 1: Rainforest Reforestation -->
+                <div class="offset-card" data-price="12.50" data-project="tree-planting" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-tree-fill"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                        <span class="offset-badge badge-popular"><i class="bi bi-star-fill"></i> Popular</span>
+                    </div>
+                    <div class="offset-title">Rainforest Reforestation</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Amazon Basin, Brazil
+                    </div>
+                    <p class="offset-description">Support the restoration of degraded Amazon rainforest through native tree planting. This project protects biodiversity and supports local communities.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">50,000+</div>
+                            <div class="offset-stat-label">Trees Planted</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">1,200</div>
+                            <div class="offset-stat-label">Hectares Protected</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$12.50 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+
+                <!-- Project 2: Wind Farm -->
+                <div class="offset-card" data-price="9.00" data-project="wind-energy" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-wind"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-gold"><i class="bi bi-award-fill"></i> Gold Standard</span>
+                    </div>
+                    <div class="offset-title">Wind Farm Project</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Rajasthan, India
+                    </div>
+                    <p class="offset-description">Clean energy generation through wind turbines replacing coal-fired power. Reduces emissions while providing sustainable electricity to local communities.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">125 MW</div>
+                            <div class="offset-stat-label">Capacity</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">300,000</div>
+                            <div class="offset-stat-label">Tons CO2/year</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$9.00 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+
+                <!-- Project 3: Ocean Conservation -->
+                <div class="offset-card" data-price="15.00" data-project="ocean-cleanup" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-water"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                    </div>
+                    <div class="offset-title">Ocean Conservation</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Pacific Ocean
+                    </div>
+                    <p class="offset-description">Protecting marine ecosystems through kelp forest restoration and ocean cleanup initiatives. Kelp forests absorb CO2 and support marine biodiversity.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">500</div>
+                            <div class="offset-stat-label">Acres Restored</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">10,000+</div>
+                            <div class="offset-stat-label">Species Protected</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$15.00 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+
+                <!-- Project 4: Community Solar -->
+                <div class="offset-card" data-price="8.00" data-project="solar-energy" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-sun-fill"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                        <span class="offset-badge badge-popular"><i class="bi bi-heart-fill"></i> Community Impact</span>
+                    </div>
+                    <div class="offset-title">Community Solar Project</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Kenya, East Africa
+                    </div>
+                    <p class="offset-description">Providing clean solar energy to rural communities, replacing kerosene lamps and diesel generators. Improves health and education outcomes.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">5,000+</div>
+                            <div class="offset-stat-label">Homes Powered</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">15,000</div>
+                            <div class="offset-stat-label">People Impacted</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$8.00 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+
+                <!-- Project 5: Mangrove Restoration -->
+                <div class="offset-card" data-price="11.00" data-project="mangrove" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-tsunami"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                    </div>
+                    <div class="offset-title">Mangrove Restoration</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Indonesia
+                    </div>
+                    <p class="offset-description">Restoring coastal mangrove forests that absorb 4x more carbon than rainforests. Protects coastlines and provides habitat for marine life.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">2,500</div>
+                            <div class="offset-stat-label">Hectares</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">1M+</div>
+                            <div class="offset-stat-label">Trees Planted</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$11.00 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+
+                <!-- Project 6: Clean Cookstoves -->
+                <div class="offset-card" data-price="7.50" data-project="cookstoves" onclick="selectProject(this)">
+                    <div class="offset-icon">
+                        <i class="bi bi-fire"></i>
+                    </div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="offset-badge badge-gold"><i class="bi bi-award-fill"></i> Gold Standard</span>
+                        <span class="offset-badge badge-popular"><i class="bi bi-heart-fill"></i> Health Impact</span>
+                    </div>
+                    <div class="offset-title">Clean Cookstoves</div>
+                    <div class="offset-location">
+                        <i class="bi bi-geo-alt"></i>
+                        Uganda
+                    </div>
+                    <p class="offset-description">Distributing fuel-efficient cookstoves to reduce wood consumption and indoor air pollution. Improves health outcomes for women and children.</p>
+                    <div class="offset-stats">
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">25,000+</div>
+                            <div class="offset-stat-label">Stoves Distributed</div>
+                        </div>
+                        <div class="offset-stat">
+                            <div class="offset-stat-value">60%</div>
+                            <div class="offset-stat-label">Fuel Reduction</div>
+                        </div>
+                    </div>
+                    <div class="offset-price">
+                        <span class="price-value">$7.50 <span class="price-unit">/ ton CO2</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-brand">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22c4-3 8-7.5 8-12a8 8 0 1 0-16 0c0 4.5 4 9 8 12z"/>
+                            <path d="M12 8v4"/>
+                            <path d="M12 16h.01"/>
+                        </svg>
+                        EcoWander
+                    </div>
+                    <p class="footer-description">Plan sustainable trips that are kind to our planet. Explore eco-friendly options worldwide.</p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">Explore</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Eco Accommodations</a></li>
+                        <li><a href="#">Green Restaurants</a></li>
+                        <li><a href="#">Sustainable Transport</a></li>
+                        <li><a href="#">Eco Activities</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">Tools</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Trip Planner</a></li>
+                        <li><a href="#">Weather Forecast</a></li>
+                        <li><a href="calculator.html">Carbon Calculator</a></li>
+                        <li><a href="#">My Favorites</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="footer-heading">Company</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Mission</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>2024 EcoWander. All rights reserved.</span>
+                <span>Travel sustainably. Protect our planet.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Action Bar -->
+    <div class="action-bar">
+        <div class="container">
+            <div class="action-bar-content">
+                <div class="action-summary">
+                    <div class="action-summary-label">Estimated offset cost:</div>
+                    <div class="action-summary-value" id="totalCost">$0.00</div>
+                </div>
+                <button class="btn btn-purchase" id="purchaseBtn" disabled onclick="completePurchase()">
+                    <i class="bi bi-leaf"></i>
+                    Select a Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="offset.js"></script>
+</body>
+</html>

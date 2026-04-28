@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | EcoTravel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #04121f;
+      --navy-mid: #08233d;
+      --navy-light: #1f4e79;
+      --orange: #f97316;
+      --orange-light: #fba760;
+      --bg: #f0f5fb;
+      --card: #ffffff;
+      --text: #1a2a3a;
+      --muted: #6b7280;
+      --border: #dde6f0;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --yellow: #ca8a04;
+      --yellow-bg: #fefce8;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: linear-gradient(90deg, var(--navy), var(--navy-mid));
+      padding: 0.9rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      color: #fff !important;
+      letter-spacing: 0.5px;
+    }
+    .navbar-brand span { color: var(--orange); }
+    .nav-link {
+      color: rgba(255,255,255,0.7) !important;
+      font-size: 0.875rem;
+      margin-left: 0.25rem;
+      transition: color 0.15s;
+    }
+    .nav-link:hover, .nav-link.active { color: #fff !important; }
+    .navbar-toggler { border-color: rgba(255,255,255,0.3); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ── PAGE ── */
+    .page-content { padding: 2rem 1.5rem 3rem; max-width: 1100px; margin: 0 auto; }
+
+    /* Welcome banner */
+    .welcome-banner {
+      background: linear-gradient(120deg, var(--navy-mid) 0%, var(--navy-light) 100%);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 4px 20px rgba(8,35,61,0.15);
+    }
+    .welcome-text-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+    .welcome-sub {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+    }
+    .welcome-leaf {
+      font-size: 3rem;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--navy-light);
+      margin-bottom: 1rem;
+    }
+
+    /* Cards */
+    .eco-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Emission rows */
+    .emission-row { margin-bottom: 1.25rem; }
+    .emission-row:last-child { margin-bottom: 0; }
+    .emission-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+    }
+    .emission-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .emission-name .icon { font-size: 1rem; }
+    .emission-pct {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+    }
+    .pct-danger { background: #fee2e2; color: var(--red); }
+    .pct-warning { background: #fef9c3; color: var(--yellow); }
+    .pct-success { background: #dcfce7; color: var(--green); }
+
+    /* Bootstrap progress override */
+    .progress {
+      height: 10px;
+      border-radius: 99px;
+      background: #eef2f7;
+    }
+    .progress-bar { border-radius: 99px; }
+
+    /* Summary stat chips */
+    .stat-chips {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .stat-chip {
+      flex: 1;
+      min-width: 130px;
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      padding: 1.1rem 1.25rem;
+      border-left: 4px solid transparent;
+    }
+    .stat-chip.danger { border-color: var(--red); }
+    .stat-chip.warning { border-color: #eab308; }
+    .stat-chip.success { border-color: var(--green); }
+    .stat-chip-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--navy-light);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-chip-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* Insight alerts */
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 0.85rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .insight-item:last-child { margin-bottom: 0; }
+    .insight-item.danger { background: var(--red-bg); color: #991b1b; }
+    .insight-item.warning { background: var(--yellow-bg); color: #713f12; }
+    .insight-item.success { background: var(--green-bg); color: #14532d; }
+    .insight-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Offset CTA */
+    .offset-cta {
+      background: linear-gradient(120deg, #f0fdf4, #dcfce7);
+      border: 1.5px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .offset-cta-icon { font-size: 2.2rem; flex-shrink: 0; }
+    .offset-cta-text { flex: 1; }
+    .offset-cta-title { font-weight: 600; color: #15803d; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .offset-cta-sub { font-size: 0.8rem; color: #166534; }
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .btn-green:hover { opacity: 0.88; }
+
+    @media (max-width: 576px) {
+      .welcome-banner { flex-direction: column; text-align: center; }
+      .page-content { padding: 1.25rem 1rem 2rem; }
+    }
+  </style>
+</head>
+<body onload="protectPage()">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="#">EcoTravel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-content="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
+                    <li class="nav-item"><a class="nav-link" href="itinerary.html">Itinerary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+  <!-- PAGE -->
+  <div class="page-content">
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <div>
+        <div class="welcome-text-main">Hello, <span id="userName">Traveller</span> 👋</div>
+        <div class="welcome-sub">Here's your carbon footprint overview for this trip</div>
+      </div>
+      <div class="welcome-leaf">🌿</div>
+    </div>
+
+    <!-- Stat Chips -->
+    <div class="stat-chips">
+      <div class="stat-chip danger">
+        <div class="stat-chip-val">70%</div>
+        <div class="stat-chip-label">Transport Emissions</div>
+      </div>
+      <div class="stat-chip warning">
+        <div class="stat-chip-val">45%</div>
+        <div class="stat-chip-label">Food Consumption</div>
+      </div>
+      <div class="stat-chip success">
+        <div class="stat-chip-val">25%</div>
+        <div class="stat-chip-label">Accommodation</div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Left column -->
+      <div class="col-lg-6">
+        <!-- Carbon Emissions -->
+        <div class="eco-card">
+          <div class="section-title">Carbon Emission Breakdown</div>
+
+          <div class="emission-row">
+            <div class="emission-label">
+              <span class="emission-name"><span class="icon">✈️</span> Transport</span>
+              <span class="emission-pct pct-danger">70%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-danger" role="progressbar" style="width: 70%" aria-valuenow="70"></div>
+            </div>
+          </div>
+
+          <div class="emission-row">
+            <div class="emission-label">
+              <span class="emission-name"><span class="icon">🍽️</span> Food Consumption</span>
+              <span class="emission-pct pct-warning">45%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: 45%" aria-valuenow="45"></div>
+            </div>
+          </div>
+
+          <div class="emission-row">
+            <div class="emission-label">
+              <span class="emission-name"><span class="icon">🏨</span> Accommodation</span>
+              <span class="emission-pct pct-success">25%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Offset CTA -->
+        <div class="offset-cta">
+          <div class="offset-cta-icon">🌳</div>
+          <div class="offset-cta-text">
+            <div class="offset-cta-title">Offset your carbon footprint</div>
+            <div class="offset-cta-sub">Support verified reforestation projects from just $2</div>
+          </div>
+          <button class="btn-green">Offset Now</button>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="col-lg-6">
+        <div class="eco-card">
+          <div class="section-title">Insights & Recommendations</div>
+
+          <div class="insight-item danger">
+            <span class="insight-icon">⚠️</span>
+            <span><strong>High transport emissions detected.</strong> Your flights account for the majority of your carbon footprint on this trip.</span>
+          </div>
+
+          <div class="insight-item warning">
+            <span class="insight-icon">🚆</span>
+            <span><strong>Switch to trains or buses</strong> for regional travel — up to 90% lower emissions than short-haul flights.</span>
+          </div>
+
+          <div class="insight-item warning">
+            <span class="insight-icon">🥗</span>
+            <span><strong>Reduce meat-heavy meals.</strong> Plant-based options at your destination can halve your food emissions.</span>
+          </div>
+
+          <div class="insight-item success">
+            <span class="insight-icon">🌿</span>
+            <span><strong>Great accommodation choice!</strong> Your selected stays have strong eco-certifications.</span>
+          </div>
+
+          <div class="insight-item success">
+            <span class="insight-icon">♻️</span>
+            <span><strong>You're in the top 30%</strong> of travellers for sustainable food choices. Keep it up!</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+  window.onload = function () {
+    protectPage();
+    const user = getCurrentUser();
+    if (user) {
+      document.getElementById("userName").textContent = user.name;
+    }
+  };
+</script>
+</body>
+</html>
