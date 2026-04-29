@@ -46,6 +46,15 @@ function renderAll() {
     updateNavbarBadge();
     syncDestinationFromItinerary();
 }
+function updateTripDates() {
+    tripDetails.startDate = document.getElementById("start-date").value;
+    tripDetails.endDate = document.getElementById("end-date").value;
+
+    setTripDetails(tripDetails);
+
+    renderSavedActivityScheduler(); // 🔥 THIS updates dropdown
+    renderTimeline();
+}
 
 // ============================================
 // CITY SELECTION
@@ -317,6 +326,7 @@ function moveActivity(id, newDate) {
     renderAll();
 }
 
+
 // ============================================
 // CARBON CALCULATOR (RESTORED)
 // ============================================
@@ -335,6 +345,11 @@ function calculateItineraryCarbon() {
 
     const nights = Number(document.getElementById("nights").value) || 0;
     const accommodationType = document.getElementById("accommodationType").value;
+    const activityItems = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
+
+const activityEmission = activityItems.reduce((sum, item) => {
+    return sum + (Number(item.co2) || 0);
+}, 0);
 
     const flightFactors = {
         economy: 0.255,
@@ -381,13 +396,15 @@ if (travelMode === "car") {
     const local = localDistance * (localFactors[localTransport] || 0);
     const acc = nights * (accFactors[accommodationType] || 0);
 
-    const total = flight + local + acc;
-
+const total = flight + local + acc + activityEmission;
     document.getElementById("carbonTotal").textContent =
         total.toFixed(1) + " kg CO₂";
 
-    document.getElementById("carbonBreakdown").textContent =
-        `Flight: ${flight.toFixed(1)} | Local: ${local.toFixed(1)} | Stay: ${acc.toFixed(1)}`;
+   document.getElementById("carbonBreakdown").innerHTML =
+    `Trip transport: ${flight.toFixed(1)} kg CO₂<br>
+     Local transport: ${local.toFixed(1)} kg CO₂<br>
+     Accommodation: ${acc.toFixed(1)} kg CO₂<br>
+     Activities: ${activityEmission.toFixed(1)} kg CO₂`;
 
     document.getElementById("carbonResultBox").style.display = "block";
 
@@ -458,8 +475,8 @@ function renderTimeline() {
                                 </select>
                             </div>
 
-                            <button class="btn btn-sm text-danger"
-                                onclick="removeActivity(${item.id})">✕</button>
+                           <button class="btn btn-sm text-danger"
+    onclick="removeActivity(${item.id}, '${item.date}')">✕</button>
                         </div>
                     </div>
                 `).join('') : `
@@ -469,33 +486,36 @@ function renderTimeline() {
         </div>`;
     }).join('');
 }
+
+function removeActivity(activityId, activityDate) {
+    const items = getItineraryItems();
+    const updated = items.filter(item => !(item.id === activityId && item.date === activityDate));
+    setItineraryItems(updated);
+    renderAll();
+}
 function renderSidebar() {
     const items = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
 
-    document.getElementById('activity-count').textContent =
-        `${items.length} activities`;
+    const totalCost = items.reduce((sum, item) => {
+        return sum + (Number(item.price) || 0);
+    }, 0);
 
-    const breakdown = document.getElementById('budget-breakdown');
+    document.getElementById("total-budget").textContent = "RM " + totalCost.toLocaleString();
+    document.getElementById("activity-count").textContent = items.length + " activities";
+
+    const breakdown = document.getElementById("budget-breakdown");
 
     if (items.length === 0) {
-        breakdown.innerHTML = 'Add activities to see your budget breakdown.';
+        breakdown.innerHTML = "Add activities to see breakdown.";
         return;
     }
 
-    const grouped = [...new Set(items.map(i => i.tags?.[0]))];
-
-    breakdown.innerHTML = grouped.map(cat => {
-        const sum = items
-            .filter(i => i.tags?.[0] === cat)
-            .reduce((s, i) => s + (i.price || 0), 0);
-
-        return `
-            <div class="d-flex justify-content-between small mb-1">
-                <span class="text-muted text-capitalize">${cat}</span>
-                <span>RM ${sum}</span>
-            </div>
-        `;
-    }).join('');
+    breakdown.innerHTML = items.map(item => `
+        <div class="d-flex justify-content-between mb-2">
+            <span>${item.name}</span>
+            <span>RM ${Number(item.price) || 0}</span>
+        </div>
+    `).join("");
 }
 function updateCityDisplay() {
     const el = document.getElementById('weather-city-name');
@@ -536,4 +556,38 @@ function attachCarbonListeners() {
 
 document.addEventListener("DOMContentLoaded", () => {
     attachCarbonListeners();
+    
 });
+
+function removeActivity(activityId, activityDate) {
+    let items = getItineraryItems();
+
+    items = items.filter(item => {
+        return !(Number(item.id) === Number(activityId) && item.date === activityDate);
+    });
+
+    setItineraryItems(items);
+    renderAll();
+}
+
+function handleResetTrip() {
+    const confirmReset = confirm("Are you sure you want to reset the whole itinerary?");
+    if (!confirmReset) return;
+
+    localStorage.removeItem("ecotravel-itinerary");
+
+    tripDetails = {
+        city: '',
+        cityId: null,
+        startDate: new Date().toISOString().split("T")[0],
+        endDate: new Date().toISOString().split("T")[0]
+    };
+
+    setTripDetails(tripDetails);
+
+    document.getElementById("start-date").value = tripDetails.startDate;
+    document.getElementById("end-date").value = tripDetails.endDate;
+
+    renderAll();
+}
+
