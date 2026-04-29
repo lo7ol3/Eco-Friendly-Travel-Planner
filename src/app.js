@@ -195,6 +195,8 @@ function getTripDetails() {
     return {
       city: '',
       cityId: null,
+      lat: null,
+      lon: null,
       startDate: '2026-05-10',
       endDate: '2026-05-12'
     };
@@ -368,6 +370,23 @@ function updateNavbarBadge() {
       badge.classList.add('hidden');
     }
   }
+}
+
+async function getCityCoordinates(cityName) {
+    const res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=1&format=json`
+    );
+    const data = await res.json();
+
+    if (!data.results || data.results.length === 0) {
+        throw new Error("City not found");
+    }
+
+    return {
+        lat: data.results[0].latitude,
+        lon: data.results[0].longitude,
+        name: data.results[0].name
+    };
 }
 
 document.addEventListener('DOMContentLoaded', updateNavbarBadge);

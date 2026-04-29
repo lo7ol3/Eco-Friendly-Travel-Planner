@@ -43,25 +43,6 @@
           <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           <h2 class="section-header-title">Trip Settings</h2>
         </div>
-<div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
-<h5 class="fw-bold text-success mb-3">Add Activity for Selected Destination</h5>
-<p class="text-muted small mb-3">
-  Choose your destination first, then select from saved activities for that place.
-</p>
-  <label class="form-label">Choose Saved Activity</label>
-  <select id="savedActivitySelect" class="form-select rounded-3 mb-3">
-    <option value="">Select activity...</option>
-  </select>
-
-  <label class="form-label">Choose Date</label>
-  <select id="activityDateSelect" class="form-select rounded-3 mb-3">
-    <option value="">Select date...</option>
-  </select>
-
-  <button class="btn btn-success w-100 rounded-3 fw-bold" onclick="addSavedActivityToSchedule()">
-    Add to Itinerary
-  </button>
-</div>
         <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
              <span class="small fw-bold text-muted text-uppercase">Basic Details</span>
@@ -82,6 +63,27 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+          <h5 class="fw-bold text-success mb-3">Add Activities</h5>
+          
+          <p class="text-muted small mb-3">
+            Select activities based on your chosen destination and schedule them into your trip.
+          </p>
+
+          <label class="form-label">Saved Activities</label>
+          <select id="savedActivitySelect" class="form-select rounded-3 mb-3">
+            <option value="">Select activity...</option>
+          </select>
+
+          <label class="form-label">Select Date</label>
+          <select id="activityDateSelect" class="form-select rounded-3 mb-3">
+            <option value="">Select date...</option>
+          </select>
+
+          <button class="btn btn-success w-100 rounded-3 fw-bold" onclick="addSavedActivityToSchedule()">
+            Add to Itinerary
+          </button>
         </div>
 
         <div class="section-header-group mt-5">
@@ -115,13 +117,39 @@
 <!-- Carbon Calculator Section -->
 <div class="sidebar-card">
   <div class="sidebar-card-title">🌱 Trip Carbon Estimator</div>
-  <p class="small text-muted mb-3">Estimate emissions for your full itinerary.</p>
+  <p class="small text-muted mb-3">Estimate emissions for your journey.</p>
 
-  <p class="section-label">Trip Transport</p>
+  <!-- MODE -->
+  <label class="form-label">Transport Mode</label>
+  <select id="travelMode" class="form-select rounded-3 mb-2">
+    <option value="flight">Flight</option>
+    <option value="train">Train</option>
+    <option value="bus">Bus</option>
+    <option value="car">Car</option>
+  </select>
 
-  <label class="form-label">Flight Distance (km)</label>
-  <input type="number" id="flightDistance" class="form-control rounded-3 mb-2" placeholder="e.g. 500">
+  <!-- START LOCATION -->
+  <label class="form-label">Start Location</label>
 
+<input 
+  type="text" 
+  id="startLocationInput"
+  class="form-control rounded-3 mb-2"
+  placeholder="Search any city, airport, country..."
+  oninput="searchLocation(this.value)"
+/>
+
+<div id="locationSuggestions" class="list-group mb-2"></div>
+<div class="small text-muted mb-2">
+  Selected: <span id="selectedStartLocation">None</span>
+</div>
+
+<div class="alert alert-success py-2 small mb-2">
+  Distance to destination calculated is:
+  <strong><span id="autoDistance">0</span> km</strong>
+</div>
+  
+  <!-- FLIGHT CLASS -->
   <label class="form-label">Flight Class</label>
   <select id="flightClass" class="form-select rounded-3 mb-2">
     <option value="economy">Economy</option>
@@ -132,12 +160,11 @@
 
   <div class="form-check mb-3">
     <input class="form-check-input" type="checkbox" id="roundTrip">
-    <label class="form-check-label" for="roundTrip">Round trip</label>
+    <label class="form-check-label">Round trip</label>
   </div>
 
-  <p class="section-label">Local Transport</p>
-
-  <label class="form-label">Transport Type</label>
+  <!-- LOCAL -->
+  <label class="form-label">Local Transport</label>
   <select id="localTransport" class="form-select rounded-3 mb-2">
     <option value="walking">Walking</option>
     <option value="train">Train</option>
@@ -147,11 +174,10 @@
   </select>
 
   <label class="form-label">Local Distance (km)</label>
-  <input type="number" id="localDistance" class="form-control rounded-3 mb-3" placeholder="e.g. 20">
+  <input type="number" id="localDistance" class="form-control rounded-3 mb-3">
 
-  <p class="section-label">Accommodation</p>
-
-  <label class="form-label">Accommodation Type</label>
+  <!-- ACCOMMODATION -->
+  <label class="form-label">Accommodation</label>
   <select id="accommodationType" class="form-select rounded-3 mb-2">
     <option value="eco">Eco Hotel</option>
     <option value="hostel">Hostel</option>
@@ -160,18 +186,18 @@
     <option value="luxury">Luxury Hotel</option>
   </select>
 
-  <label class="form-label">Number of Nights</label>
-  <input type="number" id="nights" class="form-control rounded-3 mb-3" placeholder="e.g. 3">
+  <label class="form-label">Nights</label>
+  <input type="number" id="nights" class="form-control rounded-3 mb-3">
 
-  <button class="btn btn-success w-100 rounded-3 fw-bold" onclick="calculateItineraryCarbon()">
-    Calculate Trip Carbon
-  </button>
 
+  <!-- RESULT -->
   <div id="carbonResultBox" class="mt-3 p-3 rounded-4 bg-light" style="display:none;">
     <h4 id="carbonTotal" class="text-success fw-bold mb-2"></h4>
     <p id="carbonBreakdown" class="small text-muted mb-2"></p>
-    <p id="carbonSuggestion" class="small p-2 rounded-3 mb-2" style="background:#dcfce7;color:#166534;"></p>
-    <a id="offsetLink" href="offset-options.html" class="btn btn-outline-success w-100 rounded-3">
+    <p id="carbonSuggestion" class="small p-2 rounded-3 mb-2"
+       style="background:#dcfce7;color:#166534;"></p>
+
+    <a id="offsetLink" href="#" class="btn btn-outline-success w-100 rounded-3">
       Offset This Trip
     </a>
   </div>
