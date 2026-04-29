@@ -294,3 +294,11 @@ input[type="range"] { accent-color: var(--green-mid); }
   height: 1px;
   background: var(--border-color);
 }
+
+.navbar-dark .nav-link:hover {
+    color: var(--accent) !important;
+}
+
+.navbar-dark .navbar-brand {
+    color: white !important;
+}
