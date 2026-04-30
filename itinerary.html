@@ -192,25 +192,54 @@
         <!-- Full width for cards -->
         <div class="col-12">
           <div class="row g-4">
-              <!-- Example Itinerary Card -->
-              <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm border-0 rounded-4">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <input type="text" class="form-control form-control-sm fw-semibold border-0 bg-transparent text-success" value="Bali Adventure" style="max-width: 70%;">
-                      <span class="badge bg-success-subtle text-success">3 Days</span>
-                    </div>
-                    <p class="text-muted small mb-1"><i class="bi bi-geo-alt-fill me-1 text-success"></i> Ubud, Indonesia</p>
-                    <p class="text-muted small mb-3"><i class="bi bi-calendar-event me-1 text-success"></i> 10–12 May 2026</p>
-                    <div class="border-top pt-2 mb-3">
-                      <p class="small mb-1"><strong>Activities:</strong> 5</p>
-                      <p class="small mb-1"><strong>Total Cost:</strong> RM 120</p>
-                      <p class="small mb-0"><strong>CO₂ Impact:</strong> +8 kg</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <button class="btn btn-outline-success btn-sm">View Details</button>
-                      <button class="btn btn-success" onclick="editSavedPlan(${itinerary.id})">Edit Plan</button>
-                    </div>
+            <!-- Example Itinerary Card -->
+<div class="col-md-6 col-lg-4">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-start mb-2">
+      <input 
+  type="text" 
+  class="fw-bold border-0 shadow-none p-0 m-0"
+  value="Bali Adventure"
+  style="
+    font-size: 1.3rem;
+    background: transparent;
+    height: auto;
+    line-height: 1.2;
+  "
+  onchange="updateTripTitle(this.value)"
+>
+
+        <div class="text-end">
+          <span class="badge bg-success-subtle text-success mb-1">3 Days</span>
+          <br>
+          <button class="btn btn-sm text-danger p-0" onclick="deleteSavedPlan(event)">🗑️</button>
+        </div>
+      </div>
+
+      <p class="text-muted small mb-0">Ubud, Indonesia</p>
+      <p class="text-muted small mb-1">10–12 May 2026</p>
+
+      <div class="border-top pt-2 mb-3">
+        <p class="small mb-1"><strong>Activities:</strong> 5</p>
+        <p class="small mb-1"><strong>Total Cost:</strong> RM 120</p>
+        <p class="small mb-0"><strong>CO₂ Impact:</strong> +8 kg</p>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-success btn-sm" onclick="viewSavedPlan()">View Details</button>
+        <button class="btn btn-success btn-sm" onclick="editSavedPlan()">Edit Plan</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="d-flex justify-content-between align-items-start">
+
+  
+
+
                   </div>
                 </div>
               </div>
@@ -649,7 +678,50 @@
       list.innerHTML = `<p style="font-size: 0.8rem; color: #999; text-align: center;">No activities added yet.</p>`;
     }
   }
+function viewSavedPlan() {
+  alert(
+    "Bali Adventure\n\n" +
+    "Destination: Ubud, Indonesia\n" +
+    "Date: 10–12 May 2026\n" +
+    "Activities: 5\n" +
+    "Total Cost: RM 120\n" +
+    "CO₂ Impact: +8 kg"
+  );
+}
 
+function editSavedPlan() {
+  const city = cities.find(c => c.name === "Ubud");
+
+  if (city) {
+    tripDetails = {
+      city: city.name,
+      cityId: city.id,
+      startDate: "2026-05-10",
+      endDate: "2026-05-12"
+    };
+
+    setTripDetails(tripDetails);
+
+    document.getElementById("start-date").value = tripDetails.startDate;
+    document.getElementById("end-date").value = tripDetails.endDate;
+
+    updateCityDisplay();
+    renderWeatherWidget();
+    renderTimeline();
+    renderSidebar();
+  }
+
+  const createTab = document.getElementById("create-tab");
+  const tab = new bootstrap.Tab(createTab);
+  tab.show();
+}
+
+function deleteSavedPlan(event) {
+  if (!confirm("Are you sure you want to delete this saved itinerary?")) return;
+
+  const card = event.target.closest(".col-md-6");
+  if (card) card.remove();
+}
   </script>
 </body>
 </html>

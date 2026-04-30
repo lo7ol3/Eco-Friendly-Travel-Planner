@@ -145,6 +145,16 @@
 
     <!-- Results Panel -->
     <div>
+      <div class="favorites-panel" id="favorites-panel">
+  <div class="favorites-header">
+    <h2>Favourite Places</h2>
+    <span id="favorites-count">0 saved</span>
+  </div>
+
+  <div id="favorites-list" class="favorites-list">
+    <p class="favorites-empty">No favourite places yet. Click the heart icon on a destination.</p>
+  </div>
+</div>
       <div class="results-header">
         <div>
           <h2>Destinations</h2>
@@ -212,9 +222,10 @@
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
-      setupFilterListeners();
-      renderCityCards();
-      updateNavbarBadge();
+     setupFilterListeners();
+     renderCityCards();
+     renderFavoritePlaces();
+     updateNavbarBadge();
     });
 
     // Setup filter event listeners
@@ -399,11 +410,47 @@
       }).join('');
     }
 
-    function handleFavorite(e, cityId) {
-      e.stopPropagation();
-      toggleFavorite(cityId);
-      renderCityCards();
-    }
+   function handleFavorite(e, cityId) {
+  e.stopPropagation();
+  toggleFavorite(cityId);
+  renderCityCards();
+  renderFavoritePlaces();
+}
+function renderFavoritePlaces() {
+  const list = document.getElementById('favorites-list');
+  const count = document.getElementById('favorites-count');
+
+  if (!list || !count) return;
+
+  const favoriteCities = getFavorites()
+    .map(id => getCityById(id))
+    .filter(Boolean);
+
+  count.textContent = `${favoriteCities.length} saved`;
+
+  if (favoriteCities.length === 0) {
+    list.innerHTML = `<p class="favorites-empty">No favourite places yet. Click the heart icon on a destination.</p>`;
+    return;
+  }
+
+  list.innerHTML = favoriteCities.map(city => `
+    <div class="favorite-item" onclick="openModal(${city.id})">
+      <span class="favorite-emoji">${city.emoji}</span>
+      <div>
+        <h4>${city.name}</h4>
+        <p>${city.country} • RM ${city.price} • ${city.co2} kg CO2</p>
+      </div>
+      <button onclick="removeFavoritePlace(event, ${city.id})">Remove</button>
+    </div>
+  `).join('');
+}
+
+function removeFavoritePlace(e, cityId) {
+  e.stopPropagation();
+  toggleFavorite(cityId);
+  renderCityCards();
+  renderFavoritePlaces();
+}
 
     // Modal functions
     function openModal(cityId) {

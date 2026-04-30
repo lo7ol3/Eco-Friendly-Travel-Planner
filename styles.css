@@ -315,21 +315,22 @@ input[type="range"] {
   padding: 0.5rem;
   margin-top: 0.5rem;
   font-size: 0.875rem;
-  color: var(--text-muted);
-  border: 1px solid var(--border-color);
+  color: white; /* text becomes white */
+  border: none;
   border-radius: 0.75rem;
-  background: white;
+  background: var(--green-mid); /* DARK GREEN */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .reset-btn:hover {
-  background-color: var(--green-pale);
+  background: var(--green-dark); /* lighter on hover */
 }
+
 
 /* Results Panel */
 .results-header {
@@ -1489,3 +1490,98 @@ aside .section-header {
 .mb-4 {
   margin-bottom: 1rem;
 }
+
+.favorites-panel {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.favorites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+.favorites-header h2 {
+  font-size: 1rem;
+  color: var(--green-dark);
+}
+
+.favorites-header span,
+.favorites-empty {
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+.favorites-list {
+  display: grid;
+  gap: .75rem;
+
+  /* show around 2 items only, then scroll */
+  max-height: 145px;
+  overflow-y: auto;
+  padding-right: .35rem;
+}
+
+.favorite-item {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .75rem;
+  border: 1px solid var(--border-color);
+  border-radius: .75rem;
+  background: #f5faf7;
+  cursor: pointer;
+}
+.favorite-content {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex: 1;
+}
+
+.favorites-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.favorites-list::-webkit-scrollbar-thumb {
+  background: var(--green-light);
+  border-radius: 999px;
+}
+
+.favorites-list::-webkit-scrollbar-track {
+  background: var(--green-pale);
+}
+
+.favorite-emoji {
+  font-size: 1.75rem;
+}
+
+.favorite-item div {
+  flex: 1;
+}
+
+.favorite-item h4 {
+  font-size: .9rem;
+  color: var(--green-dark);
+}
+
+.favorite-item p {
+  font-size: .75rem;
+  color: var(--text-muted);
+}
+
+.favorite-item button {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: .75rem;
+  cursor: pointer;
+}
+

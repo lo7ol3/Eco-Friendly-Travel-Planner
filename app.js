@@ -216,7 +216,9 @@ function getFavorites() {
 function setFavorites(favorites) {
   localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
 }
-
+function updateTripTitle(newTitle) {
+  console.log("Updated title:", newTitle);
+}
 function addToItinerary(activity, cityName, cityId) {
   const items = getItineraryItems();
   const tripDetails = getTripDetails();
