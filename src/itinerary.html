@@ -4,209 +4,724 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Itinerary - EcoTravel</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-light">
+
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">EcoTravel</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
-          <li class="nav-item"><a class="nav-link active" href="itinerary.html">Itinerary</a></li>
-          <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
-          <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <header class="hero">
-  <div class="container">
-    <h1 class="hero-title">Your Green Itinerary</h1>
-    <p class="hero-subtitle">Organize your eco-friendly destinations and track your impact.</p>
-  </div>
-</header>
-
-  <main class="container my-5">
-    <div class="row g-4">
-      <div class="col-lg-8">
-        <div class="section-header-group">
-          <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-          <h2 class="section-header-title">Trip Settings</h2>
-        </div>
-        <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-             <span class="small fw-bold text-muted text-uppercase">Basic Details</span>
-                 <button type="button" onclick="handleResetTrip()" class="text-danger">
-  Reset All
-</button>     </div>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">Destination City</label>
-              <select id="city-select" class="form-select rounded-3 border-light-subtle" onchange="selectCity(this.value)">
-                <option value="">Select a destination...</option>
-              </select>
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="itinerary.html">Itinerary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                </ul>
             </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-bold">Travel Dates</label>
-              <div class="input-group">
-                <input type="date" id="start-date" class="form-control rounded-start-3" onchange="updateTripDates()">
-                <input type="date" id="end-date" class="form-control rounded-end-3" onchange="updateTripDates()">
+        </div>
+    </nav>
+
+  <!-- Hero Section -->
+  <div class="hero py-5 text-center">
+    <div class="container">
+      <h1 class="font-serif display-5 fw-bold mb-2">Create Your Green Itinerary</h1>
+      <p class="lead mb-0">Organize your eco-friendly destinations and track your impact.</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container my-5">
+
+    <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs mb-4" id="itineraryTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab">
+            Create New Itinerary
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab">
+            Saved Itinerary
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tabs Content -->
+      <div class="tab-content" id="itineraryTabsContent">
+
+        <!-- Create New Itinerary -->
+        <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
+          <div class="row g-4">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+              <!-- Trip Details Form -->
+              <div class="trip-form p-4 rounded-4 bg-white shadow-sm mb-5">
+                <!-- Trip Settings header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h3 class="h6 mb-0 fw-bold text-uppercase" style="color: var(--green-dark); letter-spacing: 0.5px;">Trip Settings</h3>
+                  <button type="button" onclick="handleResetTrip()" class="btn btn-link btn-sm text-muted text-decoration-none d-flex align-items-center gap-1 p-0">
+                    <svg class="icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                    </svg>
+                    Reset Trip
+                  </button>
+                </div>
+
+            <!-- Trip Settings form -->
+            <div class="row g-3">
+              <!-- Destination City -->
+              <div class="col-md-6 position-relative">
+                <label class="form-label small fw-bold text-muted">Destination City</label>
+                <button type="button" class="city-dropdown w-100" id="city-dropdown" onclick="toggleCityDropdown()">
+                  <div id="city-dropdown-display" class="city-dropdown-inner">
+                    <svg class="icon icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <span style="color: var(--text-muted);">Select a destination...</span>
+                  </div>
+                </button>
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu w-100 shadow border-0 mt-1 p-0 hidden" id="city-dropdown-menu" style="display: block; max-height: 350px; overflow-y: auto;">
+                  <div class="p-2 border-bottom sticky-top bg-white">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-transparent border-end-0">
+                        <svg class="icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                      </span>
+                      <input type="text" id="city-search" class="form-control border-start-0 shadow-none" placeholder="Search cities..." oninput="filterCityDropdown()">
+                    </div>
+                  </div>
+                  <div id="city-list" class="list-unstyled mb-0"></div>
+                </div>
+              </div>
+
+              <!-- Travel Dates -->
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold text-muted">Travel Dates</label>
+                <div class="input-group">
+                  <input type="date" class="form-control shadow-none py-2" id="start-date" value="2026-05-10" onchange="updateTripDates()">
+                  <input type="date" class="form-control shadow-none py-2" id="end-date" value="2026-05-12" onchange="updateTripDates()">
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
-          <h5 class="fw-bold text-success mb-3">Add Activities</h5>
-          
-          <p class="text-muted small mb-3">
-            Select activities based on your chosen destination and schedule them into your trip.
-          </p>
 
-          <label class="form-label">Saved Activities</label>
-          <select id="savedActivitySelect" class="form-select rounded-3 mb-3">
-            <option value="">Select activity...</option>
-          </select>
-
-          <label class="form-label">Select Date</label>
-          <select id="activityDateSelect" class="form-select rounded-3 mb-3">
-            <option value="">Select date...</option>
-          </select>
-
-          <button class="btn btn-success w-100 rounded-3 fw-bold" onclick="addSavedActivityToSchedule()">
-            Add to Itinerary
-          </button>
+          <!-- Timeline Section -->
+          <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
+            <svg class="icon-lg text-success" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <span class="fw-bold">Your Plan</span>
+          </div>
+          <div id="itinerary-timeline" class="mb-5"></div>
         </div>
 
-        <div class="section-header-group mt-5">
-          <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-10A8 8 0 103 15Z"/></svg>
-          <h2 class="section-header-title">Weather Forecast: <span id="weather-city-name" class="fw-normal text-muted"></span></h2>
+    <!-- Right Column: Sidebar -->
+    <aside class="col-lg-4">
+      <div class="sticky-top" style="top: 100px; z-index: 10;">
+        
+        <!-- Budget Summary Card -->
+          <div class="budget-container">
+          <!-- Top Section: Hero Total -->
+          <div class="budget-header-card">
+            <span class="budget-label">Total Estimated Cost</span>
+            <div class="budget-main-value">
+              <span class="currency">RM</span>
+              <span id="total-budget" class="amount">0</span>
+            </div>
+            <div class="budget-badge">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z"></path></svg>
+              <span id="activity-count">0 Activities</span>
+            </div>
+          </div>
+
+          <!-- Bottom Section: Detailed List -->
+          <div class="budget-details">
+            <h4 class="breakdown-title">Cost Breakdown</h4>
+            <div id="budget-breakdown-list" class="breakdown-list">
+              <!-- JS will inject items here -->
+            </div>
+          </div>
+        </div>
+
+          <!-- Weather Section -->
+        <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
+          <svg class="icon-lg text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A8 8 0 1 0 3 15Z"/>
+          </svg>
+          <span class="fw-bold">Weather Forecast:</span>
+          <span class="text-muted fw-normal" id="weather-city-name">Select a city</span>
         </div>
         <div id="weather-widget" class="mb-5"></div>
 
-        <div class="section-header-group mt-5">
-          <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-          <h2 class="section-header-title">Daily Schedule</h2>
-        </div>
-        <div id="itinerary-timeline" class="timeline"></div>
+          <!-- Browse More CTA -->
+          <div class="p-4 rounded-4 bg-white shadow-sm border border-light mb-4 text-center">
+            <div class="d-flex align-items-center justify-content-center gap-2 mb-2 fw-bold text-success">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Add More Activities</span>
+            </div>
+            <p class="small text-muted mb-4">Browse eco-friendly destinations and add activities to your trip.</p>
+            <a href="directory.html" class="cta-browse-btn">Browse Destinations</a>
+          </div>
+          
+          <!-- Save Itinerary Button -->
+          <button class="btn-primary-solid" onclick="saveItinerary()">
+          <svg class="icon me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          Save Itinerary
+        </button>
+            </div>
+      </aside>
+      </div>
       </div>
 
-      <aside class="col-lg-4">
-        <div class="section-header-group">
-          <svg class="icon text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          <h2 class="section-header-title">Summary</h2>
-        </div>
+    <!-- Saved Itinerary -->
+    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
+      <div class="row g-4">
+        <!-- Full width for cards -->
+        <div class="col-12">
+          <div class="row g-4">
+            <!-- Example Itinerary Card -->
+<div class="col-md-6 col-lg-4">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
 
-        <div class="card p-4 border-light shadow-sm rounded-4 mb-4">
-          <h6 class="fw-bold mb-4 text-success text-uppercase small">Budget Details</h6>
-          <div class="bg-light p-4 rounded-4 text-center mb-2">
-            <p class="small text-muted mb-1">Total Estimated Cost</p>
-            <h2 class="fw-bold mb-0 text-success" id="total-budget">RM 0</h2>
-            <p class="small text-muted mt-1 mb-0" id="activity-count">0 activities</p>
-          </div>
-          <div id="budget-breakdown" class="small text-muted italic text-center py-2">Add activities to see breakdown.</div>
-        </div>
-<!-- Carbon Calculator Section -->
-<div class="sidebar-card">
-  <div class="sidebar-card-title">🌱 Trip Carbon Estimator</div>
-  <p class="small text-muted mb-3">Estimate emissions for your journey.</p>
-
-  <!-- MODE -->
-  <label class="form-label">Transport Mode</label>
-  <select id="travelMode" class="form-select rounded-3 mb-2">
-    <option value="flight">Flight</option>
-    <option value="train">Train</option>
-    <option value="bus">Bus</option>
-    <option value="car">Car</option>
-  </select>
-
-  <!-- START LOCATION -->
-  <label class="form-label">Start Location</label>
-
-<input 
+      <div class="d-flex justify-content-between align-items-start mb-2">
+      <input 
   type="text" 
-  id="startLocationInput"
-  class="form-control rounded-3 mb-2"
-  placeholder="Search any city, airport, country..."
-  oninput="searchLocation(this.value)"
-/>
+  class="fw-bold border-0 shadow-none p-0 m-0"
+  value="Bali Adventure"
+  style="
+    font-size: 1.3rem;
+    background: transparent;
+    height: auto;
+    line-height: 1.2;
+  "
+  onchange="updateTripTitle(this.value)"
+>
 
-<div id="locationSuggestions" class="list-group mb-2"></div>
-<div class="small text-muted mb-2">
-  Selected: <span id="selectedStartLocation">None</span>
-</div>
+        <div class="text-end">
+          <span class="badge bg-success-subtle text-success mb-1">3 Days</span>
+          <br>
+          <button class="btn btn-sm text-danger p-0" onclick="deleteSavedPlan(event)">🗑️</button>
+        </div>
+      </div>
 
-<div class="alert alert-success py-2 small mb-2">
-  Distance to destination calculated is:
-  <strong><span id="autoDistance">0</span> km</strong>
+      <p class="text-muted small mb-0">Ubud, Indonesia</p>
+      <p class="text-muted small mb-1">10–12 May 2026</p>
+
+      <div class="border-top pt-2 mb-3">
+        <p class="small mb-1"><strong>Activities:</strong> 5</p>
+        <p class="small mb-1"><strong>Total Cost:</strong> RM 120</p>
+        <p class="small mb-0"><strong>CO₂ Impact:</strong> +8 kg</p>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-success btn-sm" onclick="viewSavedPlan()">View Details</button>
+        <button class="btn btn-success btn-sm" onclick="editSavedPlan()">Edit Plan</button>
+      </div>
+
+    </div>
+  </div>
 </div>
+<div class="d-flex justify-content-between align-items-start">
+
   
-  <!-- FLIGHT CLASS -->
-  <label class="form-label">Flight Class</label>
-  <select id="flightClass" class="form-select rounded-3 mb-2">
-    <option value="economy">Economy</option>
-    <option value="premium">Premium Economy</option>
-    <option value="business">Business</option>
-    <option value="first">First Class</option>
-  </select>
-
-  <div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" id="roundTrip">
-    <label class="form-check-label">Round trip</label>
-  </div>
-
-  <!-- LOCAL -->
-  <label class="form-label">Local Transport</label>
-  <select id="localTransport" class="form-select rounded-3 mb-2">
-    <option value="walking">Walking</option>
-    <option value="train">Train</option>
-    <option value="bus">Bus</option>
-    <option value="electric">Electric Car</option>
-    <option value="car">Car</option>
-  </select>
-
-  <label class="form-label">Local Distance (km)</label>
-  <input type="number" id="localDistance" class="form-control rounded-3 mb-3">
-
-  <!-- ACCOMMODATION -->
-  <label class="form-label">Accommodation</label>
-  <select id="accommodationType" class="form-select rounded-3 mb-2">
-    <option value="eco">Eco Hotel</option>
-    <option value="hostel">Hostel</option>
-    <option value="budget">Budget Hotel</option>
-    <option value="standard">Standard Hotel</option>
-    <option value="luxury">Luxury Hotel</option>
-  </select>
-
-  <label class="form-label">Nights</label>
-  <input type="number" id="nights" class="form-control rounded-3 mb-3">
 
 
-  <!-- RESULT -->
-  <div id="carbonResultBox" class="mt-3 p-3 rounded-4 bg-light" style="display:none;">
-    <h4 id="carbonTotal" class="text-success fw-bold mb-2"></h4>
-    <p id="carbonBreakdown" class="small text-muted mb-2"></p>
-    <p id="carbonSuggestion" class="small p-2 rounded-3 mb-2"
-       style="background:#dcfce7;color:#166534;"></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Repeat more itinerary cards here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <a id="offsetLink" href="#" class="btn btn-outline-success w-100 rounded-3">
-      Offset This Trip
-    </a>
-  </div>
-</div>
+    </div>
   </main>
 
+  <!-- Bootstrap 5 JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
   <script src="app.js"></script>
-  <script src="itinerary.js"></script>
+  <script>
+    
+    // ============================================
+    // ITINERARY PAGE SPECIFIC CODE
+    // ============================================
+
+    let tripDetails = getTripDetails();
+    let dropdownOpen = false;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load trip details
+      document.getElementById('start-date').value = tripDetails.startDate;
+      document.getElementById('end-date').value = tripDetails.endDate;
+      
+      // Populate city dropdown
+      renderCityDropdown();
+      updateCityDisplay();
+      
+      // Render all sections
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('city-dropdown-menu');
+        const button = document.getElementById('city-dropdown');
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+          closeCityDropdown();
+        }
+      });
+    });
+
+    // City Dropdown Functions
+    function toggleCityDropdown() {
+      dropdownOpen = !dropdownOpen;
+      const menu = document.getElementById('city-dropdown-menu');
+      
+      if (dropdownOpen) {
+        menu.classList.remove('hidden');
+        document.getElementById('city-search').focus();
+      } else {
+        closeCityDropdown();
+      }
+    }
+
+    function closeCityDropdown() {
+      dropdownOpen = false;
+      document.getElementById('city-dropdown-menu').classList.add('hidden');
+      document.getElementById('city-search').value = '';
+      renderCityDropdown();
+    }
+
+    function renderCityDropdown(searchQuery = '') {
+      const list = document.getElementById('city-list');
+      const filtered = cities.filter(city => 
+        city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        city.country.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<p class="p-3 mb-0 small text-muted">No cities found</p>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(city => `
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 ${tripDetails.cityId === city.id ? 'bg-light fw-bold' : ''}" onclick="selectCity(${city.id})">
+            <span class="fs-5">${city.emoji}</span>
+            <div class="flex-grow-1">
+              <p class="mb-0 small fw-bold">${city.name}</p>
+              <p class="mb-0 x-small text-muted">${city.country}</p>
+            </div>
+            ${tripDetails.cityId === city.id ? '<span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill" style="font-size: 0.65rem;">Selected</span>' : ''}
+          </button>
+        </li>
+      `).join('');
+    }
+
+    function filterCityDropdown() {
+      const query = document.getElementById('city-search').value;
+      renderCityDropdown(query);
+    }
+
+    function selectCity(cityId) {
+      const city = getCityById(cityId);
+      if (city) {
+        tripDetails.city = city.name;
+        tripDetails.cityId = city.id;
+        setTripDetails(tripDetails);
+        
+        updateCityDisplay();
+        closeCityDropdown();
+        renderWeatherWidget();
+        renderTimeline();
+        renderSidebar();
+      }
+    }
+
+    function updateCityDisplay() {
+      const display = document.getElementById('city-dropdown-display');
+      const weatherCityName = document.getElementById('weather-city-name');
+      
+      if (tripDetails.cityId) {
+        const city = getCityById(tripDetails.cityId);
+        if (city) {
+          display.innerHTML = `
+            <span class="fs-5">${city.emoji}</span>
+            <span class="fw-bold" style="color: var(--green-dark);">${city.name}, ${city.country}</span>
+          `;
+          weatherCityName.textContent = city.name;
+          return;
+        }
+      }
+      
+      display.innerHTML = `
+        <svg class="icon text-muted" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="text-muted">Select a destination...</span>
+      `;
+      weatherCityName.textContent = 'Select a city';
+    }
+
+    function updateTripDates() {
+      tripDetails.startDate = document.getElementById('start-date').value;
+      tripDetails.endDate = document.getElementById('end-date').value;
+      setTripDetails(tripDetails);
+      
+      // Normalize item dates
+      const items = getItineraryItems();
+      const start = new Date(tripDetails.startDate);
+      const end = new Date(tripDetails.endDate);
+      
+      const normalizedItems = items.map(item => {
+        if (!item.date) return { ...item, date: tripDetails.startDate };
+        const itemDate = new Date(item.date);
+        if (itemDate < start || itemDate > end) {
+          return { ...item, date: tripDetails.startDate };
+        }
+        return item;
+      });
+      
+      setItineraryItems(normalizedItems);
+      
+      renderWeatherWidget();
+      renderTimeline();
+    }
+
+    // Reset Trip Function
+    function handleResetTrip() {
+      // 1. Safety check: Only prompt if they actually have activities saved
+      const currentItems = getItineraryItems();
+      if (currentItems.length > 0) {
+        if (!confirm("Are you sure you want to clear your entire itinerary? This cannot be undone.")) return;
+      }
+
+      // 2. Clear the data
+      setItineraryItems([]);
+      
+      // 3. Reset trip details to default state
+      const defaultTrip = {
+        city: '',
+        cityId: null,
+        startDate: '2026-05-10', // Default start date
+        endDate: '2026-05-12'    // Default end date
+      };
+      
+      setTripDetails(defaultTrip);
+      tripDetails = defaultTrip; // Update local state variable
+
+      // 4. Reset the form inputs in the UI
+      document.getElementById('start-date').value = defaultTrip.startDate;
+      document.getElementById('end-date').value = defaultTrip.endDate;
+
+      // 5. Re-render all components to show the empty states
+      updateCityDisplay();
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
+
+    // Weather Widget
+    function renderWeatherWidget() {
+      const container = document.getElementById('weather-widget');
+
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="p-5 text-center bg-white rounded-4 border border-dashed text-muted">
+            <svg class="mb-3 opacity-25" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <p class="mb-1 fw-bold">No city selected</p>
+            <p class="small mb-0">Select a destination to see weather forecast for your trip.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const city = getCityById(tripDetails.cityId);
+      const tripDates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      const forecasts = tripDates.map(date => getWeatherForDate(date));
+      const current = forecasts[0];
+
+      container.innerHTML = `
+        <div class="weather-widget">
+          <div class="weather-current">
+            <div class="weather-temp">
+              ${getWeatherIcon(current.icon)}
+              <h2>${current.temp}°C</h2>
+            </div>
+            <p class="weather-condition">${current.condition} - Wind 12 km/h</p>
+            <div class="weather-city">
+              <span style="font-size: 1.125rem;">${city.emoji}</span>
+              <p>${city.name}, ${city.country}</p>
+            </div>
+          </div>
+          <div class="weather-forecast">
+            ${forecasts.slice(0, 5).map(day => `
+              <div class="weather-day">
+                <div class="weather-day-label">${day.day}</div>
+                ${getWeatherIcon(day.icon)}
+                <div class="weather-day-temp">${day.temp}°</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Timeline
+    function renderTimeline() {
+      const container = document.getElementById('itinerary-timeline');
+      const items = getItineraryItems();
+      
+      // Filter items by selected city
+      const filteredItems = tripDetails.cityId 
+        ? items.filter(item => item.cityId === tripDetails.cityId)
+        : items;
+
+      // No city selected
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="p-4 text-center bg-white rounded-4 shadow-sm text-muted">
+            <p class="mb-0">Please select a destination city above to start planning.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // No activities
+      if (filteredItems.length === 0) {
+        container.innerHTML = `
+          <div class="p-5 text-center bg-white rounded-4 shadow-sm">
+            <p class="mb-3">No activities added for ${tripDetails.city} yet.</p>
+            <a href="directory.html" class="btn btn-success btn-sm px-4 rounded-pill">Browse Destinations</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Get all dates in trip range
+      const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      
+      // Group items by date
+      const itemsByDate = filteredItems.reduce((acc, item) => {
+        const date = item.date || tripDetails.startDate;
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(item);
+        return acc;
+      }, {});
+
+      const activityColors = {
+        wellness: '#c5e1a5',
+        food: '#ffe0b2',
+        nature: '#dcedc8',
+        culture: '#e1bee7',
+        adventure: '#f9e4b7',
+        wildlife: '#b2dfdb',
+      };
+
+      function getActivityColor(tags) {
+        for (const tag of tags) {
+          const lower = tag.toLowerCase();
+          if (activityColors[lower]) return activityColors[lower];
+        }
+        return '#e8f5ee';
+      }
+
+      container.innerHTML = `
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          ${dates.map(date => {
+            const dayItems = itemsByDate[date] || [];
+            const dayNum = getDayNumber(tripDetails.startDate, date);
+            
+            // Fetch weather for this specific day
+            const dayWeather = getWeatherForDate(date);
+            
+            return `
+              <div class="timeline-day">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Day ${dayNum}: ${formatDate(date)}</div>
+                ${dayItems.length > 0 ? dayItems.map(item => {
+                  
+                  // SMART SUGGESTION LOGIC
+                  const outdoorTags = ['beach', 'hiking', 'cycle', 'wildlife', 'eco'];
+                  const isOutdoor = item.tags.some(tag => outdoorTags.includes(tag.toLowerCase()));
+                  const isRaining = dayWeather.icon === 'cloud-rain';
+                  
+                  const weatherSuggestion = (isOutdoor && isRaining) ? `
+                    <div style="background-color: #fffbeb; border: 1px solid #fef08a; color: #854d0e; padding: 0.5rem 0.75rem; border-radius: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+                      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.125rem;">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      <div>
+                        <strong>Weather Alert:</strong> Rain is forecasted! Consider moving this outdoor activity to another day or swapping it for an indoor cultural experience.
+                      </div>
+                    </div>
+                  ` : '';
+
+                  return `
+                  <div class="timeline-item">
+                    <div class="timeline-item-header">
+                      <div class="timeline-item-left">
+                        <div class="timeline-item-icon" style="background-color: ${getActivityColor(item.tags)}">
+                          ${item.emoji}
+                        </div>
+                        <div>
+                          <h4 class="timeline-item-name">${item.name}</h4>
+                          <p class="timeline-item-category">${item.tags[0] ? getTagLabel(item.tags[0]) : 'Activity'}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item-right">
+                        <span class="timeline-item-co2">+${item.co2} kg CO2</span>
+                        <button class="timeline-item-delete" onclick="removeActivity(${item.id})">
+                          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    ${weatherSuggestion}
+                    
+                    ${dates.length > 1 ? `
+                      <div class="timeline-item-move">
+                        <span>Move to:</span>
+                        <div class="move-btns">
+                          ${dates.map((d, idx) => `
+                            <button 
+                              class="move-btn ${d === date ? 'current' : 'other'}"
+                              onclick="${d !== date ? `moveActivity(${item.id}, '${d}')` : ''}"
+                              ${d === date ? 'disabled' : ''}
+                            >
+                              Day ${idx + 1}
+                            </button>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+                `}).join('') : `
+                  <p class="timeline-empty">No activities planned for this day.</p>
+                `}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function removeActivity(activityId) {
+      removeFromItinerary(activityId);
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
+
+    function moveActivity(activityId, newDate) {
+      updateItemDate(activityId, newDate);
+      renderTimeline();
+    }
+
+    function renderSidebar() {
+    const items = getItineraryItems();
+    const filteredItems = tripDetails.cityId 
+      ? items.filter(item => item.cityId === tripDetails.cityId)
+      : [];
+
+    const totalPrice = filteredItems.reduce((sum, item) => sum + item.price, 0);
+    
+    // Update the Number only (RM is hardcoded in HTML for better styling)
+    document.getElementById('total-budget').textContent = totalPrice.toLocaleString();
+    document.getElementById('activity-count').textContent = `${filteredItems.length} Activities`;
+
+    const categoryTotals = filteredItems.reduce((acc, item) => {
+      const category = item.tags && item.tags[0] ? item.tags[0] : 'other';
+      acc[category] = (acc[category] || 0) + item.price;
+      return acc;
+    }, {});
+
+    const sortedCategories = Object.entries(categoryTotals)
+      .sort((a, b) => b[1] - a[1]);
+
+    const list = document.getElementById('budget-breakdown-list');
+    
+    if (sortedCategories.length > 0) {
+      list.innerHTML = sortedCategories.map(([category, amount]) => `
+        <div class="budget-category-item">
+          <span>${category}</span>
+          <span>RM ${amount.toLocaleString()}</span>
+        </div>
+      `).join('');
+    } else {
+      list.innerHTML = `<p style="font-size: 0.8rem; color: #999; text-align: center;">No activities added yet.</p>`;
+    }
+  }
+function viewSavedPlan() {
+  alert(
+    "Bali Adventure\n\n" +
+    "Destination: Ubud, Indonesia\n" +
+    "Date: 10–12 May 2026\n" +
+    "Activities: 5\n" +
+    "Total Cost: RM 120\n" +
+    "CO₂ Impact: +8 kg"
+  );
+}
+
+function editSavedPlan() {
+  const city = cities.find(c => c.name === "Ubud");
+
+  if (city) {
+    tripDetails = {
+      city: city.name,
+      cityId: city.id,
+      startDate: "2026-05-10",
+      endDate: "2026-05-12"
+    };
+
+    setTripDetails(tripDetails);
+
+    document.getElementById("start-date").value = tripDetails.startDate;
+    document.getElementById("end-date").value = tripDetails.endDate;
+
+    updateCityDisplay();
+    renderWeatherWidget();
+    renderTimeline();
+    renderSidebar();
+  }
+
+  const createTab = document.getElementById("create-tab");
+  const tab = new bootstrap.Tab(createTab);
+  tab.show();
+}
+
+function deleteSavedPlan(event) {
+  if (!confirm("Are you sure you want to delete this saved itinerary?")) return;
+
+  const card = event.target.closest(".col-md-6");
+  if (card) card.remove();
+}
+  </script>
 </body>
 </html>
