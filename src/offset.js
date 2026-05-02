@@ -32,9 +32,9 @@
             const tonsCO2 = totalEmissions / 1000;
             const cost = (tonsCO2 * selectedProject.price).toFixed(2);
             
-            document.getElementById('totalCost').textContent = '$' + cost;
+            document.getElementById('totalCost').textContent = 'RM' + cost;
             document.getElementById('purchaseBtn').disabled = false;
-            document.getElementById('purchaseBtn').innerHTML = '<i class="bi bi-leaf"></i> Offset Now for $' + cost;
+            document.getElementById('purchaseBtn').innerHTML = '<i class="bi bi-leaf"></i> Offset Now for RM' + cost;
         }
 
         function completePurchase() {

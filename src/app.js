@@ -166,7 +166,8 @@ const STORAGE_KEYS = {
   ITINERARY: 'ecotravel-itinerary',
   TRIP: 'ecotravel-trip',
   FAVORITES: 'ecotravel-favorites',
-  SAVED_ACTIVITIES: 'ecotravel-saved-activities'
+  SAVED_ACTIVITIES: 'ecotravel-saved-activities',
+  SAVED_PLANS: 'ecotravel-saved-plans'
 };
 
 function getItineraryItems() {
@@ -219,6 +220,20 @@ function getFavorites() {
 function setFavorites(favorites) {
   localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
 }
+
+function getSavedPlans() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.SAVED_PLANS);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setSavedPlans(plans) {
+  localStorage.setItem(STORAGE_KEYS.SAVED_PLANS, JSON.stringify(plans));
+}
+
 function getSavedActivities() {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.SAVED_ACTIVITIES);

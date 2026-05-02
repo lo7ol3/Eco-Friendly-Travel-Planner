@@ -14,6 +14,9 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
@@ -25,20 +28,41 @@
         </div>
     </nav>
 
-    <header class="hero py-4">
-        <div class="container text-center">
+    <header class="hero">
+        <div class="container text-start">
             <h1 class="hero-title" style="font-size: 2rem;">Carbon Calculator</h1>
-            <p class="hero-subtitle x-small">Estimate emissions without creating a full itinerary.</p>
+            <p class="hero-subtitle x-small">Estimate the carbon footprint of your travels.</p>
         </div>
     </header>
+    
 
     <main class="container my-4">
         <div class="row g-4">
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
                     <div class="section-header-group mt-0 mb-4">
                         <i class="bi bi-sliders text-success fs-5"></i>
                         <h2 class="section-header-title">Travel Details</h2>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-light rounded-4 border">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h3 class="h6 mb-1">Saved Itinerary</h3>
+                                <p class="text-muted x-small mb-0">Pick a plan, then confirm to update the distance.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <select id="savedPlanSelect" class="form-select bg-white border-0 py-2 rounded-3 flex-grow-1" disabled>
+                                <option value="">No saved plans available</option>
+                            </select>
+                        </div>
+                        <div id="savedPlanInfo" class="text-muted x-small mt-2">Checking for a saved itinerary plan...</div>
+                            <div class="d-flex">
+                                <button id="confirmSavedPlanBtn" class="btn btn-sm btn-success rounded-pill ms-auto" disabled>
+                                    Confirm Change
+                                </button>
+                            </div>
                     </div>
 
                     <div class="row g-3 mb-3">
@@ -88,7 +112,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small">Local Dist (km)</label>
+                            <label class="form-label small">Local Distance (km)</label>
                             <input type="number" class="form-control bg-light border-0 py-2 rounded-3" id="localDistance" value="18">
                         </div>
                         <div class="col-md-6">
@@ -108,36 +132,51 @@
                 </div>
             </div>
 
-            <div class="col-lg-5">
-                <div class="result-card-compact shadow-sm mb-4">
-                    <div class="text-uppercase x-small fw-bold opacity-75 letter-spacing-1 text-center">Estimated Footprint</div>
-                    <div class="total-display-small text-center" id="totalEmissions">0.0 kg CO₂</div>
-                    
-                    <div id="carbonBreakdown" class="breakdown-table">
-                        </div>
+            <div class="col-lg-4">
+                <div class="card-container shadow-sm mb-4">
+                    <!-- Top Section: Hero Total -->
+                    <div class="card-header-card">
+                    <span class="card-label">Estimated Footprint</span>
+                    <div class="card-main-value">
+                        <span id="totalEmissions" class="carbon-emission">0.0 kg CO₂</span>
+                    </div>
+                    <div class="card-badge">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.405 7.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 13H13a3 3 0 0 0 .405-5.973z"/>
+                        </svg>
+                        <span>Carbon Impact</span>
+                    </div>
+                    </div>
 
+                    <!-- Bottom Section: Detailed List -->
+                    <div class="card-details">
+                    <h4 class="breakdown-title">Carbon Breakdown</h4>
+                    <div id="carbonBreakdown" class="breakdown-list">
+                        <!-- JS will inject items here -->
+                    </div>
+
+                    <!-- Action Button -->
                     <button class="btn btn-warning w-100 fw-bold py-2 mt-3 rounded-pill shadow-sm" id="calculateBtn" style="font-size: 0.9rem;">
-                        <i class="bi bi-tree-fill me-2" ></i>Offset This Trip 
+                        <i class="bi bi-tree-fill me-2"></i>Offset This Trip 
                     </button>
+
+                    <div class="reduction-tips mt-4 pt-3 border-top">
+                        <h6 class="fw-bold mb-3 small"><i class="bi bi-lightbulb text-warning me-2"></i>Reduction Tips</h6>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-train-front small"></i></div>
+                            <p class="x-small text-muted mb-0">Trains emit 6x less CO₂ than regional flights.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-building-check small"></i></div>
+                            <p class="x-small text-muted mb-0">Eco-hotels save 60% energy vs luxury stays.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 mb-0">
+                            <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-ev-front small"></i></div>
+                            <p class="x-small text-muted mb-0">EVs slash local emissions by 70%.</p>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-
-                <div class="card p-3 border-0 shadow-sm rounded-4">
-                    <h6 class="fw-bold mb-3 mt-3 small"><i class="bi bi-lightbulb text-warning me-2"></i>Reduction Tips</h6>
-                    
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-train-front small"></i></div>
-                        <p class="x-small text-muted mb-0">Trains emit 6x less CO₂ than regional flights.</p>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-building-check small"></i></div>
-                        <p class="x-small text-muted mb-0">Eco-hotels save 60% energy vs luxury stays.</p>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <div class="bg-success-subtle p-1 px-2 rounded text-success"><i class="bi bi-ev-front small"></i></div>
-                        <p class="x-small text-muted mb-0">EVs slash local emissions by 70%.</p>
-                    </div>
                 </div>
             </div>
         </div>

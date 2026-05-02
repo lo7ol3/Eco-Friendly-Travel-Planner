@@ -51,14 +51,14 @@ body {
   color: white !important;
 }
 
-.nav-link {
+/* .nav-link {
   font-weight: 500;
   transition: opacity 0.2s;
 }
 
 .nav-link.active {
   color: var(--accent) !important;
-}
+} */
 
 .navbar-dark .nav-link:hover {
   color: var(--accent) !important;
@@ -152,6 +152,25 @@ body {
 
 .city-card-fav.active {
   color: #ef4444;
+}
+
+/* ============================================
+   OFFSET CARDS
+   ============================================ */
+.offset-card {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.offset-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.offset-card.selected {
+  border: 2px solid #198754 !important;
+  box-shadow: 0 0 0 1px rgba(25, 135, 84, 0.2), 0 8px 25px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
 }
 
 /* ============================================
@@ -317,6 +336,7 @@ input[type="range"] {
 
 #carbonBreakdown .d-flex:last-child {
   border-bottom: none;
+
 }
 
 .result-card-compact {
@@ -354,7 +374,9 @@ input[type="range"] {
 }
 
 .breakdown-value { 
-  font-weight: 600; 
+  font-weight: 800; 
+  color: #388062; 
+  text-transform: uppercase; 
 }
 
 /* Tabs inside content box */
@@ -1447,7 +1469,7 @@ input[type="range"] {
 }
 
 /* Even spacing for all sidebar cards */
-aside .budget-container,
+aside .card-container,
 aside #weather-widget,
 aside .p-4.rounded-4,   /* Browse More CTA */
 aside .btn-primary-solid {
@@ -1480,7 +1502,7 @@ aside .section-header {
 }
 
 /* Budget Summary */
-.budget-container {
+.card-container {
   background: white;
   border-radius: 1.25rem;
   overflow: hidden;
@@ -1490,14 +1512,14 @@ aside .section-header {
 }
 
 /* The Top Dark Section */
-.budget-header-card {
+.card-header-card {
   background: var(--green-dark);
   padding: 1.5rem;
   text-align: center;
   color: white;
 }
 
-.budget-label {
+.card-label {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -1506,7 +1528,7 @@ aside .section-header {
   margin-bottom: 0.5rem;
 }
 
-.budget-main-value {
+.card-main-value {
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -1514,20 +1536,26 @@ aside .section-header {
   margin-bottom: 0.75rem;
 }
 
-.budget-main-value .currency {
+.card-main-value .currency {
   font-size: 1.25rem;
   color: var(--accent);
   font-weight: 600;
 }
 
-.budget-main-value .amount {
+.card-main-value .amount {
   font-size: 2.5rem;
   font-family: 'Playfair Display', serif;
   font-weight: 700;
   color: white;
 }
+.card-main-value .carbon-emission{
+  font-size: 2.5rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: rgb(255, 196, 0);
+}
 
-.budget-badge {
+.card-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1539,7 +1567,7 @@ aside .section-header {
 }
 
 /* The Breakdown Section (Light background for readability) */
-.budget-details {
+.card-details {
   padding: 1.25rem 1.5rem;
   background: #fafdfc;
 }

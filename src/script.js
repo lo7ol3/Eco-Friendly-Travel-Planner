@@ -7,25 +7,81 @@ const EMISSION_FACTORS = {
     accommodation: { eco: 8.2, hostel: 5.1, budget: 10.2, standard: 20.6, luxury: 33.4 }
 };
 
+const SAVED_TRIP_KEY = "ecotravel-trip";
+const SAVED_ITINERARY_KEY = "ecotravel-itinerary";
+
 // Prototype State
 let selectedStart = { name: "Kuala Lumpur, Malaysia", lat: 3.1390, lon: 101.6869 };
 let locationCache = [];
 window.autoTravelDistance = 0;
+let currentLoadedPlanId = null;
+let pendingPlanId = null;
+let activeTripDetails = null;
+let activeItineraryItems = [];
 
 // ============================================
 // INITIALIZATION
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. MOCK DATA / PROTOTYPE RETRIEVAL
-    // This pulls from your itinerary page or uses a mock fallback
-    const tripDetails = getPrototypeTripData();
-    const itineraryItems = typeof getItineraryItems === "function" ? getItineraryItems() : JSON.parse(localStorage.getItem('itineraryItems')) || [];
+    // 1. Load saved itinerary data and show the plan to the user
+    let tripDetails = getPrototypeTripData();
+    let itineraryItems = getSavedItineraryItems();
+    activeTripDetails = { ...tripDetails };
+    activeItineraryItems = [...itineraryItems];
+
+    populateSavedPlanSection(tripDetails);
+    renderSavedPlanOptions(tripDetails);
 
     // 2. Setup Start Location Search UI
     const startInput = document.getElementById("startLocationInput");
     if (startInput) {
         startInput.value = selectedStart.name;
         startInput.addEventListener("input", (e) => searchLocation(e.target.value));
+    }
+
+    const savedPlanSelect = document.getElementById("savedPlanSelect");
+    const confirmPlanBtn = document.getElementById("confirmSavedPlanBtn");
+
+    if (savedPlanSelect) {
+        savedPlanSelect.addEventListener("change", () => {
+            pendingPlanId = savedPlanSelect.value;
+            if (!pendingPlanId || pendingPlanId === String(currentLoadedPlanId)) {
+                confirmPlanBtn.disabled = true;
+                document.getElementById('savedPlanInfo').textContent = 'Selected plan is already loaded or no plan selected.';
+                return;
+            }
+            confirmPlanBtn.disabled = false;
+            document.getElementById('savedPlanInfo').innerHTML = 'You have selected a different saved itinerary. Click <strong>Confirm Change</strong> to recalculate distance.';
+        });
+    }
+
+    if (confirmPlanBtn) {
+        confirmPlanBtn.addEventListener("click", async () => {
+            const selectedId = savedPlanSelect?.value;
+            if (!selectedId) {
+                alert('Please select a saved itinerary first.');
+                return;
+            }
+
+            const plan = getSavedPlanById(selectedId);
+            if (!plan) return;
+
+            if (!confirm(`Confirm change to saved itinerary "${plan.title || plan.tripDetails.city}" and recalculate distance?`)) {
+                return;
+            }
+
+            tripDetails = { ...plan.tripDetails };
+            itineraryItems = plan.items || [];
+            activeTripDetails = { ...plan.tripDetails };
+            activeItineraryItems = [...itineraryItems];
+            currentLoadedPlanId = plan.id;
+            pendingPlanId = null;
+
+            await syncDistance(plan.tripDetails.city);
+            populateSavedPlanSection(plan.tripDetails);
+            renderSavedPlanOptions(plan.tripDetails);
+            updateCalculations(tripDetails, itineraryItems);
+        });
     }
 
     // 3. Auto-Sync Distance based on the Plan
@@ -57,20 +113,86 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ============================================
 // PROTOTYPE MOCK HELPER
 // ============================================
-function getPrototypeTripData() {
-    // Attempt to get real data from previous pages
-    const saved = JSON.parse(localStorage.getItem('tripDetails'));
-    
-    // MOCK DATA FALLBACK: Use this if the user hasn't saved a plan yet
-    if (!saved || !saved.city) {
-        return {
-            city: "Singapore", 
-            cityId: 1,
-            startDate: "2026-05-01",
-            endDate: "2026-05-05"
-        };
+function getSavedTripDetails() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(SAVED_TRIP_KEY));
+        return saved && saved.city ? saved : null;
+    } catch {
+        return null;
     }
-    return saved;
+}
+
+function getSavedPlans() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('ecotravel-saved-plans'));
+        return Array.isArray(saved) ? saved : [];
+    } catch {
+        return [];
+    }
+}
+
+function getSavedItineraryItems() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(SAVED_ITINERARY_KEY));
+        return Array.isArray(saved) ? saved : [];
+    } catch {
+        return [];
+    }
+}
+
+function getPrototypeTripData() {
+    const saved = getSavedTripDetails();
+    if (saved && saved.city) return saved;
+
+    const plans = getSavedPlans();
+    return plans[0]?.tripDetails || { city: '', cityId: null, startDate: '', endDate: '' };
+}
+
+function renderSavedPlanOptions(activePlan) {
+    const select = document.getElementById('savedPlanSelect');
+    const info = document.getElementById('savedPlanInfo');
+    const confirmButton = document.getElementById('confirmSavedPlanBtn');
+    if (!select || !info || !confirmButton) return;
+
+    const plans = getSavedPlans();
+    if (plans.length === 0) {
+        select.innerHTML = `<option value="">No saved plans</option>`;
+        select.disabled = true;
+        confirmButton.disabled = true;
+        info.textContent = 'No saved itinerary plan found. Save one from the Itinerary page first.';
+        return;
+    }
+
+    select.disabled = false;
+    select.innerHTML = plans.map(plan => {
+        const title = plan.title || plan.tripDetails.city || 'Untitled plan';
+        return `<option value="${plan.id}">${title} — ${plan.tripDetails.city}</option>`;
+    }).join('');
+
+    let selectedPlan = plans[0];
+
+    if (activePlan && activePlan.city) {
+        const activePlanMatch = plans.find(plan => plan.tripDetails.city === activePlan.city && plan.tripDetails.startDate === activePlan.startDate);
+        if (activePlanMatch) {
+            selectedPlan = activePlanMatch;
+            select.value = activePlanMatch.id;
+            currentLoadedPlanId = activePlanMatch.id;
+            confirmButton.disabled = true;
+        }
+    }
+
+    info.innerHTML = `Saved itinerary ready: <strong>${selectedPlan.title || selectedPlan.tripDetails.city}</strong>`;
+}
+
+function getSavedPlanById(planId) {
+    const plans = getSavedPlans();
+    const plan = plans.find(item => item.id === Number(planId));
+    if (!plan) {
+        alert('Could not load the selected itinerary plan.');
+        return null;
+    }
+
+    return plan;
 }
 
 // ============================================
@@ -98,7 +220,7 @@ function selectStartLocation(index) {
     document.getElementById("startLocationInput").value = selectedStart.name;
     document.getElementById("locationSuggestions").innerHTML = "";
 
-    const tripDetails = getPrototypeTripData();
+    const tripDetails = activeTripDetails || getPrototypeTripData();
     if (tripDetails.city) syncDistance(tripDetails.city);
 }
 
@@ -115,8 +237,8 @@ async function syncDistance(cityName) {
             document.getElementById("distanceDisplay").innerHTML = 
                 `<i class="bi bi-geo-alt-fill me-2"></i>Destination Plan: <strong>${cityName}</strong> (${km.toFixed(1)} km)`;
             
-            const tripDetails = getPrototypeTripData();
-            const itineraryItems = JSON.parse(localStorage.getItem('itineraryItems')) || [];
+            const tripDetails = activeTripDetails || getPrototypeTripData();
+            const itineraryItems = activeItineraryItems.length ? activeItineraryItems : getSavedItineraryItems();
             updateCalculations(tripDetails, itineraryItems);
         }
     } catch (e) { 
@@ -180,20 +302,40 @@ function updateCalculations(trip, items) {
     // Updated Breakdown HTML to match the table-style rows
     document.getElementById("carbonBreakdown").innerHTML = `
         <div class="breakdown-row">
-            <span class="breakdown-label">Transport:</span>
+            <span class="breakdown-label">Transport Mode</span>
             <span class="breakdown-value">${transportCO2.toFixed(1)} kg</span>
         </div>
         <div class="breakdown-row">
-            <span class="breakdown-label">Stay:</span>
+            <span class="breakdown-label">Accommodation</span>
             <span class="breakdown-value">${accCO2.toFixed(1)} kg</span>
         </div>
         <div class="breakdown-row">
-            <span class="breakdown-label">Local/Activities:</span>
+            <span class="breakdown-label">Local Transport/Activities</span>
             <span class="breakdown-value">${(localCO2 + activityCO2).toFixed(1)} kg</span>
         </div>
     `;
 
     localStorage.setItem("carbonEmissions", total.toFixed(1));
+}
+
+function populateSavedPlanSection(tripDetails) {
+    const info = document.getElementById("savedPlanInfo");
+    const confirmBtn = document.getElementById("confirmSavedPlanBtn");
+
+    if (!info || !confirmBtn) return;
+
+    if (tripDetails && tripDetails.city) {
+        const startText = tripDetails.startDate ? ` · ${tripDetails.startDate}` : '';
+        const endText = tripDetails.endDate ? ` to ${tripDetails.endDate}` : '';
+        info.innerHTML = `Saved plan: <strong>${tripDetails.city}</strong>${startText}${endText}`;
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = "Confirm Change";
+    } else {
+        info.textContent = "No saved itinerary found. Please save a trip plan from the Itinerary page first.";
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = "Confirm Change";
+        document.getElementById("distanceDisplay").innerHTML = `<i class="bi bi-exclamation-circle me-2"></i>No destination plan selected.`;
+    }
 }
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -225,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!currentTotal || currentTotal === "0.0 kg") {
                 // If for some reason it's 0, run one last calculation
                 const tripDetails = getPrototypeTripData();
-                const itineraryItems = JSON.parse(localStorage.getItem('itineraryItems')) || [];
+                const itineraryItems = getSavedItineraryItems();
                 updateCalculations(tripDetails, itineraryItems);
             }
 

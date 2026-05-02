@@ -8,11 +8,11 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-light">
@@ -21,27 +21,31 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
                     <li class="nav-item"><a class="nav-link active" href="itinerary.html">Itinerary</a></li>
                     <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="logout()">Logout</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
   <!-- Hero Section -->
-  <div class="hero py-5 text-center">
-    <div class="container">
-      <h1 class="font-serif display-5 fw-bold mb-2">Create Your Green Itinerary</h1>
-      <p class="lead mb-0">Organize your eco-friendly destinations and track your impact.</p>
-    </div>
-  </div>
+  <header class="hero">
+        <div class="container text-start">
+            <h1 class="hero-title" style="font-size: 2rem;">Create Your Green Itinerary</h1>
+            <p class="hero-subtitle x-small">Organize your eco-friendly destinations and track your impact.</p>
+        </div>
+    </header>
 
   <!-- Main Content -->
-  <main class="container my-5">
+  <main class="container my-4">
 
     <!-- Tabs Navigation -->
       <ul class="nav nav-tabs mb-4" id="itineraryTabs" role="tablist">
@@ -133,22 +137,22 @@
       <div class="sticky-top" style="top: 100px; z-index: 10;">
         
         <!-- Budget Summary Card -->
-          <div class="budget-container">
+          <div class="card-container">
           <!-- Top Section: Hero Total -->
-          <div class="budget-header-card">
-            <span class="budget-label">Total Estimated Cost</span>
-            <div class="budget-main-value">
+          <div class="card-header-card">
+            <span class="card-label">Total Estimated Cost</span>
+            <div class="card-main-value">
               <span class="currency">RM</span>
               <span id="total-budget" class="amount">0</span>
             </div>
-            <div class="budget-badge">
+            <div class="card-badge">
               <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z"></path></svg>
               <span id="activity-count">0 Activities</span>
             </div>
           </div>
 
           <!-- Bottom Section: Detailed List -->
-          <div class="budget-details">
+          <div class="card-details">
             <h4 class="breakdown-title">Cost Breakdown</h4>
             <div id="budget-breakdown-list" class="breakdown-list">
               <!-- JS will inject items here -->
@@ -192,58 +196,8 @@
         <!-- Full width for cards -->
         <div class="col-12">
           <div class="row g-4">
-            <!-- Example Itinerary Card -->
-<div class="col-md-6 col-lg-4">
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body">
-
-      <div class="d-flex justify-content-between align-items-start mb-2">
-      <input 
-  type="text" 
-  class="fw-bold border-0 shadow-none p-0 m-0"
-  value="Bali Adventure"
-  style="
-    font-size: 1.3rem;
-    background: transparent;
-    height: auto;
-    line-height: 1.2;
-  "
-  onchange="updateTripTitle(this.value)"
->
-
-        <div class="text-end">
-          <span class="badge bg-success-subtle text-success mb-1">3 Days</span>
-          <br>
-          <button class="btn btn-sm text-danger p-0" onclick="deleteSavedPlan(event)">🗑️</button>
-        </div>
-      </div>
-
-      <p class="text-muted small mb-0">Ubud, Indonesia</p>
-      <p class="text-muted small mb-1">10–12 May 2026</p>
-
-      <div class="border-top pt-2 mb-3">
-        <p class="small mb-1"><strong>Activities:</strong> 5</p>
-        <p class="small mb-1"><strong>Total Cost:</strong> RM 120</p>
-        <p class="small mb-0"><strong>CO₂ Impact:</strong> +8 kg</p>
-      </div>
-
-      <div class="d-flex justify-content-between">
-        <button class="btn btn-outline-success btn-sm" onclick="viewSavedPlan()">View Details</button>
-        <button class="btn btn-success btn-sm" onclick="editSavedPlan()">Edit Plan</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<div class="d-flex justify-content-between align-items-start">
-
-  
-
-
-                  </div>
-                </div>
-              </div>
-              <!-- Repeat more itinerary cards here -->
+            <div class="col-12">
+              <div id="saved-plans-list" class="row g-4"></div>
             </div>
           </div>
         </div>
@@ -251,12 +205,34 @@
     </div>
 
     </div>
+
+    <!-- Saved Plan View Modal -->
+    <div class="modal fade" id="savedPlanModal" tabindex="-1" aria-labelledby="savedPlanModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+          <div class="modal-header border-0">
+            <div>
+              <h5 class="modal-title" id="savedPlanModalLabel">Plan Activities</h5>
+              <p class="small text-muted mb-0" id="savedPlanModalCity"></p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group" id="savedPlanActivitiesList"></ul>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Bootstrap 5 JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
   <script src="app.js"></script>
+  <script src="auth.js"></script>
   <script>
     
     // ============================================
@@ -281,6 +257,7 @@
       renderTimeline();
       renderSidebar();
       updateNavbarBadge();
+      renderSavedPlans();
 
       // Close dropdown when clicking outside
       document.addEventListener('click', function(e) {
@@ -678,49 +655,161 @@
       list.innerHTML = `<p style="font-size: 0.8rem; color: #999; text-align: center;">No activities added yet.</p>`;
     }
   }
-function viewSavedPlan() {
-  alert(
-    "Bali Adventure\n\n" +
-    "Destination: Ubud, Indonesia\n" +
-    "Date: 10–12 May 2026\n" +
-    "Activities: 5\n" +
-    "Total Cost: RM 120\n" +
-    "CO₂ Impact: +8 kg"
-  );
-}
 
-function editSavedPlan() {
-  const city = cities.find(c => c.name === "Ubud");
+  function renderSavedPlans() {
+    const plans = getSavedPlans();
+    const container = document.getElementById('saved-plans-list');
+    if (!container) return;
 
-  if (city) {
-    tripDetails = {
-      city: city.name,
-      cityId: city.id,
-      startDate: "2026-05-10",
-      endDate: "2026-05-12"
-    };
+    if (plans.length === 0) {
+      container.innerHTML = `
+        <div class="col-12">
+          <div class="p-5 text-center bg-white rounded-4 shadow-sm text-muted">
+            <h3 class="h5 mb-3">No saved itineraries yet</h3>
+            <p class="mb-3">Create a trip and click Save Itinerary to keep it for later.</p>
+            <button class="btn btn-success btn-sm" onclick="document.getElementById('create-tab').click()">Start a Plan</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
 
-    setTripDetails(tripDetails);
+    container.innerHTML = plans.map(plan => {
+      const trip = plan.tripDetails || {};
+      const count = Array.isArray(plan.items) ? plan.items.length : 0;
+      const totalCost = plan.items.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+      const totalCO2 = plan.items.reduce((sum, item) => sum + (Number(item.co2) || 0), 0);
+      const startDate = trip.startDate || 'TBD';
+      const endDate = trip.endDate || 'TBD';
+      const cityLabel = trip.city ? `${trip.city}` : 'Unknown destination';
 
-    document.getElementById("start-date").value = tripDetails.startDate;
-    document.getElementById("end-date").value = tripDetails.endDate;
-
-    updateCityDisplay();
-    renderWeatherWidget();
-    renderTimeline();
-    renderSidebar();
+      return `
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h5 class="mb-1">${plan.title || cityLabel}</h5>
+                  <p class="text-muted small mb-0">${cityLabel}</p>
+                </div>
+                <button type="button" class="btn btn-sm text-danger p-0" onclick="deleteSavedPlan(${plan.id})">🗑️</button>
+              </div>
+              <p class="text-muted small mb-1">${startDate} – ${endDate}</p>
+              <div class="border-top pt-2 mb-3">
+                <p class="small mb-1"><strong>Activities:</strong> ${count}</p>
+                <p class="small mb-1"><strong>Total Cost:</strong> RM ${totalCost.toLocaleString()}</p>
+                <p class="small mb-0"><strong>CO₂ Impact:</strong> +${totalCO2} kg</p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-success btn-sm" onclick="viewSavedPlan(${plan.id})">View</button>
+                <button class="btn btn-success btn-sm" onclick="editSavedPlan(${plan.id})">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+function saveItinerary() {
+  if (!tripDetails.cityId) {
+    alert('Please select a destination before saving your itinerary.');
+    return;
   }
 
-  const createTab = document.getElementById("create-tab");
+  const items = getItineraryItems().filter(item => item.cityId === tripDetails.cityId);
+  if (items.length === 0) {
+    alert('Please add at least one activity to your itinerary before saving.');
+    return;
+  }
+
+  const defaultTitle = `${tripDetails.city} ${tripDetails.startDate || ''}`.trim();
+  const title = prompt('Enter a title for this itinerary plan:', defaultTitle) || defaultTitle;
+  const plans = getSavedPlans();
+  const id = Date.now();
+
+  plans.push({
+    id,
+    title,
+    tripDetails: { ...tripDetails },
+    items
+  });
+
+  setSavedPlans(plans);
+  renderSavedPlans();
+  alert('Itinerary saved successfully. You can now load it from the Saved Itinerary tab.');
+}
+
+function openSavedPlanForEdit(planId) {
+  const plans = getSavedPlans();
+  const plan = plans.find(p => p.id === planId);
+  if (!plan) {
+    alert('Saved plan not found.');
+    return;
+  }
+
+  tripDetails = { ...plan.tripDetails };
+  setTripDetails(tripDetails);
+
+  const remainingItems = getItineraryItems().filter(item => item.cityId !== tripDetails.cityId);
+  setItineraryItems([...remainingItems, ...plan.items]);
+
+  document.getElementById('start-date').value = tripDetails.startDate;
+  document.getElementById('end-date').value = tripDetails.endDate;
+
+  updateCityDisplay();
+  renderWeatherWidget();
+  renderTimeline();
+  renderSidebar();
+  updateNavbarBadge();
+
+  const createTab = document.getElementById('create-tab');
   const tab = new bootstrap.Tab(createTab);
   tab.show();
 }
 
-function deleteSavedPlan(event) {
-  if (!confirm("Are you sure you want to delete this saved itinerary?")) return;
+function viewSavedPlan(planId) {
+  const plans = getSavedPlans();
+  const plan = plans.find(p => p.id === planId);
+  if (!plan) {
+    alert('Saved plan not found.');
+    return;
+  }
 
-  const card = event.target.closest(".col-md-6");
-  if (card) card.remove();
+  const title = plan.title || plan.tripDetails.city || 'Saved Plan';
+  document.getElementById('savedPlanModalLabel').textContent = `Activities for ${title}`;
+  document.getElementById('savedPlanModalCity').textContent = `${plan.tripDetails.city || 'Unknown destination'} · ${plan.tripDetails.startDate || 'TBD'} to ${plan.tripDetails.endDate || 'TBD'}`;
+
+  const list = document.getElementById('savedPlanActivitiesList');
+  if (!Array.isArray(plan.items) || plan.items.length === 0) {
+    list.innerHTML = '<li class="list-group-item text-muted">No activities saved for this plan.</li>';
+  } else {
+    list.innerHTML = plan.items.map(item => `
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${item.name || item.activity || 'Activity'}</strong>
+            <p class="small text-muted mb-0">${item.description || item.city || ''}</p>
+          </div>
+          <span class="badge bg-success rounded-pill">${item.co2 || '0'} kg CO₂</span>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  const modalElement = document.getElementById('savedPlanModal');
+  const modal = new bootstrap.Modal(modalElement);
+  modal.show();
+}
+
+function editSavedPlan(planId) {
+  openSavedPlanForEdit(planId);
+}
+
+function deleteSavedPlan(planId) {
+  if (!confirm('Are you sure you want to delete this saved itinerary?')) return;
+  const plans = getSavedPlans().filter(p => p.id !== planId);
+  setSavedPlans(plans);
+  renderSavedPlans();
 }
   </script>
 </body>
