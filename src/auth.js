@@ -2,13 +2,22 @@
 function registerUser(e) {
   e.preventDefault();
 
-  const user = {
+  const newUser = {
     name: document.getElementById("regName").value,
     email: document.getElementById("regEmail").value,
     password: document.getElementById("regPassword").value
   };
 
-  localStorage.setItem("user", JSON.stringify(user));
+  // 🔍 Check if user already exists
+  const existingUser = JSON.parse(localStorage.getItem("user"));
+
+  if (existingUser && existingUser.email === newUser.email) {
+    alert("Email already exists. Please use a different email.");
+    return;
+  }
+
+  // 💾 Save new user
+  localStorage.setItem("user", JSON.stringify(newUser));
 
   alert("Account created successfully!");
   window.location.href = "login.html";
