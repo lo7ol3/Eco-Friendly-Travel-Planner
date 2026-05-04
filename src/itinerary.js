@@ -1,593 +1,580 @@
-// ============================================
-// STATE
-// ============================================
 
-let tripDetails = getTripDetails();
 
-let selectedStart = {
-    name: "Kuala Lumpur",
-    lat: 3.1390,
-    lon: 101.6869
-};
+    
+    // ============================================
+    // ITINERARY PAGE SPECIFIC CODE
+    // ============================================
 
-let locationCache = [];
+    let tripDetails = getTripDetails();
+    let dropdownOpen = false;
 
-// ============================================
-// INIT
-// ============================================
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load trip details
+      document.getElementById('start-date').value = tripDetails.startDate;
+      document.getElementById('end-date').value = tripDetails.endDate;
+      
+      // Populate city dropdown
+      renderCityDropdown();
+      updateCityDisplay();
+      
+      // Render all sections
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+      renderSavedPlans();
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('start-date').value = tripDetails.startDate || '';
-    document.getElementById('end-date').value = tripDetails.endDate || '';
-
-    document.getElementById("selectedStartLocation").textContent =
-        selectedStart.name;
-
-    document.getElementById("travelMode")
-    .addEventListener("change", () => {
-        updateTravelModeUI();
-        calculateItineraryCarbon();
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('city-dropdown-menu');
+        const button = document.getElementById('city-dropdown');
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+          closeCityDropdown();
+        }
+      });
     });
 
-    populateCitySelect();
-    renderAll();
-});
-
-// ============================================
-// MAIN RENDER (IMPORTANT FIXED)
-// ============================================
-
-function renderAll() {
-    updateCityDisplay();
-    renderWeatherWidget();
-    renderSavedActivityScheduler();
-    renderTimeline();
-    renderSidebar();
-    updateNavbarBadge();
-    syncDestinationFromItinerary();
-}
-function updateTripDates() {
-    tripDetails.startDate = document.getElementById("start-date").value;
-    tripDetails.endDate = document.getElementById("end-date").value;
-
-    setTripDetails(tripDetails);
-
-    renderSavedActivityScheduler(); // 🔥 THIS updates dropdown
-    renderTimeline();
-}
-
-// ============================================
-// CITY SELECTION
-// ============================================
-
-function populateCitySelect() {
-    const select = document.getElementById('city-select');
-
-    select.innerHTML =
-        '<option value="">Select a destination...</option>' +
-        cities.map(city => `
-            <option value="${city.id}" ${tripDetails.cityId == city.id ? 'selected' : ''}>
-                ${city.emoji} ${city.name}, ${city.country}
-            </option>
-        `).join('');
-}
-
-function selectCity(cityId) {
-    if (!cityId) return;
-
-    const city = getCityById(parseInt(cityId));
-
-    tripDetails.city = city.name;
-    tripDetails.cityId = city.id;
-
-    setTripDetails(tripDetails);
-
-    renderAll();
-}
-
-// ============================================
-// START LOCATION SEARCH
-// ============================================
-
-async function searchLocation(query) {
-    const box = document.getElementById("locationSuggestions");
-
-    if (!query || query.length < 2) {
-        box.innerHTML = "";
-        return;
+    // City Dropdown Functions
+    function toggleCityDropdown() {
+      dropdownOpen = !dropdownOpen;
+      const menu = document.getElementById('city-dropdown-menu');
+      
+      if (dropdownOpen) {
+        menu.classList.remove('hidden');
+        document.getElementById('city-search').focus();
+      } else {
+        closeCityDropdown();
+      }
     }
 
-    const res = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=5&language=en&format=json`
-    );
-
-    const data = await res.json();
-    locationCache = data.results || [];
-
-    box.innerHTML = locationCache.map((loc, index) => `
-        <button class="list-group-item list-group-item-action"
-            onclick="selectStartLocation(${index})">
-            📍 ${loc.name}, ${loc.country}
-        </button>
-    `).join("");
-}
-
-function selectStartLocation(index) {
-    const loc = locationCache[index];
-    if (!loc) return;
-
-    selectedStart = {
-        name: `${loc.name}, ${loc.country}`,
-        lat: loc.latitude,
-        lon: loc.longitude
-    };
-
-    document.getElementById("startLocationInput").value = selectedStart.name;
-    document.getElementById("selectedStartLocation").textContent = selectedStart.name;
-
-    document.getElementById("locationSuggestions").innerHTML = "";
-
-    updateAutoDistance();
-}
-
-// ============================================
-// DISTANCE
-// ============================================
-
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-
-    const a =
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1*Math.PI/180) *
-        Math.cos(lat2*Math.PI/180) *
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-
-    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-}
-
-async function updateAutoDistance() {
-    if (!tripDetails.city || !selectedStart.lat) return;
-
-    const destRes = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${tripDetails.city}&count=1&format=json`
-    );
-
-    const destData = await destRes.json();
-    if (!destData.results?.length) return;
-
-    const dest = destData.results[0];
-
-    const km = calculateDistance(
-        selectedStart.lat,
-        selectedStart.lon,
-        dest.latitude,
-        dest.longitude
-    );
-
-    document.getElementById("autoDistance").textContent = km.toFixed(1);
-    window.autoTravelDistance = km;
-    calculateItineraryCarbon();
-}
-
-// ============================================
-// WEATHER (RESTORED + FIXED FORECAST)
-// ============================================
-
-async function renderWeatherWidget() {
-    const start = new Date(tripDetails.startDate);
-    const end = new Date(tripDetails.endDate);
-    const container = document.getElementById('weather-widget');
-
-    if (!tripDetails.city) {
-        container.innerHTML = `
-            <div class="p-4 text-muted text-center">
-                Select a destination to see weather
-            </div>`;
-        return;
+    function closeCityDropdown() {
+      dropdownOpen = false;
+      document.getElementById('city-dropdown-menu').classList.add('hidden');
+      document.getElementById('city-search').value = '';
+      renderCityDropdown();
     }
 
-    try {
-        const geoRes = await fetch(
-            `https://geocoding-api.open-meteo.com/v1/search?name=${tripDetails.city}&count=1&format=json`
-        );
+    function renderCityDropdown(searchQuery = '') {
+      const list = document.getElementById('city-list');
+      const filtered = cities.filter(city => 
+        city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        city.country.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
-        const geoData = await geoRes.json();
-        if (!geoData.results?.length) return;
+      if (filtered.length === 0) {
+        list.innerHTML = '<p class="p-3 mb-0 small text-muted">No cities found</p>';
+        return;
+      }
 
-        const { latitude, longitude, name } = geoData.results[0];
-
-        const weatherRes = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
-        );
-
-        const weatherData = await weatherRes.json();
-
-        const dates = weatherData.daily.time;
-        const maxT = weatherData.daily.temperature_2m_max;
-        const minT = weatherData.daily.temperature_2m_min;
-        const codes = weatherData.daily.weathercode;
-
-        const getInfo = (code, max) => {
-            if ([95,96,99].includes(code)) return { icon:"⛈️", label:"Storm", color:"text-danger" };
-            if ([61,63,65].includes(code)) return { icon:"🌧️", label:"Rain", color:"text-primary" };
-            if (code === 0 && max >= 32) return { icon:"☀️", label:"Hot", color:"text-warning" };
-            if (code === 0) return { icon:"🌤️", label:"Sunny", color:"text-success" };
-            return { icon:"⛅", label:"Cloudy", color:"text-muted" };
-        };
-
-        const forecast = dates
-          .map((d, i) => ({
-              date: d,
-              max: maxT[i],
-              min: minT[i],
-              ...getInfo(codes[i], maxT[i])
-          }))
-          .filter(day => {
-              const date = new Date(day.date);
-              return date >= start && date <= end;
-          });
-          if (forecast.length === 0) {
-    container.innerHTML = `
-        <div class="p-3 text-muted text-center">
-            No weather data available for your selected trip dates
-        </div>`;
-    return;
-}
-            
-
-        container.innerHTML = `
-            <div class="p-3">
-                <h5>${name}</h5>
-                <div class="row g-2">
-                    ${forecast.map((d, i) => `
-                        <div class="col-6 col-md-4">
-                            <div class="p-2 bg-light rounded text-center">
-                                <div class="small text-muted">
-                                    ${new Date(d.date).toLocaleDateString()}
-                                </div>
-                                <div>${d.icon}</div>
-                                <div class="${d.color} fw-bold">${d.label}</div>
-                                <div>${d.max}° / ${d.min}°</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
+      list.innerHTML = filtered.map(city => `
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 ${tripDetails.cityId === city.id ? 'bg-light fw-bold' : ''}" onclick="selectCity(${city.id})">
+            <span class="fs-5">${city.emoji}</span>
+            <div class="flex-grow-1">
+              <p class="mb-0 small fw-bold">${city.name}</p>
+              <p class="mb-0 x-small text-muted">${city.country}</p>
             </div>
-        `;
-
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `<div class="text-danger">Weather failed</div>`;
+            ${tripDetails.cityId === city.id ? '<span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill" style="font-size: 0.65rem;">Selected</span>' : ''}
+          </button>
+        </li>
+      `).join('');
     }
-}
 
-// ============================================
-// SAVED ACTIVITIES (RESTORED WORKING LOGIC)
-// ============================================
+    function filterCityDropdown() {
+      const query = document.getElementById('city-search').value;
+      renderCityDropdown(query);
+    }
 
-function renderSavedActivityScheduler() {
-    const activitySelect = document.getElementById("savedActivitySelect");
-    const dateSelect = document.getElementById("activityDateSelect");
+    function selectCity(cityId) {
+      const city = getCityById(cityId);
+      if (city) {
+        tripDetails.city = city.name;
+        tripDetails.cityId = city.id;
+        setTripDetails(tripDetails);
+        
+        updateCityDisplay();
+        closeCityDropdown();
+        renderWeatherWidget();
+        renderTimeline();
+        renderSidebar();
+      }
+    }
 
-    if (!activitySelect || !dateSelect) return;
+    function updateCityDisplay() {
+      const display = document.getElementById('city-dropdown-display');
+      const weatherCityName = document.getElementById('weather-city-name');
+      
+      if (tripDetails.cityId) {
+        const city = getCityById(tripDetails.cityId);
+        if (city) {
+          display.innerHTML = `
+            <span class="fs-5">${city.emoji}</span>
+            <span class="fw-bold" style="color: var(--green-dark);">${city.name}, ${city.country}</span>
+          `;
+          weatherCityName.textContent = city.name;
+          return;
+        }
+      }
+      
+      display.innerHTML = `
+        <svg class="icon text-muted" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="text-muted">Select a destination...</span>
+      `;
+      weatherCityName.textContent = 'Select a city';
+    }
 
-    const saved = getSavedActivities();
-    const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
-
-    const filtered = tripDetails.cityId
-        ? saved.filter(i => i.cityId == tripDetails.cityId)
-        : [];
-
-    activitySelect.innerHTML =
-        filtered.length
-            ? `<option value="">Select activity</option>` +
-              filtered.map(i => `<option value="${i.id}">${i.emoji} ${i.name}</option>`).join('')
-            : `<option>No activities</option>`;
-
-    dateSelect.innerHTML =
-        `<option value="">Select date</option>` +
-        dates.map((d,i)=>`<option value="${d}">Day ${i+1} - ${d}</option>`).join('');
-}
-
-function addSavedActivityToSchedule() {
-    const id = Number(document.getElementById("savedActivitySelect").value);
-    const date = document.getElementById("activityDateSelect").value;
-
-    const saved = getSavedActivities();
-    const activity = saved.find(a => a.id === id);
-
-    const items = getItineraryItems();
-
-    items.push({ ...activity, date });
-
-    setItineraryItems(items);
-
-    renderAll();
-}
-
-function moveActivity(id, newDate) {
-    if (!newDate) return;
-
-    const items = getItineraryItems();
-
-    const updated = items.map(item => {
-        if (item.id === id) {
-            return { ...item, date: newDate };
+    function updateTripDates() {
+      tripDetails.startDate = document.getElementById('start-date').value;
+      tripDetails.endDate = document.getElementById('end-date').value;
+      setTripDetails(tripDetails);
+      
+      // Normalize item dates
+      const items = getItineraryItems();
+      const start = new Date(tripDetails.startDate);
+      const end = new Date(tripDetails.endDate);
+      
+      const normalizedItems = items.map(item => {
+        if (!item.date) return { ...item, date: tripDetails.startDate };
+        const itemDate = new Date(item.date);
+        if (itemDate < start || itemDate > end) {
+          return { ...item, date: tripDetails.startDate };
         }
         return item;
-    });
-    updated.sort((a, b) => new Date(a.date) - new Date(b.date));
-    setItineraryItems(updated);
-
-    renderAll();
-}
-
-
-// ============================================
-// CARBON CALCULATOR (RESTORED)
-// ============================================
-function calculateItineraryCarbon() {
-  const travelMode = document.getElementById("travelMode")?.value || "flight";
-    const flightDistance =
-        Number(document.getElementById("flightDistance")?.value) ||
-        window.autoTravelDistance ||
-        0;
-
-    const flightClass = document.getElementById("flightClass").value;
-    const roundTrip = document.getElementById("roundTrip").checked;
-
-    const localDistance = Number(document.getElementById("localDistance").value) || 0;
-    const localTransport = document.getElementById("localTransport").value;
-
-    const nights = Number(document.getElementById("nights").value) || 0;
-    const accommodationType = document.getElementById("accommodationType").value;
-    const activityItems = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
-
-const activityEmission = activityItems.reduce((sum, item) => {
-    return sum + (Number(item.co2) || 0);
-}, 0);
-
-    const flightFactors = {
-        economy: 0.255,
-        premium: 0.382,
-        business: 0.739,
-        first: 1.019
-    };
-
-    const localFactors = {
-        walking: 0,
-        train: 0.03,
-        bus: 0.05,
-        electric: 0.053,
-        car: 0.21
-    };
-
-    const accFactors = {
-        eco: 8.2,
-        hostel: 5.1,
-        budget: 10.2,
-        standard: 20.6,
-        luxury: 33.4
-    };
-
-    let flight = 0;
-
-if (travelMode === "flight") {
-    flight = flightDistance * flightFactors[flightClass];
-    if (roundTrip) flight *= 2;
-}
-
-if (travelMode === "bus") {
-    flight = flightDistance * 0.05;
-}
-
-if (travelMode === "train") {
-    flight = flightDistance * 0.03;
-}
-
-if (travelMode === "car") {
-    flight = flightDistance * 0.21;
-}
-
-    const local = localDistance * (localFactors[localTransport] || 0);
-    const acc = nights * (accFactors[accommodationType] || 0);
-
-const total = flight + local + acc + activityEmission;
-    document.getElementById("carbonTotal").textContent =
-        total.toFixed(1) + " kg CO₂";
-
-   document.getElementById("carbonBreakdown").innerHTML =
-    `Trip transport: ${flight.toFixed(1)} kg CO₂<br>
-     Local transport: ${local.toFixed(1)} kg CO₂<br>
-     Accommodation: ${acc.toFixed(1)} kg CO₂<br>
-     Activities: ${activityEmission.toFixed(1)} kg CO₂`;
-
-    document.getElementById("carbonResultBox").style.display = "block";
-
-    localStorage.setItem("carbonEmissions", total.toFixed(1));
-    
-}
-function updateTravelModeUI() {
-    const mode = document.getElementById("travelMode").value;
-    const flightClass = document.getElementById("flightClass");
-
-    if (!flightClass) return;
-
-    flightClass.disabled = mode !== "flight";
-}
-
-// ============================================
-// OTHER FUNCTIONS (UNCHANGED)
-// ============================================
-
-function renderTimeline() {
-    const container = document.getElementById('itinerary-timeline');
-    const items = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
-
-    if (items.length === 0) {
-        container.innerHTML = `
-            <div class="timeline-placeholder shadow-sm">
-                <p class="text-muted italic mb-4">
-                    No activities added for ${tripDetails.city || 'your destination'} yet. Save activities from Directory, then add them to your schedule here.
-                </p>
-                <a href="directory.html" class="browse-btn">Browse Destinations</a>
-            </div>`;
-        return;
+      });
+      
+      setItineraryItems(normalizedItems);
+      
+      renderWeatherWidget();
+      renderTimeline();
     }
 
-    const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+    // Reset Trip Function
+    function handleResetTrip() {
+      // 1. Safety check: Only prompt if they actually have activities saved
+      const currentItems = getItineraryItems();
+      if (currentItems.length > 0) {
+        if (!confirm("Are you sure you want to clear your entire itinerary? This cannot be undone.")) return;
+      }
 
-    container.innerHTML = dates.map((date, idx) => {
-
-        const dayItems = items.filter(i => i.date === date);
-
-        return `
-        <div class="timeline-day-v2 mb-4">
-            <div class="timeline-dot-v2"></div>
-
-            <div class="d-flex align-items-center mb-3">
-                <span class="badge bg-success me-2 py-2 px-3 rounded-pill">
-                    Day ${idx + 1}
-                </span>
-                <span class="text-muted small fw-bold">${date}</span>
-            </div>
-
-            <div class="ms-1">
-                ${dayItems.length > 0 ? dayItems.map(item => `
-                    <div class="card p-3 border-0 shadow-sm rounded-4 mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="fs-4">${item.emoji}</span>
-                                <h6 class="fw-bold mb-0">${item.name}</h6>
-
-                                <select class="form-select form-select-sm mt-2"
-                                    onchange="moveActivity(${item.id}, this.value)">
-                                    ${dates.map(d => `
-                                        <option value="${d}" ${item.date === d ? 'selected' : ''}>
-                                            ${formatDateShort(d)}
-                                        </option>
-                                    `).join('')}
-                                </select>
-                            </div>
-
-                           <button class="btn btn-sm text-danger"
-    onclick="removeActivity(${item.id}, '${item.date}')">✕</button>
-                        </div>
-                    </div>
-                `).join('') : `
-                    <p class="text-muted small italic ms-2">No activities planned.</p>
-                `}
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function removeActivity(activityId, activityDate) {
-    const items = getItineraryItems();
-    const updated = items.filter(item => !(item.id === activityId && item.date === activityDate));
-    setItineraryItems(updated);
-    renderAll();
-}
-function renderSidebar() {
-    const items = getItineraryItems().filter(item => item.cityId == tripDetails.cityId);
-
-    const totalCost = items.reduce((sum, item) => {
-        return sum + (Number(item.price) || 0);
-    }, 0);
-
-    document.getElementById("total-budget").textContent = "RM " + totalCost.toLocaleString();
-    document.getElementById("activity-count").textContent = items.length + " activities";
-
-    const breakdown = document.getElementById("budget-breakdown");
-
-    if (items.length === 0) {
-        breakdown.innerHTML = "Add activities to see breakdown.";
-        return;
-    }
-
-    breakdown.innerHTML = items.map(item => `
-        <div class="d-flex justify-content-between mb-2">
-            <span>${item.name}</span>
-            <span>RM ${Number(item.price) || 0}</span>
-        </div>
-    `).join("");
-}
-function updateCityDisplay() {
-    const el = document.getElementById('weather-city-name');
-    if (!el) return;
-
-    el.textContent = tripDetails.city || 'Select a city';
-}
-function syncDestinationFromItinerary() {
-    const input = document.getElementById("endLocation");
-
-    if (!input) return;
-
-    if (!tripDetails.city) {
-        input.value = "";
-        return;
-    }
-
-    input.value = tripDetails.city;
-}
-function attachCarbonListeners() {
-    const ids = [
-        "flightClass",
-        "roundTrip",
-        "localTransport",
-        "localDistance",
-        "accommodationType",
-        "nights"
-    ];
-
-    ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-
-        el.addEventListener("change", calculateItineraryCarbon);
-        el.addEventListener("input", calculateItineraryCarbon);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    attachCarbonListeners();
-    
-});
-
-function removeActivity(activityId, activityDate) {
-    let items = getItineraryItems();
-
-    items = items.filter(item => {
-        return !(Number(item.id) === Number(activityId) && item.date === activityDate);
-    });
-
-    setItineraryItems(items);
-    renderAll();
-}
-
-function handleResetTrip() {
-    const confirmReset = confirm("Are you sure you want to reset the whole itinerary?");
-    if (!confirmReset) return;
-
-    localStorage.removeItem("ecotravel-itinerary");
-
-    tripDetails = {
+      // 2. Clear the data
+      setItineraryItems([]);
+      
+      // 3. Reset trip details to default state
+      const defaultTrip = {
         city: '',
         cityId: null,
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: new Date().toISOString().split("T")[0]
-    };
+        startDate: '2026-05-10', // Default start date
+        endDate: '2026-05-12'    // Default end date
+      };
+      
+      setTripDetails(defaultTrip);
+      tripDetails = defaultTrip; // Update local state variable
 
-    setTripDetails(tripDetails);
+      // 4. Reset the form inputs in the UI
+      document.getElementById('start-date').value = defaultTrip.startDate;
+      document.getElementById('end-date').value = defaultTrip.endDate;
 
-    document.getElementById("start-date").value = tripDetails.startDate;
-    document.getElementById("end-date").value = tripDetails.endDate;
+      // 5. Re-render all components to show the empty states
+      updateCityDisplay();
+      renderWeatherWidget();
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
 
-    renderAll();
+    // Weather Widget
+    function renderWeatherWidget() {
+      const container = document.getElementById('weather-widget');
+
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="p-5 text-center bg-white rounded-4 border border-dashed text-muted">
+            <svg class="mb-3 opacity-25" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <p class="mb-1 fw-bold">No city selected</p>
+            <p class="small mb-0">Select a destination to see weather forecast for your trip.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const city = getCityById(tripDetails.cityId);
+      const tripDates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      const forecasts = tripDates.map(date => getWeatherForDate(date));
+      const current = forecasts[0];
+
+      container.innerHTML = `
+        <div class="weather-widget">
+          <div class="weather-current">
+            <div class="weather-temp">
+              ${getWeatherIcon(current.icon)}
+              <h2>${current.temp}°C</h2>
+            </div>
+            <p class="weather-condition">${current.condition} - Wind 12 km/h</p>
+            <div class="weather-city">
+              <span style="font-size: 1.125rem;">${city.emoji}</span>
+              <p>${city.name}, ${city.country}</p>
+            </div>
+          </div>
+          <div class="weather-forecast">
+            ${forecasts.slice(0, 5).map(day => `
+              <div class="weather-day">
+                <div class="weather-day-label">${day.day}</div>
+                ${getWeatherIcon(day.icon)}
+                <div class="weather-day-temp">${day.temp}°</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Timeline
+    function renderTimeline() {
+      const container = document.getElementById('itinerary-timeline');
+      const items = getItineraryItems();
+      
+      // Filter items by selected city
+      const filteredItems = tripDetails.cityId 
+        ? items.filter(item => item.cityId === tripDetails.cityId)
+        : items;
+
+      // No city selected
+      if (!tripDetails.cityId) {
+        container.innerHTML = `
+          <div class="p-4 text-center bg-white rounded-4 shadow-sm text-muted">
+            <p class="mb-0">Please select a destination city above to start planning.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // No activities
+      if (filteredItems.length === 0) {
+        container.innerHTML = `
+          <div class="p-5 text-center bg-white rounded-4 shadow-sm">
+            <p class="mb-3">No activities added for ${tripDetails.city} yet.</p>
+            <a href="directory.html" class="btn btn-success btn-sm px-4 rounded-pill">Browse Destinations</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Get all dates in trip range
+      const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
+      
+      // Group items by date
+      const itemsByDate = filteredItems.reduce((acc, item) => {
+        const date = item.date || tripDetails.startDate;
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(item);
+        return acc;
+      }, {});
+
+      const activityColors = {
+        wellness: '#c5e1a5',
+        food: '#ffe0b2',
+        nature: '#dcedc8',
+        culture: '#e1bee7',
+        adventure: '#f9e4b7',
+        wildlife: '#b2dfdb',
+      };
+
+      function getActivityColor(tags) {
+        for (const tag of tags) {
+          const lower = tag.toLowerCase();
+          if (activityColors[lower]) return activityColors[lower];
+        }
+        return '#e8f5ee';
+      }
+
+      container.innerHTML = `
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          ${dates.map(date => {
+            const dayItems = itemsByDate[date] || [];
+            const dayNum = getDayNumber(tripDetails.startDate, date);
+            
+            // Fetch weather for this specific day
+            const dayWeather = getWeatherForDate(date);
+            
+            return `
+              <div class="timeline-day">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Day ${dayNum}: ${formatDate(date)}</div>
+                ${dayItems.length > 0 ? dayItems.map(item => {
+                  
+                  // SMART SUGGESTION LOGIC
+                  const outdoorTags = ['beach', 'hiking', 'cycle', 'wildlife', 'eco'];
+                  const isOutdoor = item.tags.some(tag => outdoorTags.includes(tag.toLowerCase()));
+                  const isRaining = dayWeather.icon === 'cloud-rain';
+                  
+                  const weatherSuggestion = (isOutdoor && isRaining) ? `
+                    <div style="background-color: #fffbeb; border: 1px solid #fef08a; color: #854d0e; padding: 0.5rem 0.75rem; border-radius: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+                      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; width: 1rem; height: 1rem; margin-top: 0.125rem;">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      <div>
+                        <strong>Weather Alert:</strong> Rain is forecasted! Consider moving this outdoor activity to another day or swapping it for an indoor cultural experience.
+                      </div>
+                    </div>
+                  ` : '';
+
+                  return `
+                  <div class="timeline-item">
+                    <div class="timeline-item-header">
+                      <div class="timeline-item-left">
+                        <div class="timeline-item-icon" style="background-color: ${getActivityColor(item.tags)}">
+                          ${item.emoji}
+                        </div>
+                        <div>
+                          <h4 class="timeline-item-name">${item.name}</h4>
+                          <p class="timeline-item-category">${item.tags[0] ? getTagLabel(item.tags[0]) : 'Activity'}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item-right">
+                        <span class="timeline-item-co2">+${item.co2} kg CO2</span>
+                        <button class="timeline-item-delete" onclick="removeActivity(${item.id})">
+                          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    ${weatherSuggestion}
+                    
+                    ${dates.length > 1 ? `
+                      <div class="timeline-item-move">
+                        <span>Move to:</span>
+                        <div class="move-btns">
+                          ${dates.map((d, idx) => `
+                            <button 
+                              class="move-btn ${d === date ? 'current' : 'other'}"
+                              onclick="${d !== date ? `moveActivity(${item.id}, '${d}')` : ''}"
+                              ${d === date ? 'disabled' : ''}
+                            >
+                              Day ${idx + 1}
+                            </button>
+                          `).join('')}
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+                `}).join('') : `
+                  <p class="timeline-empty">No activities planned for this day.</p>
+                `}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function removeActivity(activityId) {
+      removeFromItinerary(activityId);
+      renderTimeline();
+      renderSidebar();
+      updateNavbarBadge();
+    }
+
+    function moveActivity(activityId, newDate) {
+      updateItemDate(activityId, newDate);
+      renderTimeline();
+    }
+
+    function renderSidebar() {
+    const items = getItineraryItems();
+    const filteredItems = tripDetails.cityId 
+      ? items.filter(item => item.cityId === tripDetails.cityId)
+      : [];
+
+    const totalPrice = filteredItems.reduce((sum, item) => sum + item.price, 0);
+    
+    // Update the Number only (RM is hardcoded in HTML for better styling)
+    document.getElementById('total-budget').textContent = totalPrice.toLocaleString();
+    document.getElementById('activity-count').textContent = `${filteredItems.length} Activities`;
+
+    const categoryTotals = filteredItems.reduce((acc, item) => {
+      const category = item.tags && item.tags[0] ? item.tags[0] : 'other';
+      acc[category] = (acc[category] || 0) + item.price;
+      return acc;
+    }, {});
+
+    const sortedCategories = Object.entries(categoryTotals)
+      .sort((a, b) => b[1] - a[1]);
+
+    const list = document.getElementById('budget-breakdown-list');
+    
+    if (sortedCategories.length > 0) {
+      list.innerHTML = sortedCategories.map(([category, amount]) => `
+        <div class="budget-category-item">
+          <span>${category}</span>
+          <span>RM ${amount.toLocaleString()}</span>
+        </div>
+      `).join('');
+    } else {
+      list.innerHTML = `<p style="font-size: 0.8rem; color: #999; text-align: center;">No activities added yet.</p>`;
+    }
+  }
+
+  function renderSavedPlans() {
+    const plans = getSavedPlans();
+    const container = document.getElementById('saved-plans-list');
+    if (!container) return;
+
+    if (plans.length === 0) {
+      container.innerHTML = `
+        <div class="col-12">
+          <div class="p-5 text-center bg-white rounded-4 shadow-sm text-muted">
+            <h3 class="h5 mb-3">No saved itineraries yet</h3>
+            <p class="mb-3">Create a trip and click Save Itinerary to keep it for later.</p>
+            <button class="btn btn-success btn-sm" onclick="document.getElementById('create-tab').click()">Start a Plan</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = plans.map(plan => {
+      const trip = plan.tripDetails || {};
+      const count = Array.isArray(plan.items) ? plan.items.length : 0;
+      const totalCost = plan.items.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+      const totalCO2 = plan.items.reduce((sum, item) => sum + (Number(item.co2) || 0), 0);
+      const startDate = trip.startDate || 'TBD';
+      const endDate = trip.endDate || 'TBD';
+      const cityLabel = trip.city ? `${trip.city}` : 'Unknown destination';
+
+      return `
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h5 class="mb-1">${plan.title || cityLabel}</h5>
+                  <p class="text-muted small mb-0">${cityLabel}</p>
+                </div>
+                <button type="button" class="btn btn-sm text-danger p-0" onclick="deleteSavedPlan(${plan.id})">🗑️</button>
+              </div>
+              <p class="text-muted small mb-1">${startDate} – ${endDate}</p>
+              <div class="border-top pt-2 mb-3">
+                <p class="small mb-1"><strong>Activities:</strong> ${count}</p>
+                <p class="small mb-1"><strong>Total Cost:</strong> RM ${totalCost.toLocaleString()}</p>
+                <p class="small mb-0"><strong>CO₂ Impact:</strong> +${totalCO2} kg</p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-success btn-sm" onclick="viewSavedPlan(${plan.id})">View</button>
+                <button class="btn btn-success btn-sm" onclick="editSavedPlan(${plan.id})">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+function saveItinerary() {
+  if (!tripDetails.cityId) {
+    alert('Please select a destination before saving your itinerary.');
+    return;
+  }
+
+  const items = getItineraryItems().filter(item => item.cityId === tripDetails.cityId);
+  if (items.length === 0) {
+    alert('Please add at least one activity to your itinerary before saving.');
+    return;
+  }
+
+  const defaultTitle = `${tripDetails.city} ${tripDetails.startDate || ''}`.trim();
+  const title = prompt('Enter a title for this itinerary plan:', defaultTitle) || defaultTitle;
+  const plans = getSavedPlans();
+  const id = Date.now();
+
+  plans.push({
+    id,
+    title,
+    tripDetails: { ...tripDetails },
+    items
+  });
+
+  setSavedPlans(plans);
+  renderSavedPlans();
+  alert('Itinerary saved successfully. You can now load it from the Saved Itinerary tab.');
+}
+
+function openSavedPlanForEdit(planId) {
+  const plans = getSavedPlans();
+  const plan = plans.find(p => p.id === planId);
+  if (!plan) {
+    alert('Saved plan not found.');
+    return;
+  }
+
+  tripDetails = { ...plan.tripDetails };
+  setTripDetails(tripDetails);
+
+  const remainingItems = getItineraryItems().filter(item => item.cityId !== tripDetails.cityId);
+  setItineraryItems([...remainingItems, ...plan.items]);
+
+  document.getElementById('start-date').value = tripDetails.startDate;
+  document.getElementById('end-date').value = tripDetails.endDate;
+
+  updateCityDisplay();
+  renderWeatherWidget();
+  renderTimeline();
+  renderSidebar();
+  updateNavbarBadge();
+
+  const createTab = document.getElementById('create-tab');
+  const tab = new bootstrap.Tab(createTab);
+  tab.show();
+}
+
+function viewSavedPlan(planId) {
+  const plans = getSavedPlans();
+  const plan = plans.find(p => p.id === planId);
+  if (!plan) {
+    alert('Saved plan not found.');
+    return;
+  }
+
+  const title = plan.title || plan.tripDetails.city || 'Saved Plan';
+  document.getElementById('savedPlanModalLabel').textContent = `Activities for ${title}`;
+  document.getElementById('savedPlanModalCity').textContent = `${plan.tripDetails.city || 'Unknown destination'} · ${plan.tripDetails.startDate || 'TBD'} to ${plan.tripDetails.endDate || 'TBD'}`;
+
+  const list = document.getElementById('savedPlanActivitiesList');
+  if (!Array.isArray(plan.items) || plan.items.length === 0) {
+    list.innerHTML = '<li class="list-group-item text-muted">No activities saved for this plan.</li>';
+  } else {
+    list.innerHTML = plan.items.map(item => `
+      <li class="list-group-item">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${item.name || item.activity || 'Activity'}</strong>
+            <p class="small text-muted mb-0">${item.description || item.city || ''}</p>
+          </div>
+          <span class="badge bg-success rounded-pill">${item.co2 || '0'} kg CO₂</span>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  const modalElement = document.getElementById('savedPlanModal');
+  const modal = new bootstrap.Modal(modalElement);
+  modal.show();
+}
+
+function editSavedPlan(planId) {
+  openSavedPlanForEdit(planId);
+}
+
+function deleteSavedPlan(planId) {
+  if (!confirm('Are you sure you want to delete this saved itinerary?')) return;
+  const plans = getSavedPlans().filter(p => p.id !== planId);
+  setSavedPlans(plans);
+  renderSavedPlans();
 }
 
