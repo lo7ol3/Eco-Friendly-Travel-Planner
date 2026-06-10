@@ -1,49 +1,51 @@
 // Register user
-function registerUser(e) {
+async function registerUser(e) {
   e.preventDefault();
 
-  const newUser = {
-    name: document.getElementById("regName").value,
-    email: document.getElementById("regEmail").value,
-    password: document.getElementById("regPassword").value
-  };
+  const name = document.getElementById("regName").value;
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPassword").value;
 
-  // 🔍 Check if user already exists
-  const existingUser = JSON.parse(localStorage.getItem("user"));
+  const { data, error } = await window.supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: name
+      }
+    }
+  });
 
-  if (existingUser && existingUser.email === newUser.email) {
-    alert("Email already exists. Please use a different email.");
+  if (error) {
+    alert(error.message);
     return;
   }
-
-  // 💾 Save new user
-  localStorage.setItem("user", JSON.stringify(newUser));
 
   alert("Account created successfully!");
   window.location.href = "login.html";
 }
 
 // Login user
-function loginUser(e) {
+async function loginUser(e) {
   e.preventDefault();
 
   const email = document.getElementById("loginEmail").value;
   const password = document.getElementById("loginPassword").value;
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { data, error } =
+    await window.supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
-  if (!user) {
-    alert("No account found. Please register.");
+  if (error) {
+    alert(error.message);
     return;
   }
 
-  if (email === user.email && password === user.password) {
-    localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    window.location.href = "directory.html";
-  } else {
-    alert("Invalid email or password");
-  }
+  localStorage.setItem("loggedIn", "true");
+
+  window.location.href = "directory.html";
 }
 
 // Logout
@@ -62,9 +64,12 @@ function clearSessionData() {
   sessionKeys.forEach(key => localStorage.removeItem(key));
 }
 
-function logout() {
+async function logout() {
+  await window.supabaseClient.auth.signOut();
+
   clearSessionData();
-  window.location.href = 'login.html';
+
+  window.location.href = "login.html";
 }
 
 // Protect pages
@@ -89,21 +94,28 @@ function isPublicPage() {
   return page === 'login.html' || page === 'register.html' || page === 'index.html' || page === 'directory.html';
 }
 
-function isAuthenticated() {
-  return localStorage.getItem('loggedIn') === 'true';
+async function isAuthenticated() {
+  const {
+    data: { session }
+  } = await window.supabaseClient.auth.getSession();
+
+  return !!session;
 }
 
-function requireLogin() {
-  if (!isAuthenticated()) {
+async function requireLogin() {
+  const loggedIn = await isAuthenticated();
+
+  if (!loggedIn) {
     alert('Please log in to continue.');
     window.location.href = 'login.html';
     return false;
   }
+
   return true;
 }
 
-function handleAuthRedirect() {
-  const loggedIn = isAuthenticated();
+async function handleAuthRedirect() {
+  const loggedIn = await isAuthenticated();
   const page = getCurrentPage();
 
   if (isPublicPage()) {
