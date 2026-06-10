@@ -368,8 +368,8 @@
         <button class="avatar-edit-btn" title="Change avatar"><i class="bi bi-camera"></i></button>
       </div>
       <div class="banner-info">
-        <div class="banner-name" id="bannerName">Ahmad Zulkifli</div>
-        <div class="banner-email" id="bannerEmail">ahmad@example.com</div>
+   <h2 id="profileName">Loading...</h2>
+    <p id="profileEmail">Loading...</p>
       </div>
     </div>
 
@@ -412,21 +412,21 @@
             <label class="form-label" for="firstName">First Name</label>
             <div class="input-icon-wrap">
               <i class="bi bi-person"></i>
-              <input type="text" class="form-control" id="firstName" value="Ahmad" required />
+              <input type="text" class="form-control" id="firstName" />
             </div>
           </div>
           <div class="col-md-6">
             <label class="form-label" for="lastName">Last Name</label>
             <div class="input-icon-wrap">
               <i class="bi bi-person"></i>
-              <input type="text" class="form-control" id="lastName" value="Zulkifli" required />
+             <input type="text" class="form-control" id="lastName" />
             </div>
           </div>
           <div class="col-md-6">
             <label class="form-label" for="email">Email Address</label>
             <div class="input-icon-wrap">
               <i class="bi bi-envelope"></i>
-              <input type="email" class="form-control" id="email" value="ahmad@example.com" required />
+              <input type="email" class="form-control" id="email" />
             </div>
           </div>
           <div class="col-md-6">
@@ -440,7 +440,7 @@
             <label class="form-label" for="username">Username</label>
             <div class="input-icon-wrap">
               <i class="bi bi-at"></i>
-              <input type="text" class="form-control" id="username" value="ahmad_eco" />
+              <input type="text" class="form-control" id="username" value="-" />
             </div>
           </div>
         </div>
@@ -614,8 +614,11 @@
     const last  = document.getElementById('lastName').value.trim();
     const email = document.getElementById('email').value.trim();
 
-    document.getElementById('bannerName').textContent  = first + ' ' + last;
-    document.getElementById('bannerEmail').textContent = email;
+    document.getElementById('profileName').textContent =
+  first + ' ' + last;
+
+document.getElementById('profileEmail').textContent =
+  email;
 
     const initials = (first[0] || '') + (last[0] || '');
     document.getElementById('avatarInitials').textContent = initials.toUpperCase();
@@ -657,6 +660,10 @@
     bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
   }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="auth.js"></script>
+<script src="profile.js"></script>
 </body>
-  <script src="auth.js"></script>
+
 </html>

@@ -1994,3 +1994,14 @@ aside .section-header {
   border-radius: 10px;
   border: 4px solid white; /* Creates the "floating" bar effect */
 }
+#profileName {
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 0;
+}
+
+#profileEmail {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+}
