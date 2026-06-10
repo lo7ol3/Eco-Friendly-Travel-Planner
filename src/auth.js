@@ -2,25 +2,50 @@
 async function registerUser(e) {
   e.preventDefault();
 
-  const name = document.getElementById("regName").value;
-  const email = document.getElementById("regEmail").value;
-  const password = document.getElementById("regPassword").value;
+  const name =
+    document.getElementById("regName").value;
 
-  const { data, error } = await window.supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: name
+  const email =
+    document.getElementById("regEmail").value;
+
+  const password =
+    document.getElementById("regPassword").value;
+
+  const { data, error } =
+    await window.supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name
+        }
       }
-    }
-  });
+    });
 
   if (error) {
     alert(error.message);
     return;
   }
+const names = name.trim().split(" ");
 
+const firstName = names[0] || "";
+
+const lastName =
+  names.slice(1).join(" ");
+
+const username =
+  name.replace(/\s+/g, "").toLowerCase();
+
+await window.supabaseClient
+  .from("user_profiles")
+  .insert([
+    {
+      user_id: data.user.id,
+      first_name: firstName,
+      last_name: lastName,
+      username: username
+    }
+  ]);
   alert("Account created successfully!");
   window.location.href = "login.html";
 }

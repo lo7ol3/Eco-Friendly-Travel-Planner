@@ -28,7 +28,8 @@ async function loadProfile() {
 
   document.getElementById("email").value =
     user.email;
-
+document.getElementById("username").value =
+   fullName.replace(/\s+/g, "").toLowerCase();
   const initials =
     ((names[0]?.[0] || "") +
       (names[1]?.[0] || "")).toUpperCase();
