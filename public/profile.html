@@ -700,17 +700,50 @@
   }
 
   // ── Delete account ──
-  function confirmDelete() {
-    const val = document.getElementById('deleteConfirmInput').value.trim();
-    if (val !== 'DELETE') {
-      alert('Please type DELETE exactly to confirm.');
-      return;
-    }
-    // TODO (Phase 2): Send DELETE request to /api/profile
-    // fetch('/api/profile', { method: 'DELETE' }).then(() => window.location.href = '/register')
-    alert('Account deletion would be processed here (Phase 2).');
-    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+  async function confirmDelete() {
+  const val =
+    document.getElementById("deleteConfirmInput").value.trim();
+
+  if (val !== "DELETE") {
+    alert("Please type DELETE exactly.");
+    return;
   }
+
+  const {
+    data: { user }
+  } = await window.supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("User not found.");
+    return;
+  }
+
+  await window.supabaseClient
+    .from("user_favorites")
+    .delete()
+    .eq("user_id", user.id);
+
+  await window.supabaseClient
+    .from("user_trips")
+    .delete()
+    .eq("user_id", user.id);
+
+  const { error } = await window.supabaseClient
+    .from("user_profiles")
+    .delete()
+    .eq("user_id", user.id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  await window.supabaseClient.auth.signOut();
+
+  alert("Account deleted successfully.");
+
+  window.location.href = "login.html";
+}
 </script>
 </body>
 </html>

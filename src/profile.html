@@ -659,16 +659,51 @@ document.getElementById('profileEmail').textContent =
     setTimeout(() => alert.classList.remove('show'), 3500);
     document.getElementById('passwordForm').reset();
   }
+async function confirmDelete() {
+  const val =
+    document.getElementById("deleteConfirmInput").value.trim();
 
-  function confirmDelete() {
-    const val = document.getElementById('deleteConfirmInput').value.trim();
-    if (val !== 'DELETE') {
-      alert('Please type DELETE exactly to confirm.');
-      return;
-    }
-    alert('Account deletion would be processed here (Phase 2).');
-    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+  if (val !== "DELETE") {
+    alert("Please type DELETE exactly.");
+    return;
   }
+
+  const {
+    data: { user }
+  } = await window.supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("User not found.");
+    return;
+  }
+
+  await window.supabaseClient
+    .from("user_favorites")
+    .delete()
+    .eq("user_id", user.id);
+
+  await window.supabaseClient
+    .from("user_trips")
+    .delete()
+    .eq("user_id", user.id);
+
+  const { error } = await window.supabaseClient
+    .from("user_profiles")
+    .delete()
+    .eq("user_id", user.id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  await window.supabaseClient.auth.signOut();
+
+  alert("Account deleted successfully!");
+
+  window.location.href = "login.html";
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>

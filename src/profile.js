@@ -105,3 +105,26 @@ async function saveProfile(event) {
 
   alert("Profile updated successfully!");
 }
+async function updatePassword() {
+  const newPassword =
+    document.getElementById("newPassword").value;
+
+  if (newPassword.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  const { error } =
+    await window.supabaseClient.auth.updateUser({
+      password: newPassword
+    });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Password updated successfully!");
+
+  document.getElementById("newPassword").value = "";
+}
