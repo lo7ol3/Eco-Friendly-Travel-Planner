@@ -391,19 +391,21 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Trips Planned</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">12.4 kg</div>
-          <div class="stat-label">CO₂ Saved</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">7</div>
-          <div class="stat-label">Favourites</div>
-        </div>
-      </div>
+  <div class="stat-card">
+    <div class="stat-number" id="tripCount">0</div>
+    <div class="stat-label">Trips Planned</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-number" id="co2Saved">0 kg</div>
+    <div class="stat-label">CO₂ Saved</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-number" id="favCount">0</div>
+    <div class="stat-label">Favourites</div>
+  </div>
+</div>
 
       <form id="profileForm" onsubmit="saveProfile(event)">
         <p class="section-label">Basic Details</p>

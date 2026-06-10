@@ -32,6 +32,29 @@ async function loadProfile() {
 
   document.getElementById("avatarInitials").textContent =
     initials;
+    // Trips Planned
+const { count: tripCount } = await window.supabaseClient
+  .from("user_trips")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id);
+
+document.getElementById("tripCount").textContent =
+  tripCount || 0;
+
+
+// Favourites
+const { count: favCount } = await window.supabaseClient
+  .from("user_favorites")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id);
+
+document.getElementById("favCount").textContent =
+  favCount || 0;
+
+
+// CO₂ Saved (temporary)
+document.getElementById("co2Saved").textContent =
+  "0 kg";
 
   // Load additional profile data
   const { data: profile } =
