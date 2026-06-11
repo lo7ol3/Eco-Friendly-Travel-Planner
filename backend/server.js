@@ -39,7 +39,7 @@ app.get("/api/destinations", async (req, res) => {
     let allDestinations = [];
 
     for (const city of citiesToSearch) {
-      const geoUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(city)}&format=json&apiKey=${API_KEY}`;
+      const geoUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(city)}&format=json&lang=en&apiKey=${API_KEY}`;
       const geoResponse = await fetch(geoUrl);
       const geoData = await geoResponse.json();
 
@@ -49,7 +49,7 @@ app.get("/api/destinations", async (req, res) => {
 
       const limit = cityQuery ? 40 : 8;
 
-      const placesUrl = `https://api.geoapify.com/v2/places?categories=tourism.sights,tourism.attraction,entertainment,leisure,natural&filter=circle:${lon},${lat},50000&limit=${limit}&apiKey=${API_KEY}`;
+      const placesUrl = `https://api.geoapify.com/v2/places?categories=tourism.sights,tourism.attraction,entertainment,leisure,natural&filter=circle:${lon},${lat},50000&limit=${limit}&lang=en&apiKey=${API_KEY}`;
 
       const placesResponse = await fetch(placesUrl);
       const placesData = await placesResponse.json();

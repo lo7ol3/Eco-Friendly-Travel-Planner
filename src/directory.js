@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadApiDestinations(city = "") {
+    const cardsContainer = document.getElementById('city-cards');
+    const emptyState = document.getElementById('empty-state');
+
+    cardsContainer.classList.remove('hidden');
+    emptyState.classList.add('hidden');
+    cardsContainer.innerHTML = `<p>Loading destinations...</p>`;
+
     try {
         const url = city
             ? `http://localhost:3000/api/destinations?city=${encodeURIComponent(city)}`
@@ -47,6 +54,7 @@ async function loadApiDestinations(city = "") {
 
     } catch (error) {
         console.error("API destination error:", error);
+        cardsContainer.innerHTML = `<p>Failed to load destinations. Make sure your server is running.</p>`;
     }
 }
 
