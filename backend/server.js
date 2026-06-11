@@ -7,6 +7,59 @@ app.use(cors());
 
 const API_KEY = process.env.GEOAPIFY_API_KEY;
 
+function cleanText(text) {
+  return String(text || "")
+    .replace(/\n/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isEnglishText(text) {
+  if (!text) return false;
+
+  const name = cleanText(text);
+
+  if (name.length < 3) return false;
+  if (name.toLowerCase().includes("unnamed")) return false;
+
+  // reject Thai, Japanese, Korean, Arabic, Chinese, etc.
+  if (/[^\x00-\x7F]/.test(name)) return false;
+
+  // must contain English alphabet
+  return /[A-Za-z]/.test(name);
+}
+
+function getEnglishName(place) {
+  const p = place.properties;
+  const raw = p.datasource?.raw || {};
+
+  const possibleNames = [
+    raw["name:en"],
+    raw["int_name"],
+    raw["name:latin"],
+    p.name
+  ];
+
+  for (const item of possibleNames) {
+    const cleaned = cleanText(item);
+    if (isEnglishText(cleaned)) {
+      return cleaned;
+    }
+  }
+
+  return null;
+}
+
+function isEnglishName(name) {
+  if (!name) return false;
+
+  // Remove names like "Unnamed Destination"
+  if (name.toLowerCase().includes("unnamed")) return false;
+
+  // Allow only English letters, numbers, spaces, and common symbols
+  return /^[A-Za-z0-9\s&'.,()\-–]+$/.test(name);
+}
+
 app.get("/api/destinations", async (req, res) => {
   try {
     const cityQuery = req.query.city;
@@ -47,7 +100,7 @@ app.get("/api/destinations", async (req, res) => {
 
       const { lat, lon, country } = geoData.results[0];
 
-      const limit = cityQuery ? 40 : 8;
+      const limit = cityQuery ? 100 : 30;
 
       const placesUrl = `https://api.geoapify.com/v2/places?categories=tourism.sights,tourism.attraction,entertainment,leisure,natural&filter=circle:${lon},${lat},50000&limit=${limit}&lang=en&apiKey=${API_KEY}`;
 
@@ -56,24 +109,27 @@ app.get("/api/destinations", async (req, res) => {
 
       if (!placesData.features) continue;
 
-      const destinations = placesData.features
-        .filter(place => place.properties.name)
-        .map((place, index) => {
-          const p = place.properties;
+const destinations = placesData.features
+  .map((place, index) => {
+    const p = place.properties;
+    const englishName = getEnglishName(place);
 
-          return {
-            id: p.place_id || `${city}-${index}`,
-            name: p.name,
-            city: city,
-            country: country || "Unknown",
-            price: 100 + index * 25,
-            co2: 20 + index * 4,
-            transport: index % 2 === 0 ? "bus" : "train",
-            interests: ["eco", "culture"],
-            image: "https://via.placeholder.com/400x250?text=EcoTravel",
-            description: p.categories ? p.categories.join(", ") : "Tourist destination"
-          };
-        });
+    if (!englishName) return null;
+
+    return {
+      id: p.place_id || `${city}-${index}`,
+      name: englishName,
+      city: city,
+      country: country || "Unknown",
+      price: 100 + index * 25,
+      co2: 20 + index * 4,
+      transport: index % 2 === 0 ? "bus" : "train",
+      interests: ["eco", "culture"],
+      image: "https://via.placeholder.com/400x250?text=EcoTravel",
+      description: p.categories ? p.categories.join(", ") : "Tourist destination"
+    };
+  })
+  .filter(destination => destination !== null);
 
       allDestinations = allDestinations.concat(destinations);
     }
