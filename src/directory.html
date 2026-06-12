@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Find Destinations - EcoTravel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
     <div class="container">
@@ -33,16 +37,11 @@
     <h1 class="hero-title" style="font-size: 2rem;">Find Your Next Eco Trip</h1>
     <p class="hero-subtitle x-small">Discover sustainable destinations that match your interests and budget.</p>
     <form class="search-bar" onsubmit="handleSearch(event)">
-      <input 
-        type="text" 
-        id="search-input"
-        class="search-input" 
-        placeholder="Search by city, country, or activity..."
-      >
+      <input type="text" id="search-input" class="search-input" placeholder="Search by city, country, or activity...">
       <button type="submit" class="search-btn">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
       </button>
     </form>
@@ -52,11 +51,15 @@
     <aside class="sidebar" id="filter-sidebar">
       <h2 class="sidebar-title">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
-          <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
-          <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
-          <line x1="17" y1="16" x2="23" y2="16"/>
+          <line x1="4" y1="21" x2="4" y2="14" />
+          <line x1="4" y1="10" x2="4" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12" y2="3" />
+          <line x1="20" y1="21" x2="20" y2="16" />
+          <line x1="20" y1="12" x2="20" y2="3" />
+          <line x1="1" y1="14" x2="7" y2="14" />
+          <line x1="9" y1="8" x2="15" y2="8" />
+          <line x1="17" y1="16" x2="23" y2="16" />
         </svg>
         Filters
       </h2>
@@ -75,11 +78,11 @@
       <div class="filter-section">
         <p class="filter-label">Transport Type</p>
         <div class="option-group" id="transport-options">
-          <button class="option-btn active" data-value="any">🌍 Any</button>
-          <button class="option-btn" data-value="train">🚆 Train / Rail</button>
-          <button class="option-btn" data-value="bus">🚌 Bus / Coach</button>
-          <button class="option-btn" data-value="flight">✈️ Flight (offset)</button>
-          <button class="option-btn" data-value="cycle">🚴 Cycling route</button>
+          <button class="option-btn active" data-value="any">Any</button>
+          <button class="option-btn" data-value="train">Train / Rail</button>
+          <button class="option-btn" data-value="bus">Bus / Coach</button>
+          <button class="option-btn" data-value="flight">Flight (offset)</button>
+          <button class="option-btn" data-value="cycle">Cycling route</button>
         </div>
       </div>
 
@@ -88,35 +91,35 @@
         <div class="option-group" id="interest-options">
           <label class="checkbox-option">
             <input type="checkbox" value="eco" checked>
-            <span>🌿 Eco stays</span>
+            <span>Eco stays</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="food">
-            <span>🍃 Plant-based food</span>
+            <span>Plant-based food</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="hiking">
-            <span>🥾 Hiking & trekking</span>
+            <span>Hiking & trekking</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="beach">
-            <span>🏖️ Beach & snorkelling</span>
+            <span>Beach & snorkelling</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="culture">
-            <span>🏛️ Culture & heritage</span>
+            <span>Culture & heritage</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="wildlife">
-            <span>🦋 Wildlife</span>
+            <span>Wildlife</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="cycle">
-            <span>🚴 Cycling</span>
+            <span>Cycling</span>
           </label>
           <label class="checkbox-option">
             <input type="checkbox" value="wellness">
-            <span>🧘 Wellness & retreat</span>
+            <span>Wellness & retreat</span>
           </label>
         </div>
       </div>
@@ -133,7 +136,8 @@
 
       <button class="reset-btn" onclick="resetFilters()">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
         Reset Filters
       </button>
@@ -149,7 +153,7 @@
           <p class="favorites-empty">No favourite places yet. Click the heart icon on a destination.</p>
         </div>
       </div>
-      
+
       <div class="results-header">
         <div>
           <h2>Destinations</h2>
@@ -179,7 +183,8 @@
       <div class="modal-header" id="modal-header">
         <button class="modal-close" onclick="closeModal()">
           <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
         <h2 class="modal-title font-serif" id="modal-title"></h2>
@@ -193,12 +198,12 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
   <script src="auth.js"></script>
-  <script src="cities.js"></script>
-  <script src="activities.js"></script>
-  <script src="tagLables.js"></script>
   <script src="app.js"></script>
-  
+
   <script src="directory.js"></script>
 </body>
+
 </html>

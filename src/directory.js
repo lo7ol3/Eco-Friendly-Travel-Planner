@@ -14,8 +14,11 @@ let filters = {
 let currentModalCity = null;
 
 // Safeguard core operational runtime until DOM elements completely execute
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     setupFilterListeners();
+    if (typeof loadCities === 'function') {
+        await loadCities();
+    }
     renderCityCards();
     renderFavoritePlaces();
     if (typeof updateNavbarBadge === 'function') updateNavbarBadge();
@@ -219,13 +222,13 @@ function removeFavoritePlace(e, cityId) {
     renderFavoritePlaces();
 }
 
-function openModal(cityId) {
+async function openModal(cityId) {
     if (typeof getCityById !== 'function') return;
     const city = getCityById(cityId);
     if (!city) return;
 
     currentModalCity = city;
-    const cityActivities = typeof getActivitiesByCity === 'function' ? getActivitiesByCity(cityId) : [];
+    const cityActivities = typeof getActivitiesByCity === 'function' ? await getActivitiesByCity(cityId) : [];
 
     // FIXED: Stripped background-image so that it never puts image headers inside the view modal popup
     const modalHeader = document.getElementById('modal-header');
@@ -289,11 +292,11 @@ function closeModal() {
     currentModalCity = null;
 }
 
-function handleAddActivity(activityId) {
+async function handleAddActivity(activityId) {
     if (typeof requireLogin === 'function' && !requireLogin()) return;
-    if (!currentModalCity || typeof activities === 'undefined') return;
+    if (!currentModalCity) return;
     
-    const activity = activities.find(a => a.id === activityId);
+    const activity = typeof fetchActivityById === 'function' ? await fetchActivityById(activityId) : null;
     if (!activity) return;
 
     if (typeof isInItinerary === 'function' && isInItinerary(activityId)) {

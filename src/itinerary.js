@@ -7,7 +7,11 @@ let dropdownOpen = false;
 let weatherForecasts = [];
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+  if (typeof loadCities === 'function') {
+    await loadCities();
+  }
+
   // Load trip details
   document.getElementById('start-date').value = tripDetails.startDate;
   document.getElementById('end-date').value = tripDetails.endDate;
