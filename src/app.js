@@ -3,18 +3,7 @@
 // ============================================
 
 const cities = [
-  { id: 1, name: 'Cameron Highland', country: 'Malaysia', emoji: '🌿', tags: ['eco', 'hiking', 'food'], transport: ['bus', 'train'], co2: 18, price: 250, duration: 'weekend', imgBg: '#c8e6d8' },
-  { id: 2, name: 'Tioman Island', country: 'Malaysia', emoji: '🏖️', tags: ['beach', 'wildlife', 'eco'], transport: ['bus', 'flight'], co2: 42, price: 400, duration: 'short', imgBg: '#b2dfdb' },
-  { id: 3, name: 'Penang', country: 'Malaysia', emoji: '🏛️', tags: ['culture', 'food', 'eco'], transport: ['train', 'bus'], co2: 15, price: 300, duration: 'weekend', imgBg: '#ffe0b2' },
-  { id: 4, name: 'Belum Rainforest', country: 'Malaysia', emoji: '🦋', tags: ['wildlife', 'eco', 'hiking'], transport: ['bus'], co2: 22, price: 350, duration: 'short', imgBg: '#dcedc8' },
-  { id: 5, name: 'Yogyakarta', country: 'Indonesia', emoji: '🏛️', tags: ['culture', 'food', 'eco'], transport: ['flight', 'train'], co2: 95, price: 600, duration: 'short', imgBg: '#f8bbd0' },
-  { id: 6, name: 'Chiang Mai', country: 'Thailand', emoji: '🧘', tags: ['wellness', 'culture', 'eco'], transport: ['flight'], co2: 120, price: 700, duration: 'medium', imgBg: '#e1bee7' },
-  { id: 7, name: 'Koh Lanta', country: 'Thailand', emoji: '🏖️', tags: ['beach', 'eco', 'wellness'], transport: ['flight', 'bus'], co2: 140, price: 850, duration: 'short', imgBg: '#b3e5fc' },
-  { id: 8, name: 'Pai', country: 'Thailand', emoji: '🌄', tags: ['hiking', 'wellness', 'eco'], transport: ['bus'], co2: 30, price: 450, duration: 'weekend', imgBg: '#f9e4b7' },
-  { id: 9, name: 'Ubud', country: 'Indonesia', emoji: '🌿', tags: ['wellness', 'food', 'eco', 'culture'], transport: ['flight'], co2: 110, price: 780, duration: 'medium', imgBg: '#c5e1a5' },
-  { id: 10, name: 'Perhentian Island', country: 'Malaysia', emoji: '🐠', tags: ['beach', 'wildlife'], transport: ['bus'], co2: 28, price: 500, duration: 'short', imgBg: '#80deea' },
-  { id: 11, name: 'Singapore', country: 'Singapore', emoji: '🌆', tags: ['culture', 'food'], transport: ['train', 'bus'], co2: 12, price: 900, duration: 'weekend', imgBg: '#cfd8dc' },
-  { id: 12, name: 'Kinabalu Park', country: 'Malaysia', emoji: '🏔️', tags: ['hiking', 'wildlife', 'eco'], transport: ['flight', 'bus'], co2: 80, price: 650, duration: 'short', imgBg: '#d7ccc8' },
+  { id: 1, name: 'Cameron Highland', country: 'Malaysia', tags: ['eco', 'hiking', 'food'], transport: ['bus', 'train'], co2: 18, price: 250, duration: 'weekend', img_url: 'https://i.pinimg.com/736x/f4/d5/f9/f4d5f9b876c8a167ab65490baec57859.jpg' },
 ];
 
 const activities = [
@@ -24,82 +13,17 @@ const activities = [
   { id: 103, cityId: 1, name: 'Strawberry Farm Visit', emoji: '🍓', tags: ['food', 'eco'], price: 20, co2: 1, duration: '1 hour', description: 'Pick fresh strawberries at an organic farm.' },
   { id: 104, cityId: 1, name: 'Butterfly Garden', emoji: '🦋', tags: ['wildlife', 'eco'], price: 15, co2: 0, duration: '1 hour', description: 'See hundreds of butterfly species in a natural habitat.' },
 
-  // Tioman Island
-  { id: 201, cityId: 2, name: 'Coral Reef Snorkeling', emoji: '🤿', tags: ['beach', 'wildlife'], price: 80, co2: 5, duration: '3 hours', description: 'Snorkel in crystal clear waters among vibrant coral reefs.' },
-  { id: 202, cityId: 2, name: 'Jungle Waterfall Hike', emoji: '💦', tags: ['hiking', 'eco'], price: 40, co2: 1, duration: '4 hours', description: 'Trek through the jungle to discover hidden waterfalls.' },
-  { id: 203, cityId: 2, name: 'Beach Cleanup Volunteer', emoji: '🏖️', tags: ['eco', 'beach'], price: 0, co2: 0, duration: '2 hours', description: 'Join the community in keeping beaches clean.' },
-  { id: 204, cityId: 2, name: 'Sea Turtle Conservation', emoji: '🐢', tags: ['wildlife', 'eco'], price: 60, co2: 2, duration: '3 hours', description: 'Learn about and help protect endangered sea turtles.' },
-
-  // Penang
-  { id: 301, cityId: 3, name: 'Georgetown Heritage Walk', emoji: '🏛️', tags: ['culture'], price: 25, co2: 0, duration: '3 hours', description: 'Explore the UNESCO World Heritage streets and street art.' },
-  { id: 302, cityId: 3, name: 'Penang Hill Funicular', emoji: '🚡', tags: ['eco', 'hiking'], price: 35, co2: 3, duration: '2 hours', description: 'Ride the historic funicular railway to panoramic views.' },
-  { id: 303, cityId: 3, name: 'Hawker Food Tour', emoji: '🍜', tags: ['food', 'culture'], price: 50, co2: 2, duration: '3 hours', description: 'Taste authentic local dishes at famous hawker centers.' },
-  { id: 304, cityId: 3, name: 'Tropical Spice Garden', emoji: '🌶️', tags: ['eco', 'food'], price: 20, co2: 1, duration: '2 hours', description: 'Discover exotic spices and herbs in a lush garden setting.' },
-
-  // Belum Rainforest
-  { id: 401, cityId: 4, name: 'Rainforest Night Safari', emoji: '🦉', tags: ['wildlife', 'eco'], price: 90, co2: 5, duration: '3 hours', description: "Spot nocturnal wildlife in one of the world's oldest rainforests." },
-  { id: 402, cityId: 4, name: 'Rafflesia Trek', emoji: '🌺', tags: ['hiking', 'eco'], price: 70, co2: 2, duration: '5 hours', description: "Search for the world's largest flower in its natural habitat." },
-  { id: 403, cityId: 4, name: 'Indigenous Village Visit', emoji: '🏘️', tags: ['culture', 'eco'], price: 40, co2: 3, duration: '3 hours', description: 'Learn traditional practices from the Orang Asli community.' },
-  { id: 404, cityId: 4, name: 'Lake Cruise', emoji: '🚤', tags: ['eco', 'wildlife'], price: 55, co2: 8, duration: '2 hours', description: 'Cruise the serene lake and spot hornbills and monkeys.' },
-
-  // Yogyakarta
-  { id: 501, cityId: 5, name: 'Borobudur Sunrise', emoji: '🌅', tags: ['culture', 'eco'], price: 45, co2: 5, duration: '4 hours', description: 'Watch sunrise over the magnificent ancient Buddhist temple.' },
-  { id: 502, cityId: 5, name: 'Batik Workshop', emoji: '🎨', tags: ['culture'], price: 35, co2: 0, duration: '3 hours', description: 'Learn the traditional art of batik fabric making.' },
-  { id: 503, cityId: 5, name: 'Prambanan Temple Tour', emoji: '🏛️', tags: ['culture'], price: 30, co2: 3, duration: '3 hours', description: 'Explore the stunning Hindu temple complex.' },
-  { id: 504, cityId: 5, name: 'Jomblang Cave Adventure', emoji: '🕳️', tags: ['hiking', 'eco'], price: 80, co2: 6, duration: '4 hours', description: 'Descend into a cave with spectacular light rays.' },
-
-  // Chiang Mai
-  { id: 601, cityId: 6, name: 'Elephant Sanctuary Visit', emoji: '🐘', tags: ['wildlife', 'eco'], price: 120, co2: 8, duration: '6 hours', description: 'Ethically interact with rescued elephants in a sanctuary.' },
-  { id: 602, cityId: 6, name: 'Doi Suthep Temple', emoji: '⛩️', tags: ['culture'], price: 25, co2: 4, duration: '3 hours', description: 'Visit the sacred temple on the mountain overlooking the city.' },
-  { id: 603, cityId: 6, name: 'Thai Cooking Class', emoji: '🍲', tags: ['food', 'culture'], price: 50, co2: 2, duration: '4 hours', description: 'Learn to cook authentic Thai dishes with local ingredients.' },
-  { id: 604, cityId: 6, name: 'Meditation Retreat', emoji: '🧘', tags: ['wellness'], price: 60, co2: 0, duration: '1 day', description: 'Experience mindfulness at a peaceful Buddhist monastery.' },
-
-  // Koh Lanta
-  { id: 701, cityId: 7, name: 'Kayaking Mangroves', emoji: '🛶', tags: ['eco', 'beach'], price: 45, co2: 0, duration: '3 hours', description: 'Paddle through pristine mangrove forests.' },
-  { id: 702, cityId: 7, name: 'Four Islands Tour', emoji: '🏝️', tags: ['beach', 'wildlife'], price: 70, co2: 15, duration: '6 hours', description: 'Visit four stunning islands with snorkeling stops.' },
-  { id: 703, cityId: 7, name: 'Beach Yoga Session', emoji: '🧘‍♀️', tags: ['wellness', 'beach'], price: 20, co2: 0, duration: '1 hour', description: 'Practice yoga on the beach at sunset.' },
-  { id: 704, cityId: 7, name: 'Old Town Cultural Walk', emoji: '🏘️', tags: ['culture'], price: 15, co2: 0, duration: '2 hours', description: 'Explore the charming old fishing village.' },
-
-  // Pai
-  { id: 801, cityId: 8, name: 'Pai Canyon Sunset', emoji: '🌄', tags: ['hiking', 'eco'], price: 0, co2: 0, duration: '2 hours', description: 'Watch sunset from the stunning narrow canyon ridges.' },
-  { id: 802, cityId: 8, name: 'Hot Springs Soak', emoji: '♨️', tags: ['wellness'], price: 10, co2: 1, duration: '2 hours', description: 'Relax in natural hot springs surrounded by jungle.' },
-  { id: 803, cityId: 8, name: 'Bamboo Rafting', emoji: '🎋', tags: ['eco'], price: 30, co2: 0, duration: '2 hours', description: 'Float down the river on traditional bamboo rafts.' },
-  { id: 804, cityId: 8, name: 'Organic Farm Visit', emoji: '🥬', tags: ['food', 'eco'], price: 25, co2: 1, duration: '3 hours', description: 'Tour a sustainable organic farm and enjoy farm-to-table lunch.' },
-
-  // Ubud
-  { id: 901, cityId: 9, name: 'Tegallalang Rice Terraces', emoji: '🌾', tags: ['eco', 'culture'], price: 20, co2: 3, duration: '3 hours', description: 'Walk among the iconic cascading rice paddies.' },
-  { id: 902, cityId: 9, name: 'Sacred Monkey Forest', emoji: '🐒', tags: ['wildlife', 'eco'], price: 15, co2: 0, duration: '2 hours', description: 'Wander through ancient temples with playful macaques.' },
-  { id: 903, cityId: 9, name: 'Balinese Spa Treatment', emoji: '💆', tags: ['wellness'], price: 80, co2: 0, duration: '2 hours', description: 'Indulge in traditional Balinese healing treatments.' },
-  { id: 904, cityId: 9, name: 'Traditional Dance Show', emoji: '💃', tags: ['culture'], price: 25, co2: 0, duration: '2 hours', description: 'Watch mesmerizing Legong and Barong dance performances.' },
-
-  // Perhentian Islands
-  { id: 1001, cityId: 10, name: 'Scuba Diving Course', emoji: '🤿', tags: ['beach', 'wildlife'], price: 250, co2: 5, duration: '2 days', description: 'Get certified in crystal clear tropical waters.' },
-  { id: 1002, cityId: 10, name: 'Shark Point Snorkeling', emoji: '🦈', tags: ['beach', 'wildlife'], price: 40, co2: 5, duration: '3 hours', description: 'Snorkel with blacktip reef sharks in shallow waters.' },
-  { id: 1003, cityId: 10, name: 'Bioluminescent Plankton', emoji: '✨', tags: ['eco', 'beach'], price: 30, co2: 2, duration: '2 hours', description: 'Night swim among glowing plankton.' },
-  { id: 1004, cityId: 10, name: 'Island Jungle Trek', emoji: '🌴', tags: ['hiking', 'eco'], price: 25, co2: 0, duration: '3 hours', description: 'Hike across the island through lush jungle trails.' },
-
-  // Singapore
-  { id: 1101, cityId: 11, name: 'Gardens by the Bay', emoji: '🌳', tags: ['eco', 'culture'], price: 35, co2: 0, duration: '3 hours', description: 'Explore the futuristic gardens and Supertree Grove.' },
-  { id: 1102, cityId: 11, name: 'Hawker Center Food Tour', emoji: '🍜', tags: ['food', 'culture'], price: 60, co2: 2, duration: '3 hours', description: "Taste your way through Singapore's famous hawker stalls." },
-  { id: 1103, cityId: 11, name: 'Pulau Ubin Cycling', emoji: '🚴', tags: ['eco'], price: 20, co2: 0, duration: '4 hours', description: 'Cycle through the last kampung village in Singapore.' },
-  { id: 1104, cityId: 11, name: 'Chinatown Heritage Tour', emoji: '🏮', tags: ['culture'], price: 25, co2: 0, duration: '2 hours', description: "Discover the rich history of Singapore's Chinatown." },
-
-  // Kinabalu Park
-  { id: 1201, cityId: 12, name: 'Mount Kinabalu Climb', emoji: '🏔️', tags: ['hiking', 'eco'], price: 400, co2: 10, duration: '2 days', description: "Summit Southeast Asia's highest peak." },
-  { id: 1202, cityId: 12, name: 'Canopy Walkway', emoji: '🌲', tags: ['eco', 'wildlife'], price: 30, co2: 2, duration: '2 hours', description: 'Walk among the treetops on suspended bridges.' },
-  { id: 1203, cityId: 12, name: 'Poring Hot Springs', emoji: '♨️', tags: ['wellness'], price: 25, co2: 3, duration: '2 hours', description: 'Soak in natural hot springs at the foot of the mountain.' },
-  { id: 1204, cityId: 12, name: 'Mountain Garden Tour', emoji: '🌸', tags: ['eco'], price: 20, co2: 1, duration: '2 hours', description: 'See rare orchids and pitcher plants in the botanical garden.' },
 ];
 
 const tagLabels = {
-  eco: '🌿 Eco',
-  food: '🍃 Food',
-  hiking: '🥾 Hiking',
-  beach: '🏖️ Beach',
-  culture: '🏛️ Culture',
-  wildlife: '🦋 Wildlife',
-  cycle: '🚴 Cycling',
-  wellness: '🧘 Wellness',
+  eco: 'Eco',
+  food: 'Food',
+  hiking: 'Hiking',
+  beach: 'Beach',
+  culture: 'Culture',
+  wildlife: 'Wildlife',
+  cycle: 'Cycling',
+  wellness: 'Wellness',
 };
 
 // ============================================
