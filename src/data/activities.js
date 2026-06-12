@@ -177,6 +177,125 @@ const activities = [
 { id: 3003, cityId: 30, name: 'Arashiyama Bamboo Forest', emoji: '🎋', tags: ['eco'], price: 20, co2: 1, duration: '2 hours', description: 'Walk through bamboo forest.' },
 { id: 3004, cityId: 30, name: 'Geisha District Tour', emoji: '🎎', tags: ['culture'], price: 70, co2: 2, duration: '3 hours', description: 'Explore historic Gion district.' },
 
+// Sapporo (cityId: 31)
+  { id: 3101, cityId: 31, name: 'Ramen Alley Tasting Tour', emoji: '🍜', tags: ['food'], price: 45, co2: 1, duration: '2 hours', description: 'Sample historic miso ramen variants in Ganso Ramen Yokocho.' },
+  { id: 3102, cityId: 31, name: 'Jozankei Onsen Relaxation', emoji: '♨️', tags: ['wellness'], price: 55, co2: 2, duration: '4 hours', description: 'Soak in serene, mineral-rich thermal hot springs framed by forest scenery.' },
+  { id: 3103, cityId: 31, name: 'Historic Beer Museum Walk', emoji: '🍺', tags: ['culture', 'food'], price: 20, co2: 1, duration: '2 hours', description: 'Discover Japan beer brewing history housed inside a landmark brick structure.' },
+  { id: 3104, cityId: 31, name: 'Mount Moiwa Ropeway Ride', emoji: '🚠', tags: ['culture'], price: 30, co2: 3, duration: '2 hours', description: 'Ascend the cable car to capture panoramic city night lights.' },
+
+  // Nara (cityId: 32)
+  { id: 3201, cityId: 32, name: 'Nara Park Deer Interaction', emoji: '🦌', tags: ['wildlife', 'eco'], price: 10, co2: 0, duration: '2 hours', description: 'Meet and feed bowing sika deer roaming freely around park grounds.' },
+  { id: 3202, cityId: 32, name: 'Todai-ji Giant Buddha Tour', emoji: '🏛️', tags: ['culture'], price: 25, co2: 0, duration: '2 hours', description: 'Marvel at one of the largest bronze Buddha statues inside massive wooden architecture.' },
+  { id: 3203, cityId: 32, name: 'Kasuga Taisha Lantern Trail', emoji: '🏮', tags: ['culture', 'eco'], price: 15, co2: 0, duration: '2 hours', description: 'Walk through forest paths lined with thousands of stone and bronze lanterns.' },
+  { id: 3204, cityId: 32, name: 'Traditional Nakatanidou Mochi View', emoji: '🍡', tags: ['food', 'culture'], price: 12, co2: 1, duration: '1 hour', description: 'Watch high-speed, dramatic pounding of green mugwort rice cakes.' },
+
+  // Osaka (cityId: 33)
+  { id: 3301, cityId: 33, name: 'Dotonbori Street Food Hunt', emoji: '🐙', tags: ['food'], price: 40, co2: 2, duration: '3 hours', description: 'Savor iconic takoyaki and okonomiyaki beneath giant neon billboards.' },
+  { id: 3302, cityId: 33, name: 'Osaka Castle Grounds Walk', emoji: '🏯', tags: ['culture'], price: 25, co2: 1, duration: '3 hours', description: 'Explore vast historic citadels, massive stone walls, and scenic gardens.' },
+  { id: 3303, cityId: 33, name: 'Kuromon Ichiba Market Walk', emoji: '🐟', tags: ['food', 'culture'], price: 50, co2: 2, duration: '2 hours', description: 'Browse bustling seafood alleyways offering fresh scallops and local delicacies.' },
+  { id: 3304, cityId: 33, name: 'Shinsekai Retro Heritage Tour', emoji: '🗼', tags: ['culture'], price: 20, co2: 1, duration: '2 hours', description: 'Immerse in nostalgic post-war vibes around Tsutenkaku Tower.' },
+
+  // Seoul (cityId: 34)
+  { id: 3401, cityId: 34, name: 'Gyeongbokgung Palace Heritage Walk', emoji: '🏯', tags: ['culture'], price: 15, co2: 1, duration: '3 hours', description: 'Walk grand royal courtyards while dressed in traditional Hanbok attire.' },
+  { id: 3402, cityId: 34, name: 'Insadong Traditional Tea Experience', emoji: '🍵', tags: ['culture', 'food'], price: 30, co2: 1, duration: '2 hours', description: 'Relax in hidden wooden teahouses serving ancient herbal blends.' },
+  { id: 3403, cityId: 34, name: 'Gwangjang Market Culinary Walk', emoji: '🥞', tags: ['food'], price: 35, co2: 2, duration: '2 hours', description: 'Feast on authentic mung bean pancakes, tteokbokki, and street treats.' },
+  { id: 3404, cityId: 34, name: 'Namsan Mountain Eco Trail', emoji: '⛰️', tags: ['hiking', 'eco'], price: 10, co2: 0, duration: '2 hours', description: 'Hike green park pathways winding up toward N Seoul Tower.' },
+
+  // Jeju Island (cityId: 35)
+  { id: 3501, cityId: 35, name: 'Seongsan Ilchulbong Tuff Cone Climb', emoji: '🌋', tags: ['hiking', 'eco'], price: 20, co2: 1, duration: '2 hours', description: 'Hike up an iconic volcanic crater rising dramatically above ocean waters.' },
+  { id: 3502, cityId: 35, name: 'Manjanggul Lava Tube Exploration', emoji: '🕳️', tags: ['eco'], price: 25, co2: 2, duration: '2 hours', description: 'Descend into one of the longest, coolest natural subterranean volcanic tunnels.' },
+  { id: 3503, cityId: 35, name: 'Jeju Haenyeo Diver Culture Show', emoji: '🐚', tags: ['culture', 'wildlife'], price: 30, co2: 0, duration: '2 hours', description: 'Meet legendary elderly female free-divers keeping ancient traditions alive.' },
+  { id: 3504, cityId: 35, name: 'Hyeopjae Beach Coastal Clean', emoji: '🏖️', tags: ['beach', 'eco'], price: 0, co2: 0, duration: '2 hours', description: 'Help preserve pristine white sand coastlines and clear turquoise waters.' },
+
+  // Busan (cityId: 36)
+  { id: 3601, cityId: 36, name: 'Gamcheon Culture Village Wander', emoji: '🏡', tags: ['culture'], price: 10, co2: 1, duration: '2 hours', description: 'Explore brightly painted hillside alleyways, murals, and quirky art spaces.' },
+  { id: 3602, cityId: 36, name: 'Jagalchi Seafood Market Experience', emoji: '🦀', tags: ['food', 'culture'], price: 60, co2: 3, duration: '2 hours', description: 'Select fresh catches downstairs to be prepared instantly on market upper floors.' },
+  { id: 3603, cityId: 36, name: 'Haeundae Coastal Sky Capsule', emoji: '🚡', tags: ['beach'], price: 40, co2: 2, duration: '1 hour', description: 'Ride colorful miniature aerial rail units right along rugged shorelines.' },
+  { id: 3604, cityId: 36, name: 'Haedong Yonggungsa Ocean Temple', emoji: '⛩️', tags: ['culture', 'beach'], price: 15, co2: 2, duration: '2 hours', description: 'Visit a rare, gorgeous Buddhist temple overlooking crashing sea waves.' },
+
+  // Taipei (cityId: 37)
+  { id: 3701, cityId: 37, name: 'Shilin Night Market Food Walk', emoji: '🧋', tags: ['food'], price: 30, co2: 2, duration: '3 hours', description: 'Graze on legendary stinky tofu, pepper buns, and iconic milk tea.' },
+  { id: 3702, cityId: 37, name: 'Elephant Mountain Skyline Trail', emoji: '🐘', tags: ['hiking', 'eco'], price: 0, co2: 0, duration: '2 hours', description: 'Climb stone step trails for classic, unobstructed views of Taipei 101.' },
+  { id: 3703, cityId: 37, name: 'Dadaocheng Heritage Walk', emoji: '🧱', tags: ['culture'], price: 15, co2: 0, duration: '2 hours', description: 'Stroll historic brick shop-houses specializing in medicine and tea trade.' },
+  { id: 3704, cityId: 37, name: 'Beitou Thermal Valley Soak', emoji: '♨️', tags: ['wellness', 'eco'], price: 45, co2: 1, duration: '3 hours', description: 'Unwind inside volcanic sulfur hot spring baths near steaming valleys.' },
+
+  // Hualien (cityId: 38)
+  { id: 3801, cityId: 38, name: 'Taroko Gorge Eco Trail', emoji: '⛰️', tags: ['hiking', 'eco'], price: 70, co2: 3, duration: '5 hours', description: 'Trek inside jaw-dropping marble canyons and massive deep rock ravines.' },
+  { id: 3802, cityId: 38, name: 'Qixingtan Pebble Beach Walk', emoji: '🏖️', tags: ['beach', 'eco'], price: 0, co2: 1, duration: '2 hours', description: 'Stroll sweeping crescent shores shaped by smooth, ocean-washed marble stones.' },
+  { id: 3803, cityId: 38, name: 'Whale and Dolphin Eco Cruise', emoji: '🐬', tags: ['wildlife', 'eco'], price: 85, co2: 12, duration: '3 hours', description: 'Sail out to encounter wild oceanic cetaceans in conservation zones.' },
+  { id: 3804, cityId: 38, name: 'Indigenous Amis Culinary Workshop', emoji: '🥬', tags: ['culture', 'food'], price: 50, co2: 2, duration: '3 hours', description: 'Prepare traditional wild herb dishes over open wood fires with tribe elders.' },
+
+  // Kaohsiung (cityId: 39)
+  { id: 3901, cityId: 39, name: 'Pier-2 Art Center Cycle', emoji: '🚴', tags: ['cycle', 'culture'], price: 20, co2: 0, duration: '3 hours', description: 'Pedal around converted abandoned port warehouses showcasing modern installations.' },
+  { id: 3902, cityId: 39, name: 'Lotus Pond Pavilions Exploration', emoji: '🐉', tags: ['culture'], price: 10, co2: 1, duration: '2 hours', description: 'Enter lucky Dragon and Tiger pagodas directly over scenic waters.' },
+  { id: 3903, cityId: 39, name: 'Cijin Island Seafood Ferry Ride', emoji: '🚢', tags: ['beach', 'food'], price: 30, co2: 4, duration: '3 hours', description: 'Take short boat hops to narrow sand strips rich with street stalls.' },
+  { id: 3904, cityId: 39, name: 'Fo Guang Shan Monastery Walk', emoji: '🛕', tags: ['culture'], price: 25, co2: 3, duration: '4 hours', description: 'Walk through expansive peaceful pathways flanked by giant towering golden Buddhas.' },
+
+  // Manila (cityId: 40)
+  { id: 4001, cityId: 40, name: 'Intramuros Walled City Walk', emoji: '🏛️', tags: ['culture'], price: 20, co2: 0, duration: '3 hours', description: 'Trace old Spanish colonial fortresses, stone ramparts, and historic plazas.' },
+  { id: 4002, cityId: 40, name: 'Binondo Oldest Chinatown Food Hunt', emoji: '🥟', tags: ['food', 'culture'], price: 45, co2: 1, duration: '3 hours', description: 'Savor unique Filipino-Chinese cuisine hybrids along historical culinary lanes.' },
+  { id: 4003, cityId: 40, name: 'Rizal Park Heritage Walk', emoji: '🌳', tags: ['culture', 'eco'], price: 0, co2: 0, duration: '2 hours', description: 'Stroll beautiful city park lawns celebrating national history.' },
+  { id: 4004, cityId: 40, name: 'Jeepney Culture Commuter Route', emoji: '🛺', tags: ['culture'], price: 10, co2: 4, duration: '1 hour', description: 'Ride iconic, vibrantly painted vintage utility passenger vehicles.' },
+
+  // El Nido (cityId: 41)
+  { id: 4101, cityId: 41, name: 'Bacuit Bay Lagoon Kayaking', emoji: '🛶', tags: ['eco', 'beach'], price: 75, co2: 0, duration: '4 hours', description: 'Glide silently across pristine limestone lagoons with emerald depths.' },
+  { id: 4102, cityId: 41, name: 'Secret Beach Coral Snorkel', emoji: '🤿', tags: ['beach', 'wildlife'], price: 85, co2: 8, duration: '4 hours', description: 'Swim through underwater rocky gaps into hidden white beach sanctuaries.' },
+  { id: 4103, cityId: 41, name: 'Taroko Cliff Canopy Trek', emoji: '🧗', tags: ['hiking', 'eco'], price: 40, co2: 1, duration: '2 hours', description: 'Climb sharp karst peaks safely on secured pathways for ocean outlooks.' },
+  { id: 4104, cityId: 41, name: 'Marine Life Sanctuary Presentation', emoji: '🐢', tags: ['wildlife', 'eco'], price: 15, co2: 0, duration: '2 hours', description: 'Engage with researchers preserving delicate Palawan eco-networks.' },
+
+  // Boracay (cityId: 42)
+  { id: 4201, cityId: 42, name: 'White Beach Sunset Sail', emoji: '⛵', tags: ['beach'], price: 50, co2: 0, duration: '2 hours', description: 'Board traditional outrigger boats propelled gently by evening ocean wind.' },
+  { id: 4202, cityId: 42, name: 'Coral Garden Reef Dive', emoji: '🐠', tags: ['wildlife', 'beach'], price: 110, co2: 6, duration: '3 hours', description: 'Explore diverse shallow marine colonies and anemone nurseries.' },
+  { id: 4203, cityId: 42, name: 'Puka Shell Beach Eco Walk', emoji: '🐚', tags: ['beach', 'eco'], price: 15, co2: 2, duration: '2 hours', description: 'Roam quieter northern shorelines composed of coarse crushed coral shells.' },
+  { id: 4204, cityId: 42, name: 'Island Mandala Spa Relaxation', emoji: '🧘‍♀️', tags: ['wellness'], price: 90, co2: 0, duration: '2 hours', description: 'Indulge organic botanical oil massage therapies inside quiet forest villas.' },
+
+  // Ho Chi Minh City (cityId: 43)
+  { id: 4301, cityId: 43, name: 'Ben Thanh Night Food Market', emoji: '🍲', tags: ['food'], price: 30, co2: 1, duration: '2 hours', description: 'Sample steaming noodle broths and crispy sizzling pancakes.' },
+  { id: 4302, cityId: 43, name: 'Cu Chi Eco Tunnel Trail', emoji: '🕳️', tags: ['culture'], price: 45, co2: 6, duration: '4 hours', description: 'Explore subterranean historical tunnel networks inside rural woodland.' },
+  { id: 4303, cityId: 43, name: 'French Quarter Architecture Trail', emoji: '🏛️', tags: ['culture'], price: 15, co2: 0, duration: '2 hours', description: 'See iconic post office facades and historic cathedrals on foot.' },
+  { id: 4304, cityId: 43, name: 'Saigon River Sunset Cruise', emoji: '🚢', tags: ['eco'], price: 55, co2: 5, duration: '2 hours', description: 'Watch the modern metropolis skyline ignite from serene water currents.' },
+
+  // Da Nang (cityId: 44)
+  { id: 4401, cityId: 44, name: 'Marble Mountains Cave Hike', emoji: '⛰️', tags: ['hiking', 'culture'], price: 25, co2: 1, duration: '3 hours', description: 'Climb stone hillsides into deep, atmospheric limestone sanctuaries.' },
+  { id: 4402, cityId: 44, name: 'Dragon Bridge Weekend Show', emoji: '🐉', tags: ['culture'], price: 0, co2: 2, duration: '1 hour', description: 'Witness the iconic bridge spout massive fire and water displays.' },
+  { id: 4403, cityId: 44, name: 'My Khe Beach Eco Jog', emoji: '🏖️', tags: ['beach', 'eco'], price: 0, co2: 0, duration: '1 hour', description: 'Enjoy sunrise activities along vast, wide sandy coastal stretches.' },
+  { id: 4404, cityId: 44, name: 'Son Tra Peninsula Monkey Trek', emoji: '🐒', tags: ['wildlife', 'eco'], price: 35, co2: 3, duration: '3 hours', description: 'Spot critically endangered red-shanked douc langurs in native trees.' },
+
+  // Hoi An (cityId: 45)
+  { id: 4501, cityId: 45, name: 'Ancient Town Lantern Cycle', emoji: '🚴', tags: ['cycle', 'culture'], price: 20, co2: 0, duration: '3 hours', description: 'Ride slow historic streets free from motorized vehicular traffic.' },
+  { id: 4502, cityId: 45, name: 'Thu Bon River Lantern Release', emoji: '🏮', tags: ['culture'], price: 15, co2: 1, duration: '1 hour', description: 'Float handmade biodegradable paper lanterns along glowing waters.' },
+  { id: 4503, cityId: 45, name: 'Organic Tra Que Vegetable Farm', emoji: '🥬', tags: ['food', 'eco'], price: 40, co2: 1, duration: '3 hours', description: 'Learn chemical-free fertilizing techniques using native pond seaweed.' },
+  { id: 4504, cityId: 45, name: 'Central Market Cooking Class', emoji: '🥗', tags: ['food'], price: 55, co2: 2, duration: '4 hours', description: 'Select fresh ingredients inside local wet stalls to create regional spring rolls.' },
+
+  // Phnom Penh (cityId: 46)
+  { id: 4601, cityId: 46, name: 'Royal Palace Complex Tour', emoji: '🏰', tags: ['culture'], price: 35, co2: 2, duration: '2 hours', description: 'Admire magnificent Khmer architecture and the glistening Silver Pagoda.' },
+  { id: 4602, cityId: 46, name: 'Mekong River Dolphin Cruise', emoji: '🚤', tags: ['wildlife', 'eco'], price: 50, co2: 6, duration: '3 hours', description: 'Search river currents for remaining protected freshwater Irrawaddy populations.' },
+  { id: 4603, cityId: 46, name: 'Tuol Sleng History Memorial', emoji: '🏛️', tags: ['culture'], price: 20, co2: 1, duration: '2 hours', description: 'Reflect on profound, moving national history inside preserved museum halls.' },
+  { id: 4604, cityId: 46, name: 'Central Market Architecture Walk', emoji: '🟡', tags: ['culture', 'food'], price: 10, co2: 1, duration: '2 hours', description: 'Explore a unique, historic Art Deco domed covered bazaar hub.' },
+
+  // Vang Vieng (cityId: 47)
+  { id: 4701, cityId: 47, name: 'Nam Song River Kayaking', emoji: '🛶', tags: ['eco'], price: 35, co2: 0, duration: '3 hours', description: 'Paddle down gentle currents cutting through towering karst mountain peaks.' },
+  { id: 4702, cityId: 47, name: 'Tham Chang Cave Exploration', emoji: '🕳️', tags: ['hiking', 'culture'], price: 20, co2: 1, duration: '2 hours', description: 'Cross orange suspension bridges to view deep, cool historical cavern layouts.' },
+  { id: 4703, cityId: 47, name: 'Nam Xay Viewpoint Ridge Climb', emoji: '🧗', tags: ['hiking', 'eco'], price: 15, co2: 0, duration: '2 hours', description: 'Scramble steep forest paths up to a famous mountaintop motorcycle prop.' },
+  { id: 4704, cityId: 47, name: 'Organic Mulberry Farm Visit', emoji: '🍃', tags: ['eco', 'food'], price: 25, co2: 1, duration: '2 hours', description: 'See silk production processes and taste refreshing natural leaf teas.' },
+
+  // Phuket (cityId: 48)
+  { id: 4801, cityId: 48, name: 'Old Town Baba Heritage Walk', emoji: '🏛️', tags: ['culture', 'food'], price: 20, co2: 1, duration: '3 hours', description: 'Stroll past pastel Sino-Portuguese shophouses filled with artisanal shops.' },
+  { id: 4802, cityId: 48, name: 'Phang Nga Bay Sea Canoe', emoji: '🛶', tags: ['eco', 'beach'], price: 90, co2: 7, duration: '5 hours', description: 'Navigate enclosed lagoon chambers accessible only via narrow marine caves.' },
+  { id: 4803, cityId: 48, name: 'Gibbon Rehabilitation Center', emoji: '🐒', tags: ['wildlife', 'eco'], price: 30, co2: 2, duration: '2 hours', description: 'Observe rescued primates recovering within secondary rainforest zones.' },
+  { id: 4804, cityId: 48, name: 'Kata Beach Surf Yoga Session', emoji: '🧘‍♀️', tags: ['wellness', 'beach'], price: 40, co2: 0, duration: '2 hours', description: 'Combine ocean-facing breathing routines with light sand balance stretching.' },
+
+  // Bandung (cityId: 49)
+  { id: 4901, cityId: 49, name: 'Tangkuban Perahu Crater View', emoji: '🌋', tags: ['eco', 'hiking'], price: 45, co2: 4, duration: '3 hours', description: 'Peer into a vast, active volcanic sulfur bowl framed by mist.' },
+  { id: 4902, cityId: 49, name: 'Kawah Putih Crater Lake Trek', emoji: '🧪', tags: ['hiking', 'eco'], price: 35, co2: 3, duration: '2 hours', description: 'Walk around a surreal, highly acidic white-turquoise mountain reservoir.' },
+  { id: 4903, cityId: 49, name: 'Saung Angklung Udjo Performance', emoji: '🎋', tags: ['culture'], price: 30, co2: 1, duration: '2 hours', description: 'Listen to harmonious live bamboo hand-shaken musical orchestra pieces.' },
+  { id: 4904, cityId: 49, name: ' Braga Street Heritage Coffee', emoji: '☕', tags: ['food', 'culture'], price: 20, co2: 1, duration: '2 hours', description: 'Walk historic European-style cobblestone strip lanes hosting roasting hubs.' },
+
+  // Lombok (cityId: 50)
+  { id: 5001, cityId: 50, name: 'Mount Rinjani Footbridge Trek', emoji: '🥾', tags: ['hiking', 'eco'], price: 65, co2: 2, duration: '4 hours', description: 'Hike lower evergreen slopes toward towering epic volcanic ridge panoramas.' },
+  { id: 5002, cityId: 50, name: 'Gili Meno Sea Turtle Snorkel', emoji: '🐢', tags: ['beach', 'wildlife'], price: 55, co2: 5, duration: '3 hours', description: 'Swim over shallow seagrass meadows hosting wild nesting ocean turtles.' },
+  { id: 5003, cityId: 50, name: 'Sade Traditional Sasak Village', emoji: '🛖', tags: ['culture'], price: 25, co2: 1, duration: '2 hours', description: 'Observe indigenous clay-and-straw thatched house architecture and hand-weaving.' },
+  { id: 5004, cityId: 50, name: 'Tanjung Aan Sand Beach Clean', emoji: '🏖️', tags: ['beach', 'eco'], price: 0, co2: 0, duration: '2 hours', description: 'Gather plastic debris alongside local coast wardens to secure coral health.' }
 ];
 
 export default activities;

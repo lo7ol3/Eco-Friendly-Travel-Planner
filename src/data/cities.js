@@ -38,6 +38,26 @@ const cities = [
 
 { id: 29, name: 'Mount Fuji Area', country: 'Japan', emoji: '🗻', tags: ['hiking', 'culture'], transport: ['flight', 'train'], co2: 200, price: 1500, duration: 'medium', imgBg: '#e0e0e0' },
 { id: 30, name: 'Kyoto', country: 'Japan', emoji: '⛩️', tags: ['culture', 'eco'], transport: ['flight', 'train'], co2: 180, price: 1400, duration: 'medium', imgBg: '#f8bbd0' },
+{ id: 31, name: 'Sapporo', country: 'Japan', emoji: '❄️', tags: ['food', 'culture', 'wellness'], transport: ['flight', 'train'], co2: 210, price: 1600, duration: 'medium', imgBg: '#e3f2fd' },
+  { id: 32, name: 'Nara', country: 'Japan', emoji: '🦌', tags: ['wildlife', 'culture', 'eco'], transport: ['train'], co2: 15, price: 350, duration: 'weekend', imgBg: '#f1f8e9' },
+  { id: 33, name: 'Osaka', country: 'Japan', emoji: '🏯', tags: ['food', 'culture'], transport: ['flight', 'train'], co2: 190, price: 1300, duration: 'medium', imgBg: '#fce4ec' },
+  { id: 34, name: 'Seoul', country: 'South Korea', emoji: '🇰🇷', tags: ['culture', 'food'], transport: ['flight'], co2: 240, price: 1400, duration: 'medium', imgBg: '#ede7f6' },
+  { id: 35, name: 'Jeju Island', country: 'South Korea', emoji: '🌋', tags: ['eco', 'hiking', 'beach'], transport: ['flight'], co2: 260, price: 1200, duration: 'medium', imgBg: '#e0f2f1' },
+  { id: 36, name: 'Busan', country: 'South Korea', emoji: '⚓', tags: ['beach', 'food', 'culture'], transport: ['flight', 'train'], co2: 250, price: 1100, duration: 'short', imgBg: '#e0f7fa' },
+  { id: 37, name: 'Taipei', country: 'Taiwan', emoji: '🧋', tags: ['food', 'culture', 'hiking'], transport: ['flight'], co2: 160, price: 950, duration: 'short', imgBg: '#fff3e0' },
+  { id: 38, name: 'Hualien', country: 'Taiwan', emoji: '⛰️', tags: ['eco', 'hiking', 'wildlife'], transport: ['flight', 'train'], co2: 175, price: 850, duration: 'short', imgBg: '#e8f5e9' },
+  { id: 39, name: 'Kaohsiung', country: 'Taiwan', emoji: '🚢', tags: ['culture', 'cycle'], transport: ['flight', 'train'], co2: 180, price: 800, duration: 'weekend', imgBg: '#f9f1f0' },
+  { id: 40, name: 'Manila', country: 'Philippines', emoji: '🇵🇭', tags: ['culture', 'food'], transport: ['flight'], co2: 145, price: 700, duration: 'short', imgBg: '#efebe9' },
+  { id: 41, name: 'El Nido', country: 'Philippines', emoji: '🏝️', tags: ['beach', 'eco', 'wildlife'], transport: ['flight', 'boat'], co2: 185, price: 1100, duration: 'medium', imgBg: '#b2dfdb' },
+  { id: 42, name: 'Boracay', country: 'Philippines', emoji: '🏖️', tags: ['beach', 'wellness'], transport: ['flight', 'boat'], co2: 170, price: 1050, duration: 'short', imgBg: '#e0f7fa' },
+  { id: 43, name: 'Ho Chi Minh City', country: 'Vietnam', emoji: '🛵', tags: ['culture', 'food'], transport: ['flight'], co2: 115, price: 580, duration: 'short', imgBg: '#fbe9e7' },
+  { id: 44, name: 'Da Nang', country: 'Vietnam', emoji: '🌉', tags: ['beach', 'culture', 'eco'], transport: ['flight'], co2: 125, price: 680, duration: 'short', imgBg: '#e1f5fe' },
+  { id: 45, name: 'Hoi An', country: 'Vietnam', emoji: '🏮', tags: ['culture', 'food', 'cycle'], transport: ['flight', 'bus'], co2: 130, price: 600, duration: 'weekend', imgBg: '#fffde7' },
+  { id: 46, name: 'Phnom Penh', country: 'Cambodia', emoji: '🛕', tags: ['culture', 'food'], transport: ['flight'], co2: 100, price: 550, duration: 'weekend', imgBg: '#fff9c4' },
+  { id: 47, name: 'Vang Vieng', country: 'Laos', emoji: '🧗', tags: ['eco', 'hiking'], transport: ['flight', 'bus'], co2: 105, price: 480, duration: 'short', imgBg: '#f1f8e9' },
+  { id: 48, name: 'Phuket', country: 'Thailand', emoji: '🏝️', tags: ['beach', 'food', 'wellness'], transport: ['flight'], co2: 135, price: 850, duration: 'short', imgBg: '#e0f7fa' },
+  { id: 49, name: 'Bandung', country: 'Indonesia', emoji: '🌋', tags: ['eco', 'food', 'hiking'], transport: ['flight', 'train'], co2: 125, price: 500, duration: 'weekend', imgBg: '#e8f5e9' },
+  { id: 50, name: 'Lombok', country: 'Indonesia', emoji: '🌊', tags: ['beach', 'hiking', 'eco'], transport: ['flight'], co2: 135, price: 820, duration: 'short', imgBg: '#e0f2f1' }
 ];
 
 export default cities;
