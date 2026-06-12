@@ -405,3 +405,167 @@ async function getCityCoordinates(cityName) {
 }
 
 document.addEventListener('DOMContentLoaded', updateNavbarBadge);
+
+// ============================================
+// IMPORT DATA FROM /data FOLDER
+// ============================================
+
+// import { cities } from './data/cities.js';
+// import { activities } from './data/activities.js';
+// import { tagLabels } from './data/tagLabels.js';
+
+
+// // ============================================
+// // HELPER FUNCTIONS
+// // ============================================
+
+// function getCityById(id) {
+//   return cities.find(city => city.id === id);
+// }
+
+// function getActivitiesByCity(cityId) {
+//   return activities.filter(activity => activity.cityId === cityId);
+// }
+
+// function getTagLabel(tag) {
+//   return tagLabels[tag] || tag;
+// }
+
+// function formatDate(dateStr) {
+//   const date = new Date(dateStr);
+//   return date.toLocaleDateString('en-US', {
+//     weekday: 'long',
+//     month: 'long',
+//     day: 'numeric',
+//     year: 'numeric'
+//   });
+// }
+
+// function formatDateShort(dateStr) {
+//   const date = new Date(dateStr);
+//   return date.toLocaleDateString('en-US', {
+//     month: 'short',
+//     day: 'numeric'
+//   });
+// }
+
+// function getDayNumber(startDate, itemDate) {
+//   const start = new Date(startDate);
+//   const item = new Date(itemDate);
+//   return Math.floor((item - start) / (1000 * 60 * 60 * 24)) + 1;
+// }
+
+// function getDatesInRange(startDate, endDate) {
+//   const dates = [];
+//   const start = new Date(startDate);
+//   const end = new Date(endDate);
+
+//   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+//     dates.push(d.toISOString().split('T')[0]);
+//   }
+
+//   return dates;
+// }
+
+// function getCO2Label(co2) {
+//   if (co2 < 50) return '🟢';
+//   if (co2 < 150) return '🟡';
+//   return '🔴';
+// }
+
+
+// // ============================================
+// // STATE MANAGEMENT (localStorage)
+// // ============================================
+
+// const STORAGE_KEYS = {
+//   ITINERARY: 'ecotravel-itinerary',
+//   TRIP: 'ecotravel-trip',
+//   FAVORITES: 'ecotravel-favorites',
+//   SAVED_ACTIVITIES: 'ecotravel-saved-activities',
+//   SAVED_PLANS: 'ecotravel-saved-plans'
+// };
+
+// // --- (all your storage functions stay EXACTLY the same) ---
+// // I did NOT rewrite them to keep your logic safe
+
+
+// // ============================================
+// // WEATHER (Simulated)
+// // ============================================
+
+// function getWeatherForDate(dateStr) {
+//   const date = new Date(dateStr);
+//   const dayOfMonth = date.getDate();
+
+//   const weatherPatterns = [
+//     { icon: 'sun', temp: 28, condition: 'Sunny' },
+//     { icon: 'cloud-sun', temp: 27, condition: 'Partly Cloudy' },
+//     { icon: 'cloud', temp: 26, condition: 'Cloudy' },
+//     { icon: 'cloud-rain', temp: 25, condition: 'Light Rain' },
+//   ];
+
+//   const pattern = weatherPatterns[dayOfMonth % weatherPatterns.length];
+
+//   return {
+//     ...pattern,
+//     day: date.toLocaleDateString('en-US', { weekday: 'short' }),
+//     date: dateStr
+//   };
+// }
+
+// function getWeatherIcon(type) {
+//   const icons = {
+//     sun: '☀️',
+//     'cloud-sun': '⛅',
+//     cloud: '☁️',
+//     'cloud-rain': '🌧️'
+//   };
+
+//   return icons[type] || '☀️';
+// }
+
+
+// // ============================================
+// // NAVBAR UPDATE
+// // ============================================
+
+// function updateNavbarBadge() {
+//   const items = getItineraryItems();
+//   const badge = document.getElementById('itinerary-badge');
+
+//   if (!badge) return;
+
+//   badge.textContent = items.length;
+
+//   if (items.length > 0) {
+//     badge.classList.remove('hidden');
+//   } else {
+//     badge.classList.add('hidden');
+//   }
+// }
+
+// document.addEventListener('DOMContentLoaded', updateNavbarBadge);
+
+
+// // ============================================
+// // API (unchanged)
+// // ============================================
+
+// export async function getCityCoordinates(cityName) {
+//   const res = await fetch(
+//     `https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=1&format=json`
+//   );
+
+//   const data = await res.json();
+
+//   if (!data.results?.length) {
+//     throw new Error("City not found");
+//   }
+
+//   return {
+//     lat: data.results[0].latitude,
+//     lon: data.results[0].longitude,
+//     name: data.results[0].name
+//   };
+// }
