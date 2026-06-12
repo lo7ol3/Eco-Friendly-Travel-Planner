@@ -1,6 +1,4 @@
-// ============================================
 // WEATHER UTILITY MODULE (Open-Meteo API)
-// ============================================
 
 class WeatherService {
     constructor() {

@@ -250,30 +250,62 @@ function renderWeatherWidget() {
 
   const city = getApiCityById(tripDetails.cityId);
   const tripDates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
-  const forecasts = tripDates.map(date => getWeatherForDate(date));
+  const visibleDates = tripDates.slice(0, 16);
+  const forecasts = visibleDates.map(date => getWeatherForDate(date));
   const current = forecasts[0];
+  const forecastNote = tripDates.length > visibleDates.length
+    ? `Showing first ${visibleDates.length} days`
+    : `${visibleDates.length} day forecast`;
 
   container.innerHTML = `
-        <div class="weather-widget">
+        <div class="weather-widget weather-widget-expanded">
           <div class="weather-current">
-            <div class="weather-temp">
-              ${getWeatherIcon(current.icon)}
-              <h2>${current.temp}°C</h2>
+            <div class="weather-current-top">
+              <div class="weather-temp">
+                ${getWeatherIcon(current.icon)}
+                <div>
+                  <h2>${current.temp}°C</h2>
+                  <p class="weather-condition">${current.condition}</p>
+                </div>
+              </div>
+              <div class="weather-city">
+                <span style="font-size: 1.125rem;">${city.emoji}</span>
+                <p>${city.name}, ${city.country}</p>
+              </div>
             </div>
-            <p class="weather-condition">${current.condition} - Wind 12 km/h</p>
-            <div class="weather-city">
-              <span style="font-size: 1.125rem;">${city.emoji}</span>
-              <p>${city.name}, ${city.country}</p>
+
+            <div class="weather-summary-meta">
+              <div class="weather-summary-pill">
+                <span>Forecast</span>
+                <strong>${visibleDates.length} days</strong>
+              </div>
+              <div class="weather-summary-pill">
+                <span>Start</span>
+                <strong>${formatDateShort(tripDetails.startDate)}</strong>
+              </div>
+              <div class="weather-summary-pill">
+                <span>End</span>
+                <strong>${formatDateShort(tripDetails.endDate)}</strong>
+              </div>
             </div>
           </div>
-          <div class="weather-forecast">
-            ${forecasts.slice(0, 5).map(day => `
-              <div class="weather-day">
-                <div class="weather-day-label">${day.day}</div>
-                ${getWeatherIcon(day.icon)}
-                <div class="weather-day-temp">${day.temp}°</div>
-              </div>
-            `).join('')}
+
+          <div class="weather-forecast-section">
+            <div class="weather-forecast-header">
+              <span>Daily Forecast</span>
+              <span class="weather-forecast-note">${forecastNote}</span>
+            </div>
+            <div class="weather-forecast">
+              ${forecasts.map((day, index) => `
+                <article class="weather-day ${index === 0 ? 'current' : ''}">
+                  <div class="weather-day-label">${day.day}</div>
+                  <div class="weather-day-date">${formatDateShort(day.date)}</div>
+                  ${getWeatherIcon(day.icon)}
+                  <div class="weather-day-temp">${day.temp}°C</div>
+                  <div class="weather-day-condition">${day.condition}</div>
+                </article>
+              `).join('')}
+            </div>
           </div>
         </div>
       `;
