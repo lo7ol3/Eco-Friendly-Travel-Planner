@@ -144,9 +144,13 @@ function renderCityCards() {
 
         return `
           <div class="city-card" onclick="openModal(${city.id})">
-            <div class="city-card-header" style="background-image: url('${city.img_url || ''}'); background-size: cover; background-position: center; height: 160px; background-color: ${city.imgBg || '#f0f0f0'}; position: relative;">
-              <span class="city-card-badge" style="position: absolute; top: 12px; right: 12px;">ECO</span>
-              <button class="city-card-fav ${fav ? 'active' : ''}" onclick="handleFavorite(event, ${city.id})">
+            <div class="city-card-header" style="height: 160px; position: relative; overflow: hidden; background-color: ${city.imgBg || '#e8f5ee'};">
+              ${city.img_url ? 
+                `<img src="${city.img_url}" alt="${city.name}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">` : 
+                `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--green-mid);">🌿</div>`
+              }
+              <span class="city-card-badge" style="position: absolute; top: 12px; right: 12px; z-index: 5;">ECO</span>
+              <button class="city-card-fav ${fav ? 'active' : ''}" onclick="handleFavorite(event, ${city.id})" style="position: absolute; top: 12px; left: 12px; z-index: 5;">
                 <svg class="icon" fill="${fav ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
@@ -223,12 +227,11 @@ function openModal(cityId) {
     currentModalCity = city;
     const cityActivities = typeof getActivitiesByCity === 'function' ? getActivitiesByCity(cityId) : [];
 
+    // FIXED: Stripped background-image so that it never puts image headers inside the view modal popup
     const modalHeader = document.getElementById('modal-header');
     if (modalHeader) {
-        modalHeader.style.backgroundImage = `url('${city.img_url || ''}')`;
-        modalHeader.style.backgroundSize = 'cover';
-        modalHeader.style.backgroundPosition = 'center';
-        modalHeader.style.backgroundColor = 'transparent';
+        modalHeader.style.backgroundImage = 'none';
+        modalHeader.style.backgroundColor = 'var(--green-pale)';
     }
 
     const titleEl = document.getElementById('modal-title');
@@ -251,11 +254,12 @@ function openModal(cityId) {
                 return `<span class="tag">${label}</span>`;
             }).join('');
 
+            // Restored original activity layout styling and dynamic functional check classes
             return `
-              <div class="activity-card" style="margin-bottom: 12px; border: 1px solid #eee; padding: 12px; border-radius: 8px;">
+              <div class="activity-card" style="margin-bottom: 12px; border: 1px solid #eee; padding: 12px; border-radius: 8px; background: white;">
                 <div class="activity-card-inner d-flex align-items-start justify-content-between gap-2">
                   <div class="activity-content">
-                    <h4 class="activity-name fw-bold mb-1" style="font-size:1rem;">${activity.name}</h4>
+                    <h4 class="activity-name fw-bold mb-1" style="font-size:1rem; color: var(--green-dark);">${activity.name}</h4>
                     <p class="activity-desc text-muted small mb-2">${activity.description}</p>
                     <div class="city-card-tags mb-2">${actTagsHTML}</div>
                     <div class="activity-meta small text-muted d-flex gap-3">

@@ -23,8 +23,7 @@ async function loadProfile() {
   document.getElementById("email").value =
     user.email;
 
-  document.getElementById("username").value =
-    fullName.replace(/\s+/g, "").toLowerCase();
+document.getElementById("username").value = "";
 
   const initials =
     ((names[0]?.[0] || "") +
@@ -32,6 +31,32 @@ async function loadProfile() {
 
   document.getElementById("avatarInitials").textContent =
     initials;
+   const savedPlans =
+  JSON.parse(localStorage.getItem("ecotravel-saved-plans")) || [];
+
+document.getElementById("tripCount").textContent =
+  savedPlans.length;
+
+
+// ===== CO2 Saved =====
+let totalCO2 = 0;
+
+savedPlans.forEach(plan => {
+  plan.items?.forEach(item => {
+    totalCO2 += Number(item.co2 || 0);
+  });
+});
+
+document.getElementById("co2Saved").textContent =
+  `${totalCO2} kg`;
+
+
+// ===== Favourites =====
+const favourites =
+  JSON.parse(localStorage.getItem("ecotravel-favorites")) || [];
+
+document.getElementById("favCount").textContent =
+  favourites.length;
 
   // Load additional profile data
   const { data: profile } =
@@ -42,6 +67,17 @@ async function loadProfile() {
       .single();
 
   if (profile) {
+    if (profile.username) {
+
+  document.getElementById("profileName").textContent =
+    profile.username;
+
+  document.getElementById("username").value =
+    profile.username;
+}
+    document.getElementById("firstName").readOnly = true;
+document.getElementById("lastName").readOnly = true;
+
     document.getElementById("firstName").value =
       profile.first_name || names[0] || "";
 
@@ -99,11 +135,34 @@ async function saveProfile(event) {
       });
 
   if (error) {
-    alert(error.message);
-    return;
-  }
+  alert(error.message);
+  return;
+}
+
+alert("Profile updated successfully!");
+
+// Update username shown on profile card
+document.getElementById("profileName").textContent =
+  document.getElementById("username").value;
 
   alert("Profile updated successfully!");
+  
+
+}
+ const savedImage =
+  localStorage.getItem("profileImage");
+
+if (savedImage) {
+
+  const img =
+    document.getElementById("profileImage");
+
+  img.src = savedImage;
+  img.style.display = "block";
+
+  document.getElementById(
+    "avatarInitials"
+  ).style.display = "none";
 }
 async function updatePassword() {
   const newPassword =
@@ -128,3 +187,38 @@ async function updatePassword() {
 
   document.getElementById("newPassword").value = "";
 }
+const avatarUpload =
+  document.getElementById("avatarUpload");
+
+const profileImage =
+  document.getElementById("profileImage");
+
+avatarUpload?.addEventListener(
+  "change",
+  function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+      profileImage.src = e.target.result;
+
+profileImage.style.display = "block";
+
+document.getElementById(
+  "avatarInitials"
+).style.display = "none";
+
+      localStorage.setItem(
+        "profileImage",
+        e.target.result
+      );
+    };
+
+    reader.readAsDataURL(file);
+  }
+);

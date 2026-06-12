@@ -51,13 +51,15 @@
       margin-bottom: 0.5rem;
     }
 
-    .profile-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(26,60,46,0.07);
-    }
+    .profile-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: block;
+}
 
     .profile-banner {
       background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
@@ -68,9 +70,11 @@
       position: relative;
     }
     .avatar-wrap {
-      position: relative;
-      flex-shrink: 0;
-    }
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+}
     .avatar-circle {
       width: 88px;
       height: 88px;
@@ -88,8 +92,8 @@
     }
     .avatar-edit-btn {
       position: absolute;
-      bottom: 0;
-      right: 0;
+      bottom: 4px;
+      right: 4px;
       width: 28px;
       height: 28px;
       border-radius: 50%;
@@ -363,10 +367,36 @@
   <div class="profile-card">
 
     <div class="profile-banner">
-      <div class="avatar-wrap">
-        <div class="avatar-circle" id="avatarInitials">AZ</div>
-        <button class="avatar-edit-btn" title="Change avatar"><i class="bi bi-camera"></i></button>
-      </div>
+    <div class="avatar-wrap">
+
+  <div
+    id="avatarInitials"
+    class="avatar-circle"
+  >
+    A
+  </div>
+
+  <img
+    id="profileImage"
+    class="profile-avatar"
+    style="display:none;"
+  >
+
+  <label
+    for="avatarUpload"
+    class="avatar-edit-btn"
+  >
+    <i class="bi bi-camera"></i>
+  </label>
+
+  <input
+    type="file"
+    id="avatarUpload"
+    accept="image/*"
+    hidden
+  >
+
+</div>
       <div class="banner-info">
    <h2 id="profileName">Loading...</h2>
     <p id="profileEmail">Loading...</p>
@@ -391,37 +421,60 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Trips Planned</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">12.4 kg</div>
-          <div class="stat-label">CO₂ Saved</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">7</div>
-          <div class="stat-label">Favourites</div>
-        </div>
-      </div>
+  <div class="stat-card">
+    <div class="stat-number" id="tripCount">0</div>
+    <div class="stat-label">Trips Planned</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-number" id="co2Saved">0 kg</div>
+    <div class="stat-label">CO₂ Saved</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-number" id="favCount">0</div>
+    <div class="stat-label">Favourites</div>
+  </div>
+</div>
 
       <form id="profileForm" onsubmit="saveProfile(event)">
         <p class="section-label">Basic Details</p>
         <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label" for="firstName">First Name</label>
-            <div class="input-icon-wrap">
-              <i class="bi bi-person"></i>
-              <input type="text" class="form-control" id="firstName" />
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="lastName">Last Name</label>
-            <div class="input-icon-wrap">
-              <i class="bi bi-person"></i>
-             <input type="text" class="form-control" id="lastName" />
-            </div>
-          </div>
+        <div class="col-md-6">
+  <label class="form-label" for="firstName">
+    First Name
+  </label>
+
+  <div class="input-icon-wrap">
+    <i class="bi bi-person"></i>
+
+    <input
+      type="text"
+      class="form-control"
+      id="firstName"
+      readonly
+    />
+  </div>
+</div>
+
+<div class="col-md-6">
+  <label class="form-label" for="lastName">
+    Last Name
+  </label>
+
+  <div class="input-icon-wrap">
+    <i class="bi bi-person"></i>
+
+    <input
+      type="text"
+      class="form-control"
+      id="lastName"
+      readonly
+    />
+  </div>
+</div>
+
+
           <div class="col-md-6">
             <label class="form-label" for="email">Email Address</label>
             <div class="input-icon-wrap">
@@ -448,9 +501,7 @@
               <input
   type="text"
   id="username"
-  class="form-control"
-  readonly
->
+  class="form-control">
             </div>
           </div>
         </div>
