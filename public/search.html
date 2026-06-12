@@ -43,15 +43,15 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
       color: #fff !important;
+      font-weight: 700;
     }
-    .navbar-brand span { color: var(--accent); }
     .nav-link {
       color: rgba(255,255,255,0.75) !important;
       font-size: 0.9rem;
       margin-left: 0.5rem;
       transition: color 0.2s;
     }
-    .nav-link:hover, .nav-link.active { color: #fff !important; }
+    .nav-link:hover, .nav-link.active { color: #d8f3dc !important; }
 
     /* ── Hero search bar ── */
     .search-hero {
@@ -477,19 +477,21 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg">
-  <a class="navbar-brand" href="#">Eco<span>Travel</span></a>
-  <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-    <span class="navbar-toggler-icon" style="filter:invert(1);"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navMenu">
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-      <li class="nav-item"><a class="nav-link active" href="#">Itinerary</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Directory</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
-    </ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="search.html">Directory</a></li>
+        <li class="nav-item"><a class="nav-link" href="../src/itinerary.html">Itinerary</a></li>
+        <li class="nav-item"><a class="nav-link" href="../src/calculator.html">Carbon Calculator</a></li>
+        <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="showToast('Logged out successfully.')">Logout</a></li>
+      </ul>
+    </div>
   </div>
 </nav>
 

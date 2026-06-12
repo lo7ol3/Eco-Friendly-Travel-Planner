@@ -5,9 +5,10 @@
 let tripDetails = getTripDetails();
 let dropdownOpen = false;
 let weatherForecasts = [];
+let editingPlanId = null;
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
   if (typeof loadCities === 'function') {
     await loadCities();
   }
@@ -15,13 +16,13 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Load trip details
   document.getElementById('start-date').value = tripDetails.startDate;
   document.getElementById('end-date').value = tripDetails.endDate;
-  
+
   // Populate city dropdown
   renderCityDropdown();
   updateCityDisplay();
-  
+
   // Render all sections
-    renderWeatherWidget().then(() => {
+  renderWeatherWidget().then(() => {
     renderTimeline();
   });
   renderSidebar();
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   renderSavedPlans();
 
   // Close dropdown when clicking outside
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     const dropdown = document.getElementById('city-dropdown-menu');
     const button = document.getElementById('city-dropdown');
     if (!dropdown || !button) return;
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 function toggleCityDropdown() {
   dropdownOpen = !dropdownOpen;
   const menu = document.getElementById('city-dropdown-menu');
-  
+
   if (dropdownOpen) {
     menu.classList.remove('hidden');
     document.getElementById('city-search').focus();
@@ -61,7 +62,7 @@ function closeCityDropdown() {
 
 function renderCityDropdown(searchQuery = '') {
   const list = document.getElementById('city-list');
-  const filtered = cities.filter(city => 
+  const filtered = cities.filter(city =>
     city.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     city.country.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -96,21 +97,21 @@ function selectCity(cityId) {
     tripDetails.city = city.name;
     tripDetails.cityId = city.id;
     setTripDetails(tripDetails);
-    
+
     updateCityDisplay();
     closeCityDropdown();
     renderWeatherWidget().then(() => {
-  renderTimeline();
-});
+      renderTimeline();
+    });
 
-renderSidebar();
+    renderSidebar();
   }
 }
 
 function updateCityDisplay() {
   const display = document.getElementById('city-dropdown-display');
   const weatherCityName = document.getElementById('weather-city-name');
-  
+
   if (tripDetails.cityId) {
     const city = getCityById(tripDetails.cityId);
     if (city) {
@@ -124,7 +125,7 @@ function updateCityDisplay() {
       return;
     }
   }
-  
+
   display.innerHTML = `
     <svg class="icon text-muted" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
@@ -138,12 +139,12 @@ function updateTripDates() {
   tripDetails.startDate = document.getElementById('start-date').value;
   tripDetails.endDate = document.getElementById('end-date').value;
   setTripDetails(tripDetails);
-  
+
   // Normalize item dates
   const items = getItineraryItems();
   const start = new Date(tripDetails.startDate);
   const end = new Date(tripDetails.endDate);
-  
+
   const normalizedItems = items.map(item => {
     if (!item.date) return { ...item, date: tripDetails.startDate };
     const itemDate = new Date(item.date);
@@ -152,9 +153,9 @@ function updateTripDates() {
     }
     return item;
   });
-  
+
   setItineraryItems(normalizedItems);
-  
+
   renderWeatherWidget().then(() => {
     renderTimeline();
   });
@@ -164,20 +165,36 @@ function updateTripDates() {
 function handleResetTrip() {
   const currentItems = getItineraryItems();
   if (currentItems.length > 0) {
-    if (!confirm("Are you sure you want to clear your entire itinerary? This cannot be undone.")) return;
+    showConfirmDialog(
+      'Clear Itinerary',
+      'Are you sure you want to clear your entire itinerary? This cannot be undone.',
+      {
+        confirmBtnText: 'Clear All',
+        confirmBtnClass: 'btn-danger',
+        icon: '⚠️',
+        onConfirm: executeResetTrip
+      }
+    );
+  } else {
+    executeResetTrip();
   }
+}
 
+function executeResetTrip() {
   setItineraryItems([]);
-  
+  editingPlanId = null;
+
+  const defaults = typeof getDefaultDates === 'function' ? getDefaultDates() : { start: '', end: '' };
+
   const defaultTrip = {
     city: '',
     cityId: null,
-    startDate: '2026-05-10', 
-    endDate: '2026-05-12'    
+    startDate: defaults.start,
+    endDate: defaults.end
   };
-  
+
   setTripDetails(defaultTrip);
-  tripDetails = defaultTrip; 
+  tripDetails = defaultTrip;
 
   document.getElementById('start-date').value = defaultTrip.startDate;
   document.getElementById('end-date').value = defaultTrip.endDate;
@@ -330,7 +347,7 @@ async function renderWeatherWidget() {
       </section>
     `;
 
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     weatherForecasts = [];
 
@@ -345,8 +362,8 @@ async function renderWeatherWidget() {
 function renderTimeline() {
   const container = document.getElementById('itinerary-timeline');
   const items = getItineraryItems();
-  
-  const filteredItems = tripDetails.cityId 
+
+  const filteredItems = tripDetails.cityId
     ? items.filter(item => item.cityId === tripDetails.cityId)
     : items;
 
@@ -370,7 +387,7 @@ function renderTimeline() {
   }
 
   const dates = getDatesInRange(tripDetails.startDate, tripDetails.endDate);
-  
+
   const itemsByDate = filteredItems.reduce((acc, item) => {
     const date = item.date || tripDetails.startDate;
     if (!acc[date]) acc[date] = [];
@@ -399,33 +416,33 @@ function renderTimeline() {
     <div class="timeline">
       <div class="timeline-line"></div>
       ${dates.map(date => {
-        const dayItems = itemsByDate[date] || [];
-        const dayNum = getDayNumber(tripDetails.startDate, date);
-        const dayWeather = weatherForecasts.find(f => f.date === date);
-        
-        return `
+    const dayItems = itemsByDate[date] || [];
+    const dayNum = getDayNumber(tripDetails.startDate, date);
+    const dayWeather = weatherForecasts.find(f => f.date === date);
+
+    return `
           <div class="timeline-day">
             <div class="timeline-dot"></div>
             <div class="timeline-date">Day ${dayNum}: ${formatDate(date)}</div>
             ${dayItems.length > 0 ? dayItems.map(item => {
-              
-              const outdoorTags = ['beach', 'hiking', 'cycle', 'wildlife', 'eco'];
-              const isOutdoor = item.tags.some(tag => outdoorTags.includes(tag.toLowerCase()));
-              const suitable = dayWeather
-                  ? weatherService.isSuitableForOutdoor(dayWeather)
-                  : true;
-    
-              
-              const weatherSuggestion = (isOutdoor && !suitable)
-                  ? `
+
+      const outdoorTags = ['beach', 'hiking', 'cycle', 'wildlife', 'eco'];
+      const isOutdoor = item.tags.some(tag => outdoorTags.includes(tag.toLowerCase()));
+      const suitable = dayWeather
+        ? weatherService.isSuitableForOutdoor(dayWeather)
+        : true;
+
+
+      const weatherSuggestion = (isOutdoor && !suitable)
+        ? `
                     <div class="alert alert-warning mt-2 py-2">
                       Weather Alert:
                       ${dayWeather?.condition || 'Poor weather'} expected.
                     </div>
                   `
-                  : '';
+        : '';
 
-              return `
+      return `
               <div class="timeline-item">
                 <div class="timeline-item-header">
                   <div class="timeline-item-left">
@@ -471,7 +488,7 @@ function renderTimeline() {
             `}
           </div>
         `;
-      }).join('')}
+  }).join('')}
     </div>
   `;
 }
@@ -490,12 +507,12 @@ function moveActivity(activityId, newDate) {
 
 function renderSidebar() {
   const items = getItineraryItems();
-  const filteredItems = tripDetails.cityId 
+  const filteredItems = tripDetails.cityId
     ? items.filter(item => item.cityId === tripDetails.cityId)
     : [];
 
   const totalPrice = filteredItems.reduce((sum, item) => sum + item.price, 0);
-  
+
   document.getElementById('total-budget').textContent = totalPrice.toLocaleString();
   document.getElementById('activity-count').textContent = `${filteredItems.length} Activities`;
 
@@ -507,7 +524,7 @@ function renderSidebar() {
 
   const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
   const list = document.getElementById('budget-breakdown-list');
-  
+
   if (sortedCategories.length > 0) {
     list.innerHTML = sortedCategories.map(([category, amount]) => `
       <div class="budget-category-item">
@@ -577,40 +594,204 @@ function renderSavedPlans() {
 
 function saveItinerary() {
   if (!tripDetails.cityId) {
-    alert('Please select a destination before saving your itinerary.');
+    showNotification('Action Required', 'Please select a destination before saving your itinerary.', 'error');
     return;
   }
 
   const items = getItineraryItems().filter(item => item.cityId === tripDetails.cityId);
   if (items.length === 0) {
-    alert('Please add at least one activity to your itinerary before saving.');
+    showNotification('Itinerary Empty', 'Please add at least one activity to your itinerary before saving.', 'error');
     return;
   }
 
-  const defaultTitle = `${tripDetails.city} ${tripDetails.startDate || ''}`.trim();
-  const title = prompt('Enter a title for this itinerary plan:', defaultTitle) || defaultTitle;
-  const plans = getSavedPlans();
-  const id = Date.now();
+  const defaultTitle = editingPlanId
+    ? (getSavedPlans().find(p => p.id === editingPlanId)?.title || `${tripDetails.city} ${tripDetails.startDate || ''}`.trim())
+    : `${tripDetails.city} ${tripDetails.startDate || ''}`.trim();
 
-  plans.push({
-    id,
-    title,
-    tripDetails: { ...tripDetails },
-    items
-  });
+  const titleInput = document.getElementById('itinerary-title-input');
+  if (titleInput) {
+    titleInput.value = defaultTitle;
+  }
+
+  const saveModalTitle = document.querySelector('#saveItineraryModal h3');
+  const saveModalBtn = document.querySelector('#saveItineraryModal button.btn-success');
+  if (saveModalTitle) {
+    saveModalTitle.textContent = editingPlanId ? 'Update Itinerary Plan' : 'Save Itinerary Plan';
+  }
+  if (saveModalBtn) {
+    saveModalBtn.textContent = editingPlanId ? 'Update Plan' : 'Save Plan';
+  }
+
+  const modalEl = document.getElementById('saveItineraryModal');
+  if (modalEl) {
+    modalEl.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSaveModal() {
+  const modalEl = document.getElementById('saveItineraryModal');
+  if (modalEl) {
+    modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+function confirmSaveItinerary() {
+  const titleInput = document.getElementById('itinerary-title-input');
+  const title = titleInput ? titleInput.value.trim() : '';
+  if (!title) {
+    showNotification('Title Required', 'Please enter a title for your plan.', 'error');
+    return;
+  }
+
+  const items = getItineraryItems().filter(item => item.cityId === tripDetails.cityId);
+  const plans = getSavedPlans();
+
+  if (editingPlanId) {
+    const planIndex = plans.findIndex(p => p.id === editingPlanId);
+    if (planIndex !== -1) {
+      plans[planIndex].title = title;
+      plans[planIndex].tripDetails = { ...tripDetails };
+      plans[planIndex].items = items;
+    } else {
+      plans.push({
+        id: editingPlanId,
+        title,
+        tripDetails: { ...tripDetails },
+        items
+      });
+    }
+  } else {
+    const id = Date.now();
+    plans.push({
+      id,
+      title,
+      tripDetails: { ...tripDetails },
+      items
+    });
+  }
 
   setSavedPlans(plans);
   renderSavedPlans();
-  alert('Itinerary saved successfully. You can now load it from the Saved Itinerary tab.');
+  closeSaveModal();
+
+  showNotification(
+    editingPlanId ? 'Itinerary Updated!' : 'Itinerary Saved!',
+    editingPlanId ? 'Your saved itinerary has been updated.' : 'You can now view and load it from the Saved Itinerary tab.',
+    'success'
+  );
 }
+
+function showNotification(title, message, type = 'success') {
+  const modalIcon = document.getElementById('notificationModalIcon');
+  const modalTitle = document.getElementById('notificationModalTitle');
+  const modalMsg = document.getElementById('notificationModalMessage');
+
+  if (modalTitle) modalTitle.textContent = title;
+  if (modalMsg) modalMsg.textContent = message;
+
+  if (type === 'error') {
+    if (modalIcon) {
+      modalIcon.textContent = '⚠️';
+      modalIcon.style.display = 'block';
+    }
+    if (modalTitle) {
+      modalTitle.classList.remove('text-success');
+      modalTitle.classList.add('text-danger');
+    }
+  } else {
+    if (modalIcon) {
+      modalIcon.textContent = '🎉';
+      modalIcon.style.display = 'block';
+    }
+    if (modalTitle) {
+      modalTitle.classList.remove('text-danger');
+      modalTitle.classList.add('text-success');
+    }
+  }
+
+  const modalEl = document.getElementById('notificationModal');
+  if (modalEl) {
+    modalEl.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeNotificationModal() {
+  const modalEl = document.getElementById('notificationModal');
+  if (modalEl) {
+    modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+function showConfirmDialog(title, message, options = {}) {
+  const modalEl = document.getElementById('confirmModal');
+  const iconEl = document.getElementById('confirmModalIcon');
+  const titleEl = document.getElementById('confirmModalTitle');
+  const messageEl = document.getElementById('confirmModalMessage');
+  const actionBtn = document.getElementById('confirmModalActionBtn');
+
+  if (titleEl) titleEl.textContent = title;
+  if (messageEl) messageEl.textContent = message;
+
+  if (options.icon && iconEl) {
+    iconEl.textContent = options.icon;
+    iconEl.style.display = 'block';
+  } else if (iconEl) {
+    iconEl.textContent = '⚠️';
+    iconEl.style.display = 'none';
+  }
+
+  if (actionBtn) {
+    actionBtn.textContent = options.confirmBtnText || 'Confirm';
+    actionBtn.className = 'btn btn-sm w-50 py-2 rounded-pill fw-semibold ' + (options.confirmBtnClass || 'btn-danger');
+
+    // Clone button to remove previous event listeners
+    const newActionBtn = actionBtn.cloneNode(true);
+    actionBtn.parentNode.replaceChild(newActionBtn, actionBtn);
+
+    newActionBtn.addEventListener('click', function () {
+      if (typeof options.onConfirm === 'function') {
+        options.onConfirm();
+      }
+      closeConfirmModal();
+    });
+  }
+
+  if (modalEl) {
+    modalEl.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeConfirmModal() {
+  const modalEl = document.getElementById('confirmModal');
+  if (modalEl) {
+    modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    closeSaveModal();
+    closeNotificationModal();
+    closeConfirmModal();
+    closeSavedPlanModal();
+  }
+});
 
 function openSavedPlanForEdit(planId) {
   const plans = getSavedPlans();
   const plan = plans.find(p => p.id === planId);
   if (!plan) {
-    alert('Saved plan not found.');
+    showNotification('Not Found', 'The requested plan was not found.', 'error');
     return;
   }
+
+  editingPlanId = planId;
 
   tripDetails = { ...plan.tripDetails };
   setTripDetails(tripDetails);
@@ -637,7 +818,7 @@ function viewSavedPlan(planId) {
   const plans = getSavedPlans();
   const plan = plans.find(p => p.id === planId);
   if (!plan) {
-    alert('Saved plan not found.');
+    showNotification('Not Found', 'The requested plan was not found.', 'error');
     return;
   }
 
@@ -647,24 +828,39 @@ function viewSavedPlan(planId) {
 
   const list = document.getElementById('savedPlanActivitiesList');
   if (!Array.isArray(plan.items) || plan.items.length === 0) {
-    list.innerHTML = '<li class="list-group-item text-muted">No activities saved for this plan.</li>';
+    list.innerHTML = '<p class="p-4 text-center text-muted small bg-light rounded-4 mb-0">No activities saved for this plan.</p>';
   } else {
     list.innerHTML = plan.items.map(item => `
-      <li class="list-group-item">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <strong>${item.name || item.activity || 'Activity'}</strong>
-            <p class="small text-muted mb-0">${item.description || item.city || ''}</p>
-          </div>
-          <span class="badge bg-success rounded-pill">${item.co2 || '0'} kg CO₂</span>
+      <div class="p-3 rounded-4 d-flex justify-content-between align-items-center" style="background: #f8f9fa; border: 1px solid rgba(0,0,0,0.04);">
+        <div>
+          <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.95rem;">${item.name || item.activity || 'Activity'}</h6>
+          <p class="small text-muted mb-0" style="font-size: 0.8rem;">${item.description || item.city || ''}</p>
         </div>
-      </li>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-semibold" style="font-size: 0.75rem;">
+            RM ${Number(item.price || 0).toLocaleString()}
+          </span>
+          <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-semibold" style="font-size: 0.75rem;">
+            ${item.co2 || '0'} kg CO₂
+          </span>
+        </div>
+      </div>
     `).join('');
   }
 
-  const modalElement = document.getElementById('savedPlanModal');
-  const modal = new bootstrap.Modal(modalElement);
-  modal.show();
+  const modalEl = document.getElementById('savedPlanModal');
+  if (modalEl) {
+    modalEl.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeSavedPlanModal() {
+  const modalEl = document.getElementById('savedPlanModal');
+  if (modalEl) {
+    modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
 }
 
 function editSavedPlan(planId) {
@@ -672,8 +868,22 @@ function editSavedPlan(planId) {
 }
 
 function deleteSavedPlan(planId) {
-  if (!confirm('Are you sure you want to delete this saved itinerary?')) return;
-  const plans = getSavedPlans().filter(p => p.id !== planId);
-  setSavedPlans(plans);
-  renderSavedPlans();
+  showConfirmDialog(
+    'Delete Itinerary',
+    'Are you sure you want to delete this saved itinerary? This cannot be undone.',
+    {
+      confirmBtnText: 'Delete',
+      confirmBtnClass: 'btn-danger',
+      icon: '⚠️',
+      onConfirm: function () {
+        const plans = getSavedPlans().filter(p => p.id !== planId);
+        setSavedPlans(plans);
+        renderSavedPlans();
+        if (editingPlanId === planId) {
+          editingPlanId = null;
+        }
+        showNotification('Deleted Successfully', 'The saved itinerary has been deleted.', 'success');
+      }
+    }
+  );
 }

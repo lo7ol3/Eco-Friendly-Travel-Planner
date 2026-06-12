@@ -48,6 +48,32 @@
                     'cookstoves': 'Clean Cookstoves'
                 };
                 
-                alert('Thank you for choosing to offset your carbon footprint!\n\nProject: ' + projectNames[selectedProject.project] + '\nEmissions: ' + totalEmissions.toFixed(1) + ' kg CO2\nOffset Cost: ' + document.getElementById('totalCost').textContent + '\n\nYou will be redirected to complete your purchase.');
+                document.getElementById('modalProjectName').textContent = projectNames[selectedProject.project];
+                document.getElementById('modalEmissions').textContent = totalEmissions.toFixed(1);
+                document.getElementById('modalCost').textContent = document.getElementById('totalCost').textContent;
+
+                const modalEl = document.getElementById('purchaseSuccessModal');
+                if (modalEl) {
+                    modalEl.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
             }
         }
+
+        function closePurchaseModal() {
+            const modalEl = document.getElementById('purchaseSuccessModal');
+            if (modalEl) {
+                modalEl.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+            // Clear the carbon emissions as they have been successfully offset
+            localStorage.removeItem('carbonEmissions');
+            // Redirect user to their profile dashboard
+            window.location.href = 'profile.html';
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closePurchaseModal();
+            }
+        });

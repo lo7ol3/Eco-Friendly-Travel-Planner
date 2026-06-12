@@ -201,14 +201,30 @@ function setItineraryItems(items) {
   localStorage.setItem(STORAGE_KEYS.ITINERARY, JSON.stringify(items));
 }
 
+function getLocalDateString(date) {
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+  return localDate.toISOString().split('T')[0];
+}
+
+function getDefaultDates() {
+  const today = new Date();
+  const start = getLocalDateString(today);
+  const end = new Date(today);
+  end.setDate(today.getDate() + 2);
+  const endStr = getLocalDateString(end);
+  return { start, end: endStr };
+}
+
 function getTripDetails() {
+  const defaults = getDefaultDates();
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.TRIP);
     return stored ? JSON.parse(stored) : {
       city: '',
       cityId: null,
-      startDate: '2026-05-10',
-      endDate: '2026-05-12'
+      startDate: defaults.start,
+      endDate: defaults.end
     };
   } catch {
     return {
@@ -216,8 +232,8 @@ function getTripDetails() {
       cityId: null,
       lat: null,
       lon: null,
-      startDate: '2026-05-10',
-      endDate: '2026-05-12'
+      startDate: defaults.start,
+      endDate: defaults.end
     };
   }
 }

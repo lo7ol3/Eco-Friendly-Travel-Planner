@@ -531,38 +531,42 @@
         <div class="interests-grid">
           <div class="interest-chip">
             <input type="checkbox" id="int-eco" checked />
-            <label for="int-eco">🌿 Eco stays</label>
+            <label for="int-eco">Eco stays</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-food" checked />
-            <label for="int-food">🍃 Plant-based food</label>
+            <label for="int-food">Plant-based food</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-hike" />
-            <label for="int-hike">🥾 Hiking</label>
+            <label for="int-hike">Hiking</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-beach" checked />
-            <label for="int-beach">🏖️ Beach</label>
+            <label for="int-beach">Beach</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-culture" />
-            <label for="int-culture">🏛️ Culture</label>
+            <label for="int-culture">Culture</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-wildlife" />
-            <label for="int-wildlife">🦋 Wildlife</label>
+            <label for="int-wildlife">Wildlife</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-cycle" />
-            <label for="int-cycle">🚴 Cycling</label>
+            <label for="int-cycle">Cycling</label>
           </div>
           <div class="interest-chip">
             <input type="checkbox" id="int-train" checked />
-            <label for="int-train">🚆 Train travel</label>
+            <label for="int-train">Train travel</label>
           </div>
         </div>
 
+        <div class="d-flex gap-3 mt-4 pt-2" id="profileActions">
+          <button type="submit" class="btn-save"><i class="bi bi-check2"></i> Save Changes</button>
+          <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
+        </div>
       </form>
     </div>
 
@@ -620,36 +624,40 @@
     </div>
 
   </div>
-  
-  <div class="d-flex gap-2 mt-4" id="profileActions">
-    <button type="submit" form="profileForm" class="btn-save"><i class="bi bi-check2"></i> Save Changes</button>
-    <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
-  </div>
 
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius:16px;border:none;">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title" style="font-family:'Playfair Display',serif;color:#842029;">Confirm Account Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" style="font-size:0.88rem;color:#444;">
-        <p>Are you sure you want to delete your account? This will permanently erase:</p>
-        <ul style="margin-top:0.5rem;padding-left:1.2rem;">
-          <li>Your profile and personal details</li>
-          <li>All saved itineraries</li>
-          <li>Your favourites and carbon footprint history</li>
-        </ul>
-        <p style="margin-top:0.75rem;">Type <strong>DELETE</strong> to confirm:</p>
-        <input type="text" class="form-control mt-2" id="deleteConfirmInput" placeholder="Type DELETE here" />
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn-danger-outline" onclick="confirmDelete()">
-          <i class="bi bi-trash3"></i> Yes, Delete
-        </button>
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+    <div class="modal-content" style="border-radius: 1.5rem; border: none; box-shadow: 0 12px 30px rgba(0,0,0,0.18); overflow: hidden; background: white;">
+      <div class="modal-body p-4 text-center">
+        <!-- Close button top-right -->
+        <button type="button" class="btn-close position-absolute" style="top: 1.25rem; right: 1.25rem;" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+        <!-- Large Warning Icon -->
+        <div class="mb-3 mt-2 text-danger" style="font-size: 3.5rem;">⚠️</div>
+        
+        <!-- Modal Title -->
+        <h3 class="fw-bold mb-3 text-danger" style="font-size: 1.35rem; font-family: 'DM Sans', sans-serif;">Confirm Account Deletion</h3>
+        
+        <!-- Warning Message & Checklist -->
+        <p class="text-muted small mb-3">Are you sure you want to delete your account? This will permanently erase all your data:</p>
+        
+        <div class="text-start mb-4 p-3" style="background: #fff5f5; border: 1px solid #f5c6cb; border-radius: 12px; font-size: 0.82rem; color: #842029;">
+          <ul class="mb-0 ps-3">
+            <li class="mb-1">Your profile and personal details</li>
+            <li class="mb-1">All saved itineraries</li>
+            <li class="mb-0">Your favourites and carbon footprint history</li>
+          </ul>
+        </div>
+        
+        <!-- Confirmation Action Buttons -->
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-light btn-sm w-50 py-2.5 rounded-pill fw-semibold" data-bs-dismiss="modal" style="border: 1px solid #e5e7eb;">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm w-50 py-2.5 rounded-pill fw-semibold" onclick="confirmDelete()">
+            <i class="bi bi-trash3 me-1"></i> Yes, Delete
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -690,7 +698,11 @@ document.getElementById('profileEmail').textContent =
   }
 
   function resetForm() {
-    document.getElementById('profileForm').reset();
+    if (typeof loadProfile === 'function') {
+      loadProfile();
+    } else {
+      document.getElementById('profileForm').reset();
+    }
   }
 
   function changePassword(e) {
@@ -711,12 +723,10 @@ document.getElementById('profileEmail').textContent =
     document.getElementById('passwordForm').reset();
   }
 async function confirmDelete() {
-  const val =
-    document.getElementById("deleteConfirmInput").value.trim();
-
-  if (val !== "DELETE") {
-    alert("Please type DELETE exactly.");
-    return;
+  const modalEl = document.getElementById("deleteModal");
+  const modalInstance = bootstrap.Modal.getInstance(modalEl);
+  if (modalInstance) {
+    modalInstance.hide();
   }
 
   const {
@@ -724,7 +734,7 @@ async function confirmDelete() {
   } = await window.supabaseClient.auth.getUser();
 
   if (!user) {
-    alert("User not found.");
+    showNotification('Error', 'User not found.', 'error');
     return;
   }
 
@@ -744,22 +754,34 @@ async function confirmDelete() {
     .eq("user_id", user.id);
 
   if (error) {
-    alert(error.message);
+    showNotification('Error', error.message, 'error');
     return;
   }
 
   await window.supabaseClient.auth.signOut();
 
-  alert("Account deleted successfully!");
-
+  // Redirect to login after signing out
   window.location.href = "login.html";
 }
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="auth.js"></script>
-<script src="profile.js"></script>
+
+    <!-- Custom Success/Notification Modal -->
+    <div class="custom-modal-overlay hidden" id="notificationModal">
+      <div class="custom-modal-backdrop" onclick="closeNotificationModal()"></div>
+      <div class="custom-modal p-4 text-center position-relative"
+        style="background: white; border-radius: 1.5rem; max-width: 400px; width: 92%; box-shadow: 0 12px 30px rgba(0,0,0,0.18);">
+        <button type="button" class="btn-close position-absolute" style="top: 1.25rem; right: 1.25rem;" onclick="closeNotificationModal()"></button>
+        <div id="notificationModalIcon" class="mb-3 mt-3" style="font-size: 3.5rem;">🎉</div>
+        <h3 class="fw-bold mb-2 text-success" id="notificationModalTitle" style="font-size: 1.25rem;">Success</h3>
+        <p class="text-muted small mb-0" id="notificationModalMessage"></p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile.js"></script>
 </body>
 
 </html>

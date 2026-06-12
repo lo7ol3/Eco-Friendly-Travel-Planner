@@ -791,7 +791,7 @@ input[type="range"] {
 }
 
 /* Modal */
-.modal-overlay {
+.custom-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 50;
@@ -801,14 +801,14 @@ input[type="range"] {
   padding: 1rem;
 }
 
-.modal-backdrop {
+.custom-modal-backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
 
-.modal {
+.custom-modal {
   position: relative;
   background: white;
   border-radius: 1rem;
@@ -819,13 +819,13 @@ input[type="range"] {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-.modal-header {
+.custom-modal .modal-header {
   padding: 2rem 1.5rem;
   text-align: center;
   position: relative;
 }
 
-.modal-close {
+.custom-modal .modal-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -842,34 +842,34 @@ input[type="range"] {
   transition: background-color 0.2s;
 }
 
-.modal-close:hover {
+.custom-modal .modal-close:hover {
   background: white;
 }
 
-.modal-emoji {
+.custom-modal .modal-emoji {
   font-size: 4rem;
   display: block;
   margin-bottom: 0.75rem;
 }
 
-.modal-title {
+.custom-modal .modal-title {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.5rem;
   color: var(--green-dark);
 }
 
-.modal-subtitle {
+.custom-modal .modal-subtitle {
   font-size: 0.875rem;
   color: var(--text-muted);
 }
 
-.modal-body {
+.custom-modal .modal-body {
   padding: 1.5rem;
   overflow-y: auto;
   max-height: 50vh;
 }
 
-.modal-section-title {
+.custom-modal .modal-section-title {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--green-dark);

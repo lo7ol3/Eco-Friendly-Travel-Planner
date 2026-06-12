@@ -135,19 +135,15 @@ async function saveProfile(event) {
       });
 
   if (error) {
-  alert(error.message);
-  return;
-}
+    showNotification('Error', error.message, 'error');
+    return;
+  }
 
-alert("Profile updated successfully!");
+  showNotification('Success', 'Profile updated successfully!', 'success');
 
-// Update username shown on profile card
-document.getElementById("profileName").textContent =
-  document.getElementById("username").value;
-
-  alert("Profile updated successfully!");
-  
-
+  // Update username shown on profile card
+  document.getElementById("profileName").textContent =
+    document.getElementById("username").value;
 }
  const savedImage =
   localStorage.getItem("profileImage");
@@ -164,28 +160,36 @@ if (savedImage) {
     "avatarInitials"
   ).style.display = "none";
 }
-async function updatePassword() {
-  const newPassword =
-    document.getElementById("newPassword").value;
+async function changePassword(e) {
+  e.preventDefault();
+  const newPw = document.getElementById('newPw').value;
+  const confirm = document.getElementById('confirmPw').value;
+  const errEl = document.getElementById('pwError');
 
-  if (newPassword.length < 6) {
-    alert("Password must be at least 6 characters.");
+  if (newPw !== confirm) {
+    if (errEl) errEl.style.display = 'block';
+    return;
+  }
+  if (errEl) errEl.style.display = 'none';
+
+  if (newPw.length < 6) {
+    showNotification('Action Required', 'Password must be at least 6 characters.', 'error');
     return;
   }
 
   const { error } =
     await window.supabaseClient.auth.updateUser({
-      password: newPassword
+      password: newPw
     });
 
   if (error) {
-    alert(error.message);
+    showNotification('Error', error.message, 'error');
     return;
   }
 
-  alert("Password updated successfully!");
+  showNotification('Success', 'Password updated successfully!', 'success');
 
-  document.getElementById("newPassword").value = "";
+  document.getElementById("passwordForm").reset();
 }
 const avatarUpload =
   document.getElementById("avatarUpload");
@@ -222,3 +226,52 @@ document.getElementById(
     reader.readAsDataURL(file);
   }
 );
+
+function showNotification(title, message, type = 'success') {
+  const modalIcon = document.getElementById('notificationModalIcon');
+  const modalTitle = document.getElementById('notificationModalTitle');
+  const modalMsg = document.getElementById('notificationModalMessage');
+
+  if (modalTitle) modalTitle.textContent = title;
+  if (modalMsg) modalMsg.textContent = message;
+
+  if (type === 'error') {
+    if (modalIcon) {
+      modalIcon.textContent = '⚠️';
+      modalIcon.style.display = 'block';
+    }
+    if (modalTitle) {
+      modalTitle.classList.remove('text-success');
+      modalTitle.classList.add('text-danger');
+    }
+  } else {
+    if (modalIcon) {
+      modalIcon.textContent = '🎉';
+      modalIcon.style.display = 'block';
+    }
+    if (modalTitle) {
+      modalTitle.classList.remove('text-danger');
+      modalTitle.classList.add('text-success');
+    }
+  }
+
+  const modalEl = document.getElementById('notificationModal');
+  if (modalEl) {
+    modalEl.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeNotificationModal() {
+  const modalEl = document.getElementById('notificationModal');
+  if (modalEl) {
+    modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    closeNotificationModal();
+  }
+});

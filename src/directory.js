@@ -14,11 +14,14 @@ let filters = {
 let currentModalCity = null;
 
 // Safeguard core operational runtime until DOM elements completely execute
+let userProfileBudget = null;
+
 document.addEventListener('DOMContentLoaded', async () => {
     setupFilterListeners();
     if (typeof loadCities === 'function') {
         await loadCities();
     }
+    await loadUserProfileBudget();
     renderCityCards();
     renderFavoritePlaces();
     if (typeof updateNavbarBadge === 'function') updateNavbarBadge();
@@ -30,10 +33,16 @@ function initDirectoryAuthGuards() {
         const href = link.getAttribute('href');
         if (!href || href === 'directory.html' || href === 'index.html' || href === 'login.html' || href === 'register.html') return;
         link.addEventListener('click', function(e) {
-            if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+            if (localStorage.getItem('loggedIn') !== 'true') {
                 e.preventDefault();
-                alert('Please log in to continue.');
-                window.location.href = 'login.html';
+                if (typeof showNotification === 'function') {
+                    showNotification('Action Required', 'Please log in to continue.', 'error', () => {
+                        window.location.href = 'login.html';
+                    });
+                } else {
+                    alert('Please log in to continue.');
+                    window.location.href = 'login.html';
+                }
             }
         });
     });
@@ -113,9 +122,21 @@ function renderCityCards() {
         return true;
     });
 
-    if (filters.sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-    if (filters.sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-    if (filters.sort === 'co2-asc') filtered.sort((a, b) => a.co2 - b.co2);
+    if (filters.sort === 'default') {
+        filtered.sort((a, b) => {
+            // Recommendation: lowest CO2 impact first; if equal, lowest price first
+            if (a.co2 !== b.co2) {
+                return a.co2 - b.co2;
+            }
+            return a.price - b.price;
+        });
+    } else if (filters.sort === 'price-asc') {
+        filtered.sort((a, b) => a.price - b.price);
+    } else if (filters.sort === 'price-desc') {
+        filtered.sort((a, b) => b.price - a.price);
+    } else if (filters.sort === 'co2-asc') {
+        filtered.sort((a, b) => a.co2 - b.co2);
+    }
 
     const cardsContainer = document.getElementById('city-cards');
     const emptyState = document.getElementById('empty-state');
@@ -332,3 +353,29 @@ function resetFilters() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
 });
+
+async function loadUserProfileBudget() {
+    if (typeof window.supabaseClient === 'undefined') return;
+    try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const { data: profile } = await window.supabaseClient
+            .from("user_profiles")
+            .select("budget")
+            .eq("user_id", user.id)
+            .single();
+
+        if (profile && profile.budget) {
+            userProfileBudget = parseInt(profile.budget);
+            filters.budgetMax = userProfileBudget;
+            const maxSlider = document.getElementById('budget-max');
+            if (maxSlider) {
+                maxSlider.value = userProfileBudget;
+            }
+            updateBudgetDisplay();
+        }
+    } catch (e) {
+        console.error("Error loading user budget:", e);
+    }
+}

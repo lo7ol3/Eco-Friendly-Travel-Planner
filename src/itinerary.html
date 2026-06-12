@@ -1,241 +1,315 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Itinerary - EcoTravel</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
+
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-light">
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="itinerary.html">Itinerary</a></li>
-                    <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
-                    <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="logout()">Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">EcoTravel</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="directory.html">Directory</a></li>
+          <li class="nav-item"><a class="nav-link active" href="itinerary.html">Itinerary</a></li>
+          <li class="nav-item"><a class="nav-link" href="calculator.html">Carbon Calculator</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="logout()">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <!-- Hero Section -->
   <header class="hero">
-        <div class="container text-start">
-            <h1 class="hero-title" style="font-size: 2rem;">Create Your Green Itinerary</h1>
-            <p class="hero-subtitle x-small">Organize your eco-friendly destinations and track your impact.</p>
-        </div>
-    </header>
+    <div class="container text-start">
+      <h1 class="hero-title" style="font-size: 2rem;">Create Your Green Itinerary</h1>
+      <p class="hero-subtitle x-small">Organize your eco-friendly destinations and track your impact.</p>
+    </div>
+  </header>
 
   <!-- Main Content -->
   <main class="container my-4">
 
     <!-- Tabs Navigation -->
-      <ul class="nav nav-tabs mb-4" id="itineraryTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab">
-            Create New Itinerary
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab">
-            Saved Itinerary
-          </button>
-        </li>
-      </ul>
-
-      <!-- Tabs Content -->
-      <div class="tab-content" id="itineraryTabsContent">
-
-        <!-- Create New Itinerary -->
-        <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
-          <div class="row g-4">
-            <!-- Left Column -->
-            <div class="col-lg-8">
-              <!-- Trip Details Form -->
-              <div class="trip-form p-4 rounded-4 bg-white shadow-sm mb-5">
-                <!-- Trip Settings header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <h3 class="h6 mb-0 fw-bold text-uppercase" style="color: var(--green-dark); letter-spacing: 0.5px;">Trip Settings</h3>
-                  <button type="button" onclick="handleResetTrip()" class="btn btn-link btn-sm text-muted text-decoration-none d-flex align-items-center gap-1 p-0">
-                    <svg class="icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                    </svg>
-                    Reset Trip
-                  </button>
-                </div>
-
-            <!-- Trip Settings form -->
-            <div class="row g-3">
-              <!-- Destination City -->
-              <div class="col-md-6 position-relative">
-                <label class="form-label small fw-bold text-muted">Destination City</label>
-                <button type="button" class="city-dropdown w-100" id="city-dropdown" onclick="toggleCityDropdown()">
-                  <div id="city-dropdown-display" class="city-dropdown-inner">
-                    <svg class="icon icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
-                    <span style="color: var(--text-muted);">Select a destination...</span>
-                  </div>
-                </button>
-                <!-- Dropdown Menu -->
-                <div class="dropdown-menu w-100 shadow border-0 mt-1 p-0 hidden" id="city-dropdown-menu" style="display: block; max-height: 350px; overflow-y: auto;">
-                  <div class="p-2 border-bottom sticky-top bg-white">
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-text bg-transparent border-end-0">
-                        <svg class="icon" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                      </span>
-                      <input type="text" id="city-search" class="form-control border-start-0 shadow-none" placeholder="Search cities..." oninput="filterCityDropdown()">
-                    </div>
-                  </div>
-                  <div id="city-list" class="list-unstyled mb-0"></div>
-                </div>
-              </div>
-
-              <!-- Travel Dates -->
-              <div class="col-md-6">
-                <label class="form-label small fw-semibold text-muted">Travel Dates</label>
-                <div class="input-group">
-                  <input type="date" class="form-control shadow-none py-2" id="start-date" value="2026-05-10" onchange="updateTripDates()">
-                  <input type="date" class="form-control shadow-none py-2" id="end-date" value="2026-05-12" onchange="updateTripDates()">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Timeline Section -->
-          <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
-            <svg class="icon-lg text-success" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-            </svg>
-            <span class="fw-bold">Your Plan</span>
-          </div>
-          <div id="itinerary-timeline" class="mb-5"></div>
-        </div>
-
-    <!-- Right Column: Sidebar -->
-    <aside class="col-lg-4">
-      <div class="sticky-top" style="top: 100px; z-index: 10;">
-        
-        <!-- Budget Summary Card -->
-          <div class="card-container">
-          <!-- Top Section: Hero Total -->
-          <div class="card-header-card">
-            <span class="card-label">Total Estimated Cost</span>
-            <div class="card-main-value">
-              <span class="currency">RM</span>
-              <span id="total-budget" class="amount">0</span>
-            </div>
-            <div class="card-badge">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z"></path></svg>
-              <span id="activity-count">0 Activities</span>
-            </div>
-          </div>
-
-          <!-- Bottom Section: Detailed List -->
-          <div class="card-details">
-            <h4 class="breakdown-title">Cost Breakdown</h4>
-            <div id="budget-breakdown-list" class="breakdown-list">
-              <!-- JS will inject items here -->
-            </div>
-          </div>
-        </div>
-
-          <!-- Weather Section -->
-        <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
-          <svg class="icon-lg text-primary" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A8 8 0 1 0 3 15Z"/>
-          </svg>
-          <span class="fw-bold">Weather Forecast:</span>
-          <span class="text-muted fw-normal" id="weather-city-name">Select a city</span>
-        </div>
-        <div id="weather-widget" class="mb-5"></div>
-
-          <!-- Browse More CTA -->
-          <div class="p-4 rounded-4 bg-white shadow-sm border border-light mb-4 text-center">
-            <div class="d-flex align-items-center justify-content-center gap-2 mb-2 fw-bold text-success">
-              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>Add More Activities</span>
-            </div>
-            <p class="small text-muted mb-4">Browse eco-friendly destinations and add activities to your trip.</p>
-            <a href="directory.html" class="cta-browse-btn">Browse Destinations</a>
-          </div>
-          
-          <!-- Save Itinerary Button -->
-          <button class="btn-primary-solid" onclick="saveItinerary()">
-          <svg class="icon me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          Save Itinerary
+    <ul class="nav nav-tabs mb-4" id="itineraryTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button"
+          role="tab">
+          Create New Itinerary
         </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab">
+          Saved Itinerary
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="itineraryTabsContent">
+
+      <!-- Create New Itinerary -->
+      <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
+        <div class="row g-4">
+          <!-- Left Column -->
+          <div class="col-lg-8">
+            <!-- Trip Details Form -->
+            <div class="trip-form p-4 rounded-4 bg-white shadow-sm mb-5">
+              <!-- Trip Settings header -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="h6 mb-0 fw-bold text-uppercase" style="color: var(--green-dark); letter-spacing: 0.5px;">Trip
+                  Settings</h3>
+                <button type="button" onclick="handleResetTrip()"
+                  class="btn btn-link btn-sm text-muted text-decoration-none d-flex align-items-center gap-1 p-0">
+                  <svg class="icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                  </svg>
+                  Reset Trip
+                </button>
+              </div>
+
+              <!-- Trip Settings form -->
+              <div class="row g-3">
+                <!-- Destination City -->
+                <div class="col-md-6 position-relative">
+                  <label class="form-label small fw-bold text-muted">Destination City</label>
+                  <button type="button" class="city-dropdown w-100" id="city-dropdown" onclick="toggleCityDropdown()">
+                    <div id="city-dropdown-display" class="city-dropdown-inner">
+                      <svg class="icon icon-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                      <span style="color: var(--text-muted);">Select a destination...</span>
+                    </div>
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <div class="dropdown-menu w-100 shadow border-0 mt-1 p-0 hidden" id="city-dropdown-menu"
+                    style="display: block; max-height: 350px; overflow-y: auto;">
+                    <div class="p-2 border-bottom sticky-top bg-white">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-end-0">
+                          <svg class="icon" width="14" height="14" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          </svg>
+                        </span>
+                        <input type="text" id="city-search" class="form-control border-start-0 shadow-none"
+                          placeholder="Search cities..." oninput="filterCityDropdown()">
+                      </div>
+                    </div>
+                    <div id="city-list" class="list-unstyled mb-0"></div>
+                  </div>
+                </div>
+
+                <!-- Travel Dates -->
+                <div class="col-md-6">
+                  <label class="form-label small fw-semibold text-muted">Travel Dates</label>
+                  <div class="input-group">
+                    <input type="date" class="form-control shadow-none py-2" id="start-date"
+                      onchange="updateTripDates()">
+                    <input type="date" class="form-control shadow-none py-2" id="end-date" onchange="updateTripDates()">
+                  </div>
+                </div>
+              </div>
             </div>
-      </aside>
-      </div>
+
+            <!-- Timeline Section -->
+            <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
+              <svg class="icon-lg text-success" width="24" height="24" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+              <span class="fw-bold">Your Plan</span>
+            </div>
+            <div id="itinerary-timeline" class="mb-5"></div>
+          </div>
+
+          <!-- Right Column: Sidebar -->
+          <aside class="col-lg-4">
+            <div class="sticky-top" style="top: 100px; z-index: 10;">
+
+              <!-- Budget Summary Card -->
+              <div class="card-container">
+                <!-- Top Section: Hero Total -->
+                <div class="card-header-card">
+                  <span class="card-label">Total Estimated Cost</span>
+                  <div class="card-main-value">
+                    <span class="currency">RM</span>
+                    <span id="total-budget" class="amount">0</span>
+                  </div>
+                  <div class="card-badge">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z">
+                      </path>
+                    </svg>
+                    <span id="activity-count">0 Activities</span>
+                  </div>
+                </div>
+
+                <!-- Bottom Section: Detailed List -->
+                <div class="card-details">
+                  <h4 class="breakdown-title">Cost Breakdown</h4>
+                  <div id="budget-breakdown-list" class="breakdown-list">
+                    <!-- JS will inject items here -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weather Section -->
+              <div class="section-header d-flex align-items-center gap-2 mb-3 px-1">
+                <svg class="icon-lg text-primary" width="24" height="24" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A8 8 0 1 0 3 15Z" />
+                </svg>
+                <span class="fw-bold">Weather Forecast:</span>
+                <span class="text-muted fw-normal" id="weather-city-name">Select a city</span>
+              </div>
+              <div id="weather-widget" class="mb-5"></div>
+
+              <!-- Browse More CTA -->
+              <div class="p-4 rounded-4 bg-white shadow-sm border border-light mb-4 text-center">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-2 fw-bold text-success">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span>Add More Activities</span>
+                </div>
+                <p class="small text-muted mb-4">Browse eco-friendly destinations and add activities to your trip.</p>
+                <a href="directory.html" class="cta-browse-btn">Browse Destinations</a>
+              </div>
+
+              <!-- Save Itinerary Button -->
+              <button class="btn-primary-solid" onclick="saveItinerary()">
+                <svg class="icon me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Save Itinerary
+              </button>
+            </div>
+          </aside>
+        </div>
       </div>
 
-    <!-- Saved Itinerary -->
-    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
-      <div class="row g-4">
-        <!-- Full width for cards -->
-        <div class="col-12">
-          <div class="row g-4">
-            <div class="col-12">
-              <div id="saved-plans-list" class="row g-4"></div>
+      <!-- Saved Itinerary -->
+      <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
+        <div class="row g-4">
+          <!-- Full width for cards -->
+          <div class="col-12">
+            <div class="row g-4">
+              <div class="col-12">
+                <div id="saved-plans-list" class="row g-4"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
     </div>
 
     <!-- Saved Plan View Modal -->
-    <div class="modal fade" id="savedPlanModal" tabindex="-1" aria-labelledby="savedPlanModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content rounded-4">
-          <div class="modal-header border-0">
-            <div>
-              <h5 class="modal-title" id="savedPlanModalLabel">Plan Activities</h5>
-              <p class="small text-muted mb-0" id="savedPlanModalCity"></p>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="custom-modal-overlay hidden" id="savedPlanModal">
+      <div class="custom-modal-backdrop" onclick="closeSavedPlanModal()"></div>
+      <div class="custom-modal p-4"
+        style="background: white; border-radius: 1.5rem; max-width: 520px; width: 92%; box-shadow: 0 12px 30px rgba(0,0,0,0.18);">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h5 class="fw-bold mb-1 text-success" id="savedPlanModalLabel" style="font-size: 1.3rem;">Plan Activities</h5>
+            <p class="small text-muted mb-0" id="savedPlanModalCity"></p>
           </div>
-          <div class="modal-body">
-            <ul class="list-group" id="savedPlanActivitiesList"></ul>
-          </div>
-          <div class="modal-footer border-0">
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-          </div>
+          <button type="button" class="btn-close" onclick="closeSavedPlanModal()"></button>
+        </div>
+        <div class="modal-body p-0" style="max-height: 380px; overflow-y: auto;">
+          <div id="savedPlanActivitiesList" class="d-flex flex-column gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Itinerary Custom Modal -->
+    <div class="custom-modal-overlay hidden" id="saveItineraryModal">
+      <div class="custom-modal-backdrop" onclick="closeSaveModal()"></div>
+      <div class="custom-modal p-4"
+        style="background: white; border-radius: 1.5rem; max-width: 480px; width: 92%; box-shadow: 0 12px 30px rgba(0,0,0,0.18);">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-bold mb-0 text-success" style="font-size: 1.3rem;">Save Itinerary Plan</h3>
+          <button type="button" class="btn-close" onclick="closeSaveModal()"></button>
+        </div>
+        <div class="mb-4">
+          <label for="itinerary-title-input" class="form-label small fw-semibold text-muted mb-2">Itinerary
+            Title</label>
+          <input type="text" class="form-control rounded-3 py-2" id="itinerary-title-input"
+            placeholder="e.g. My Trip to Penang" style="border: 1px solid var(--border-color);">
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-light btn-sm px-4 rounded-pill fw-semibold"
+            onclick="closeSaveModal()">Cancel</button>
+          <button type="button" class="btn btn-success btn-sm px-4 rounded-pill fw-semibold"
+            onclick="confirmSaveItinerary()">Save Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Notification/Success/Error Modal -->
+    <div class="custom-modal-overlay hidden" id="notificationModal">
+      <div class="custom-modal-backdrop" onclick="closeNotificationModal()"></div>
+      <div class="custom-modal p-4 text-center position-relative"
+        style="background: white; border-radius: 1.5rem; max-width: 400px; width: 92%; box-shadow: 0 12px 30px rgba(0,0,0,0.18);">
+        <button type="button" class="btn-close position-absolute" style="top: 1.25rem; right: 1.25rem;" onclick="closeNotificationModal()"></button>
+        <div id="notificationModalIcon" class="mb-3 mt-3" style="font-size: 3.5rem;">🎉</div>
+        <h3 class="fw-bold mb-2 text-success" id="notificationModalTitle" style="font-size: 1.25rem;">Success</h3>
+        <p class="text-muted small mb-0" id="notificationModalMessage"></p>
+      </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div class="custom-modal-overlay hidden" id="confirmModal">
+      <div class="custom-modal-backdrop" onclick="closeConfirmModal()"></div>
+      <div class="custom-modal p-4 text-center"
+        style="background: white; border-radius: 1.5rem; max-width: 400px; width: 92%; box-shadow: 0 12px 30px rgba(0,0,0,0.18);">
+        <div id="confirmModalIcon" class="mb-3" style="font-size: 3.5rem;">⚠️</div>
+        <h3 class="fw-bold mb-2 text-dark" id="confirmModalTitle" style="font-size: 1.25rem;">Confirm Action</h3>
+        <p class="text-muted small mb-4" id="confirmModalMessage"></p>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-light btn-sm w-50 py-2 rounded-pill fw-semibold" onclick="closeConfirmModal()">Cancel</button>
+          <button type="button" id="confirmModalActionBtn" class="btn btn-danger btn-sm w-50 py-2 rounded-pill fw-semibold">Delete</button>
         </div>
       </div>
     </div>
   </main>
 
   <!-- Bootstrap 5 JS Bundle -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="app.js"></script>
-<script src="auth.js"></script>
-<script src="weather.js"></script>
-<script src="itinerary.js"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+  <script src="auth.js"></script>
+  <script src="weather.js"></script>
+  <script src="itinerary.js"></script>
+
 </body>
+
 </html>
