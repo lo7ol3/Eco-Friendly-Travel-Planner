@@ -1156,6 +1156,7 @@ input[type="range"] {
 /* Weather Widget */
 .weather-widget {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
   gap: 1rem;
   padding: 1rem;
@@ -1167,13 +1168,14 @@ input[type="range"] {
 
 .weather-loading {
   align-items: center;
+  flex-direction: row;
   color: var(--text-muted);
   font-size: 0.875rem;
 }
 
 .weather-current {
   flex-shrink: 0;
-  width: 10.5rem;
+  width: 100%;
   min-width: 0;
 }
 
@@ -1251,7 +1253,7 @@ input[type="range"] {
 }
 
 .weather-forecast-wrap {
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1340,16 +1342,6 @@ input[type="range"] {
 .weather-placeholder small {
   font-size: 0.75rem;
   color: #9ca3af;
-}
-
-@media (max-width: 575.98px) {
-  .weather-widget {
-    flex-direction: column;
-  }
-
-  .weather-current {
-    width: 100%;
-  }
 }
 
 /* Section Headers */

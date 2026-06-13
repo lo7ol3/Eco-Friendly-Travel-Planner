@@ -237,11 +237,15 @@ function renderWeatherAlerts(alerts) {
 
 function renderWeatherDay(day) {
   const uv = weatherService.getUVRiskLevel(day.uvIndex);
+  const dateLabel = new Date(`${day.date}T00:00:00`).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  });
 
   return `
     <article class="weather-day" title="${escapeHtml(day.condition)} on ${escapeHtml(weatherService.formatDate(day.date))}">
       <div class="weather-day-label">${escapeHtml(day.day)}</div>
-      <div class="weather-day-date">${escapeHtml(weatherService.formatDate(day.date).replace(',', ''))}</div>
+      <div class="weather-day-date">${escapeHtml(dateLabel)}</div>
       <div class="weather-day-icon">${day.icon}</div>
       <div class="weather-day-temp">${day.maxTemp}&deg; / ${day.minTemp}&deg;</div>
       <div class="weather-day-meta">
